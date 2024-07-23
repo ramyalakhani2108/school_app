@@ -38,6 +38,7 @@ class Validator
                 $errors[$field_name][] = $ruleValidator->getMessage($data, $field_name, $ruleParams);
             }
         }
+
         if (count($errors)) {
 
             throw new ValidationException($errors);

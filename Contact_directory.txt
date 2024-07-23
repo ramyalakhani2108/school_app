@@ -1,0 +1,53 @@
+API Documentation: CONTACT_DIRECTORY
+
+Base URL: http://localhost/test_api
+For example: http://localhost/test_api/api/index.php?mod=login&act=do_login
+
+Login user
+End point: /api/index.php?mod=login&act=do_login
+Method: POST
+Post params: username, password
+
+
+Register user
+End point: /api/index.php?mod=register&act=do_reg
+Method: POST
+Post params: username, first_name, last_name, phone, email, password
+
+
+Add contact
+End point: /api/index.php?mod=contact&act=create_contact
+Method: POST
+Post params: first_name, last_name, phone, email, user_id
+
+
+Get contacts
+End point: /api/index.php?mod=contact&act=show_contacts
+Method: POST
+Post params: user_id
+
+
+Edit contact
+End point: /api/index.php?mod=contact&act=create_contact
+Method: POST
+Post params: first_name, last_name, phone, email, user_id, contact_id
+
+
+Edit profile
+End point: /api/index.php?mod=login&act=edit_profile
+Method: POST
+Post params: first_name, last_name, phone, email, user_id, username,profile(image)(jpg/jpeg/png)
+
+
+
+Get User
+End point: /api/index.php?mod=login&act=get_user
+Method: POST
+Post params: id(user_id)
+
+
+
+Delete contact (Multiple)
+End point: /api/index.php?mod=contact&act=delete_contacts
+Method: POST
+Post params: user_id, contact_ids   (single dimentional array of contact ids like contact_ids[0] = 5, contact_ids[1] = 7)

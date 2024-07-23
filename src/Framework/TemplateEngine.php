@@ -7,7 +7,6 @@ namespace Framework;
 class TemplateEngine
 {
     private array $global_template_data = [];
-
     public function __construct(private string $base_path)
     {
     }

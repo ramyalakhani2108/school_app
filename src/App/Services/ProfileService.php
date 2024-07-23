@@ -32,7 +32,8 @@ class ProfileService
             'phone' => $phone, 'user_id' => $userId
         ])->fetchColumn();
         if ($result > 0) {
-            return true;
+            throw new ValidationException(['phone' => 'The number is already added']);
+            // return true;
         } else {
             return false;
         }
@@ -66,6 +67,8 @@ class ProfileService
 
 
 
+
+
         if ($_FILES && $_FILES['profile']['name'] != '') {
             $this->validate_file($_FILES['profile']);
 
@@ -91,14 +94,18 @@ class ProfileService
         } else {
             $where .= ',`phone` = :phn ';
         }
+        if ($data['password'] == $user_old_data['password']) {
+            unset($params['pwd']);
+        } else {
+            $where .= ', `password`=:pwd';
+        }
 
 
         // Perform the update query
 
         $query = "UPDATE `staff` SET `name` = :nm, `department` = :dept,`email` = :eml" . $where . " WHERE `user_id` = :uid";
-        // dd($params);
         $this->db->query($query, $params);
-        // dd(Paths::STORAGE_UPLOADS . "/" . $user_old_data['storage_filename']);
+
         if ($newFileName != '') {
             unlink(Paths::STORAGE_UPLOADS . "/" . $user_old_data['storage_filename']);
         }

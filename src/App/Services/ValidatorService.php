@@ -46,12 +46,19 @@ class ValidatorService
     }
     public function validate_profile(array $data)
     {
-        $this->validator->validate($data, [
+
+        $fields = [
             'email' => ['required', 'email'],
             'name' => ['required', 'name'],
             'phone' => ['required', 'phone'],
             'department' => ['required'],
-            'password' => ['required', 'pass'],
-        ]);
+            'password' => ['pass'],
+        ];
+
+        if ($data['password'] == '') {
+            unset($fields['password']);
+        }
+
+        $this->validator->validate($data, $fields);
     }
 }

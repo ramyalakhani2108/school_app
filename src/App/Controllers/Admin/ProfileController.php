@@ -36,6 +36,7 @@ class ProfileController
     }
     public function profile_update()
     {
+        // dd($_POST);
 
         $this->validator_service->validate_profile($_POST);
         $this->user_service->is_email_taken_profile($_POST['email'], $_SESSION['user_id']);

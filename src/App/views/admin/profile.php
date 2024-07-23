@@ -524,7 +524,7 @@ if ($profile['storage_filename'] != null) {
                                                                     </div>
                                                                     <?php if (array_key_exists('email', $errors)) : ?>
                                                                         <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                                            <?php echo e($errors['email'][0]); ?>
+                                                                            <?php echo e($errors['email']); ?>
                                                                         </div>
                                                                     <?php endif; ?>
 
@@ -537,7 +537,7 @@ if ($profile['storage_filename'] != null) {
                                                                     </div>
                                                                     <?php if (array_key_exists('phone', $errors)) : ?>
                                                                         <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                                            <?php echo e($errors['phone'][0]); ?>
+                                                                            <?php echo e($errors['phone']); ?>
                                                                         </div>
                                                                     <?php endif; ?>
 
