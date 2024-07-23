@@ -1,0 +1,6 @@
+/vendor/
+/public/assets/admin/node_modules/
+/public/assets/admin/assets/vendors/
+package-lock.json
+package.json
+/public/assets/public/vendor/

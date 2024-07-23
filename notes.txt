@@ -1,0 +1,222 @@
+Based on your database schema, here are some possible pages and their functionalities for your school application when a student logs in:
+
+ Student Dashboard
+  URL:   `/dashboard`
+  Functionality:  
+- Display a welcome message.
+- Show basic student details (name, email, class).
+- Display recent announcements or messages.
+
+ Profile Page
+  URL:   `/profile`
+  Functionality:  
+- Allow students to view and update their personal details like name, address, phone number, and email.
+- Display information like date of birth and gender, but make them read-only.
+
+ Academic Information
+  URL:   `/academic`
+  Functionality:  
+- Display the student’s enrollment details and current class and division.
+- Show past year’s academic performance (percentage).
+
+ Class Schedule
+  URL:   `/schedule`
+  Functionality:  
+- Display the student's class schedule with subjects, teachers, and timings.
+
+ Assignments
+  URL:   `/assignments`
+  Functionality:  
+- List all assignments with their due dates and descriptions.
+- Show the status of each assignment (e.g., submitted, pending).
+
+ Grades
+  URL:   `/grades`
+  Functionality:  
+- Display grades for various assignments and exams.
+- Show overall academic performance and grades for each subject.
+
+ Leave Requests
+  URL:   `/leaves`
+  Functionality:  
+- Allow students to view their leave history.
+- Enable students to apply for new leaves.
+
+ Notifications
+  URL:   `/notifications`
+  Functionality:  
+- Show notifications related to school events, announcements, and other important information.
+
+ Logout
+  URL:   `/logout`
+  Functionality:  
+- Provide a way for students to log out of the application.
+
+ Example Folder Structure
+
+Here’s an example of how you might organize these pages within your application’s folder structure:
+
+```
+/school_app
+    /public
+        index.php
+    /src
+        /App
+            /Controllers
+                DashboardController.php
+                ProfileController.php
+                AcademicController.php
+                ScheduleController.php
+                AssignmentsController.php
+                GradesController.php
+                LeavesController.php
+                NotificationsController.php
+                AuthController.php
+            /Services
+                UserService.php
+                AssignmentService.php
+                GradeService.php
+                LeaveService.php
+            /Views
+                /dashboard
+                    index.php
+                /profile
+                    index.php
+                /academic
+                    index.php
+                /schedule
+                    index.php
+                /assignments
+                    index.php
+                /grades
+                    index.php
+                /leaves
+                    index.php
+                /notifications
+                    index.php
+                /auth
+                    login.php
+                    register.php
+    /vendor
+        /firebase
+            /php-jwt
+```
+
+ Steps to Implement
+
+1.   Controllers  : Each controller handles the business logic for a specific section of the application.
+    - Example: `ProfileController.php` manages user profile-related actions.
+
+2.   Views  : Each view corresponds to a page in your application.
+    - Example: `profile/index.php` renders the profile page.
+
+3.   Services  : Services contain the logic for interacting with the database.
+    - Example: `UserService.php` contains methods to retrieve and update user data.
+
+ Example Controller: `ProfileController.php`
+```php
+<?php
+
+namespace App\Controllers;
+
+use App\Services\UserService;
+
+class ProfileController
+{
+    protected $userService;
+
+    public function __construct()
+    {
+        $this->userService = new UserService();
+    }
+
+    public function index()
+    {
+        // Assuming you have a way to get the currently logged-in student
+        $studentId = $_SESSION['student_id'];
+        $student = $this->userService->getStudentById($studentId);
+
+        // Render the profile view with student data
+        include '../Views/profile/index.php';
+    }
+
+    public function update($formData)
+    {
+        $studentId = $_SESSION['student_id'];
+        $this->userService->updateStudent($studentId, $formData);
+
+        // Redirect back to the profile page
+        header('Location: /profile');
+    }
+}
+```
+
+ Example View: `profile/index.php`
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+</head>
+<body>
+    <h1>Profile</h1>
+    <form action="/profile/update" method="post">
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" value="<?= $student['first_name'] ?>" required>
+        <br>
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" value="<?= $student['last_name'] ?>" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<?= $student['email'] ?>" required>
+        <br>
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" value="<?= $student['phone'] ?>" required>
+        <br>
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>
+```
+
+ Example Service: `UserService.php`
+```php
+<?php
+
+namespace App\Services;
+
+use PDO;
+
+class UserService
+{
+    protected $db;
+
+    public function __construct()
+    {
+        $this->db = new PDO('mysql:host=localhost;dbname=school_app', 'root', '');
+    }
+
+    public function getStudentById($id)
+    {
+        $stmt = $this->db->prepare('SELECT   FROM STUDENT WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateStudent($id, $data)
+    {
+        $stmt = $this->db->prepare('UPDATE STUDENT SET first_name = :first_name, last_name = :last_name, email = :email, phone = :phone WHERE id = :id');
+        $stmt->execute([
+            'id' => $id,
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'email' => $data['email'],
+            'phone' => $data['phone']
+        ]);
+    }
+}
+```
+
+This setup provides a robust structure for your school application, ensuring that the student can access various functionalities efficiently.

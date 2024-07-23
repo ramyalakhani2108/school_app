@@ -1,0 +1,29 @@
+{
+    "name": "hp/school_app",
+    "description": "A school app as an personal project",
+    "autoload": {
+        "psr-4": {
+            "Hp\\SchoolApp\\": "src/",
+            "Framework\\":"src/Framework",
+            "App\\":"src/App"
+                },
+                "files":[
+                    "src/App/Config/Routes.php", 
+                    "src/App/Config/Middleware.php" 
+                ]
+        
+    },
+    "authors": [
+        {
+            "name": "ramyalakhani2108",
+            "email": "lakhani.ramya.u@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6",
+        "firebase/php-jwt": "^6.10"
+    },
+    "scripts": {
+        "school_app" : "php cli.php"
+    }
+}
