@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Services;
 
 use Framework\Rules\{DateRule, RequiredRule, EmailRule, NameRule, PassRule, PhoneRule};
+use Framework\Rules\Subject_rules\ClassNameRule;
+use Framework\Rules\Subject_rules\SubjectCodeRule;
+use Framework\Rules\Subject_rules\SubjectNameRule;
+use Framework\Rules\Subject_rules\SubjectTeacherNameRule;
 use Framework\Validator;
 
 class ValidatorService
@@ -20,6 +24,10 @@ class ValidatorService
         $this->validator->add('phone', new PhoneRule());
         $this->validator->add('date', new DateRule());
         $this->validator->add('name', new NameRule());
+        $this->validator->add('subject_name', new SubjectNameRule());
+        $this->validator->add('subject_teacher_name', new SubjectTeacherNameRule());
+        $this->validator->add('class_name', new ClassNameRule());
+        $this->validator->add('sub_code', new SubjectCodeRule());
     }
     public function validate_login(array $data)
     {
@@ -59,6 +67,17 @@ class ValidatorService
             unset($fields['password']);
         }
 
+        $this->validator->validate($data, $fields);
+    }
+
+    public function validate_subject(array $data)
+    {
+        $fields = [
+            'sub_name' => ['required', 'subject_name'],
+            'sub_code' => ['required', 'sub_code'],
+            'class_names' => ['required', 'class_name'],
+            'teacher_names' => ['required', 'subject_teacher_name']
+        ];
         $this->validator->validate($data, $fields);
     }
 }

@@ -15,7 +15,7 @@ class TemplateEngine
     {
         extract($data, EXTR_SKIP);
         extract($this->global_template_data, EXTR_SKIP);
-
+        // dd($this->global_template_data);
         ob_start();
 
         include $this->resolve($template);

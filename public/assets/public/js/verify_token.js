@@ -12,13 +12,14 @@ async function verifyToken() {
         // Redirect to login page if no token is found
         console.log('Token not found, redirecting to login page.');
 
-        // window.location.href = '/login';
+        window.location.href = '/login';
         // return;
     }
     localStorage.clear(); // Clear all items from local storage
 
     if (token) {
-        localStorage.setItem('authToken', token); // Set authToken back to local storage
+        localStorage.setItem('authToken', token);
+        // Set authToken back to local storage
     }
     try {
         let response = await fetch('verified_token.php', {
@@ -40,14 +41,19 @@ async function verifyToken() {
         if (!data.valid) {
             // If token is invalid, redirect to login page
             console.log('Token is invalid, redirecting to login page.');
-            // window.location.href = '/login';
+            window.location.href = '/login';
         } else {
             console.log('Token is valid:', data);
         }
     } catch (error) {
         console.error('Error verifying token:', error);
         // Handle error, usually redirect to login page
-        // window.location.href = '/';
+        var Cookies = document.cookie.split(';');
+
+        // set 1 Jan, 1970 expiry for every cookies
+        for (var i = 0; i < Cookies.length; i++)
+            document.cookie = Cookies[i] + "=;expires=" + new Date(0).toUTCString();
+        window.location.href = '/';
     }
 }
 

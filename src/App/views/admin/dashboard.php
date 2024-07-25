@@ -1,15 +1,15 @@
-<?php include $this->resolve("admin/partials/_header.php"); ?>
+<?php include $this->resolve("partials/admin/_header.php"); ?>
 
 
 <body>
     <div class="container-scroller">
         <!-- partial:partials/_sidebar.html -->
-        <?php include $this->resolve("admin/partials/_sidebar.php"); ?>
+        <?php include $this->resolve("partials/admin/_sidebar.php"); ?>
 
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">
             <!-- partial:partials/_navbar.html -->
-            <?php include $this->resolve("admin/partials/_navbar.php"); ?>
+            <?php include $this->resolve("partials/admin/_navbar.php"); ?>
 
             <!-- partial -->
             <div class="main-panel">

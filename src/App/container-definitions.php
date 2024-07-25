@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Config\Paths;
-use App\Services\{ProfileService, UserService, ValidatorService};
+use App\Services\{ProfileService, SubjectService, UserService, ValidatorService};
 
 use Framework\Container;
 use Framework\Database;
@@ -31,5 +31,8 @@ return [
     }, ProfileService::class => function (Container $container) {
         $db = $container->get(Database::class);
         return new ProfileService($db);
+    }, SubjectService::class => function (Container $container) {
+        $db = $container->get(Database::class);
+        return new SubjectService($db);
     }
 ];

@@ -80,11 +80,11 @@
       </a>
     </li>
     <li class="nav-item menu-items">
-      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+      <a class="nav-link" href="/admin/subjects">
         <span class="menu-icon">
-          <i class="mdi mdi-laptop"></i>
+          <i class="mdi mdi-book-open-page-variant"></i>
         </span>
-        <span class="menu-title">Basic UI Elements</span>
+        <span class="menu-title">Subjects</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="ui-basic">

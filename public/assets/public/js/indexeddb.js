@@ -15,6 +15,7 @@ function setToken(token) {
 function login() {
     // setTimeout(login, 200);
     const token = getCookie('token');
+
     // const deviceDetails = getDeviceDetails();
     if (token) {
         setToken(token);
@@ -22,6 +23,7 @@ function login() {
 
     } else {
         if (localStorage.getItem('authToken')) {
+            
             localStorage.removeItem('authToken');
         }
 

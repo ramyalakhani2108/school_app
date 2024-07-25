@@ -52,8 +52,8 @@ class Router
 
                 continue;
             }
-
             array_shift($param_values);
+
 
             preg_match_all("#{([^/]+)}#", $route['path'], $param_keys);
             $param_keys = $param_keys[1];
@@ -73,6 +73,7 @@ class Router
             }
 
             $action();
+
             return;
         }
         $this->dispatch_not_found($container);

@@ -7,7 +7,6 @@ namespace App\Services;
 use Exception;
 use Firebase\JWT\JWT;
 use Framework\Database;
-use Framework\Exceptions\UserException;
 use Framework\Exceptions\ValidationException;
 
 class UserService
@@ -146,9 +145,14 @@ class UserService
         unset($_SESSION['user_id']);
         // unset($_COOKIE['token']);
         setcookie("token", "/", time() - 3600);
+        setcookie("PHPSESSID", "/", time() - 3600);
     }
 
-    public function get_user()
+    public function get_user(int $id)
     {
+        $query = "SELECT * FROM `users` WHERE `id`=:id";
+        return $this->db->query($query, [
+            'id' => $id
+        ])->find();
     }
 }

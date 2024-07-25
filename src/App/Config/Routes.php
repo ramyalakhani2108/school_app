@@ -12,6 +12,7 @@ use App\Controllers\ErrorController;
 use App\Controllers\Student\CourseController;
 use App\Controllers\Student\StudentHomeController;
 use App\Controllers\Student\SubjectController;
+use App\Controllers\Subjects\SubjectsController;
 use App\Controllers\Teacher\TeacherController;
 // use App\Controllers\Student\TeacherController;
 use App\Middlewares\AuthTokenMiddleware;
@@ -30,6 +31,9 @@ function register_routes(App $app)
     $app->get("/about", [AboutController::class, 'about_view'])->add(AuthTokenMiddleware::class);
     $app->get("/courses", [SubjectController::class, 'subject_view'])->add(AuthTokenMiddleware::class);
     $app->get("/trainers", [TeacherController::class, 'teacher_view'])->add(AuthTokenMiddleware::class);
+    $app->get("/admin/subjects/create_subject", [SubjectsController::class, 'create_subjects_view'])->add(AuthTokenMiddleware::class);
+    $app->post("/admin/subjects/create_subject", [SubjectsController::class, 'create'])->add(AuthTokenMiddleware::class);
+    $app->get("/admin/subjects", [SubjectsController::class, 'admin_subjects_view'])->add(AuthTokenMiddleware::class);
     $app->get("/admin/{id}", [ProfileController::class, 'profile_view'])->add(AuthTokenMiddleware::class);
     $app->post("/admin/{id}", [ProfileController::class, 'profile_update'])->add(AuthTokenMiddleware::class);
     $app->get("/admin", [AdminDashboardController::class, 'admin_view'])->add(AuthTokenMiddleware::class);

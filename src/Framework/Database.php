@@ -35,6 +35,10 @@ class Database
     {
         return $this->stmt->fetch();
     }
+    public function find_all()
+    {
+        return $this->stmt->fetchAll();
+    }
     public function count()
     {
         return $this->stmt->fetchColumn();
@@ -55,5 +59,17 @@ class Database
         return $this->stmt->rowCount();
     } //getting last registered id
 
+    public function beginTransaction()
+    {
+        $this->connection->beginTransaction();
+    }
+    public function endTransaction()
+    {
+        $this->connection->commit();
+    }
 
+    public function cancelTransaction()
+    {
+        $this->connection->rollBack();
+    }
 }

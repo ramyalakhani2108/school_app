@@ -23,6 +23,7 @@ class App
 
     public function get(string $path, array $controller): App
     {
+
         $this->router->add("GET", $path, $controller);
 
         return $this;
@@ -45,6 +46,7 @@ class App
     {
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); //return trailing path like /,/about
         $method = $_SERVER['REQUEST_METHOD'];
+      
         $this->router->dispatch($path, $method, $this->container);
     }
 

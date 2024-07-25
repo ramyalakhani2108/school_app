@@ -73,6 +73,8 @@ declare(strict_types=1);
 
 namespace App\Middlewares;
 
+use App\Services\ProfileService;
+use App\Services\UserService;
 use DomainException;
 use Exception;
 use Firebase\JWT\JWT;
@@ -80,10 +82,24 @@ use Firebase\JWT\Key;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\SignatureInvalidException;
 use Framework\Contracts\MiddlewareInterface;
+use Framework\Database;
 use Framework\Exceptions\ValidationException;
 
 class AuthTokenMiddleware implements MiddlewareInterface
 {
+    public Database $database;
+
+    public function __construct()
+    {
+        $this->database =
+            new Database($_ENV['DB_DRIVER'], [
+                'host' => $_ENV['DB_HOST'],
+                'port' => $_ENV['DB_PORT'],
+                'dbname' => $_ENV['DB_NAME']
+            ], $_ENV['DB_USER'], $_ENV['DB_PASS']);
+    }
+
+
     public function process(callable $next)
     {
         try {
@@ -127,8 +143,10 @@ class AuthTokenMiddleware implements MiddlewareInterface
             redirectTo("/login");
         } catch (ValidationException $e) {
             $_SESSION['errors'] = $e->errors;
-            redirectTo($_SERVER['HTTP_REFERER']);
+
+            redirectTo($_SERVER['HTTP_REFERER'] ?? "/login");
         } catch (Exception $e) {
+
             $_SESSION['errors'] = ['email' => $e->getMessage()];
             redirectTo($_SERVER['HTTP_REFERER'] ?? '/login');
         }
@@ -143,7 +161,7 @@ class AuthTokenMiddleware implements MiddlewareInterface
 
         // Retrieve user data from the database
         $userId = $decoded->user_id;
-        $user = $this->getUserById($userId);
+        $user = $this->get_user_by_id((int)$userId);
         if (!$user) {
             throw new Exception('User not found.');
         }
@@ -158,13 +176,19 @@ class AuthTokenMiddleware implements MiddlewareInterface
         return $newToken;
     }
 
-    private function getUserById($userId)
+    public function get_user_by_id(int $id)
     {
-        // Implement the logic to get user by ID from the database
-        // For example:
-        // $user = UserModel::find($userId);
-        // return $user;
-        // Placeholder for actual database logic
-        return true;
+
+        $user = $this->database->query("
+            SELECT * FROM `users` WHERE `id`=:id
+        ", [
+            'id' => $id
+        ])->find();
+
+        if (!$user) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
