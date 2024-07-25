@@ -117,7 +117,9 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="preview-list ">
-                                                <?php foreach ($subject as $subjects) : ?>
+                                                <?php foreach ($subject as $subjects) :
+                                                ?>
+
                                                     <div class="preview-item border-bottom">
                                                         <div class="preview-thumbnail">
                                                             <div class="preview-icon bg-primary">
@@ -150,10 +152,13 @@
                                                             </div>
                                                             <div class="mr-auto text-sm-right pt-2 pt-sm-0">
                                                                 <p class="text-muted">
-                                                                    <button type="button" class="btn btn-success btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Edit</button>
+                                                                    <a href="/admin/subjects/edit_subjects/<?php echo e($subjects['subject_id']); ?>"><button type="button" class="btn btn-success btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Edit</button></a>
                                                                 </p>
                                                                 <p class="text-muted mb-0">
-                                                                    <button type="button" class="btn btn-danger btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Delete</button>
+                                                                <form action="/admin/subjects/delete_subjects/<?php echo e($subjects['subject_id']); ?>" method="post">
+                                                                    <input type="hidden" name="_METHOD" value="DELETE">
+                                                                    <button type="submit" class="btn btn-danger btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Delete</button>
+                                                                </form>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -166,7 +171,7 @@
 
                                     </div>
                                     <button type="button" class="btn btn-success btn-fw mt-3 col-5 ml-5 p-4" style="padding:15px;font-size:20px;margin-right:20px;" onclick="add_subject()">Add Subject</button>
-                                    <button type="button" class="btn btn-danger btn-fw mt-3 col-6 ml-0 p-4" style="padding:15px;font-size:20px;" onclick="delete_subject()">Delete Subject</button>
+                                    <!-- <button type="button" class="btn btn-danger btn-fw mt-3 col-6 ml-0 p-4" style="padding:15px;font-size:20px;" onclick="delete_subject()">Delete Subject</button> -->
 
                                     <script>
                                         function add_subject() {

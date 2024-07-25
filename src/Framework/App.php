@@ -28,7 +28,11 @@ class App
 
         return $this;
     }
-
+    public function delete(string $path, array $controller): App //accept the route name as path and array of data [contoller class and function name]
+    {
+        $this->router->add("DELETE", $path, $controller); //we are using get method instead of post because it is okay to show just a name of route for understanding
+        return $this;
+    }
     public function post(string $path, array $controller): App
     {
         $this->router->add("POST", $path, $controller);
@@ -46,7 +50,7 @@ class App
     {
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); //return trailing path like /,/about
         $method = $_SERVER['REQUEST_METHOD'];
-      
+
         $this->router->dispatch($path, $method, $this->container);
     }
 

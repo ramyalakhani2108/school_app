@@ -112,10 +112,10 @@
                                 <div class="card-body">
                                     <h4 class="card-title">Add Subject</h4>
                                     <!-- <p class="card-description"> Basic form elements </p> -->
-                                    <form class="forms-sample" id="addSub" method="POST">
+                                    <form id="editSub" class="forms-sample" action="/admin/subjects/edit_subjects/<?php echo e($subject['subject_id']); ?>" method="POST">
                                         <div class="form-group">
                                             <label for="exampleInputName1">Subject Name</label>
-                                            <input type="text" value="<?php echo e($oldFormData['sub_name'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="sub_name" placeholder="Enter Subject Name...">
+                                            <input type="text" value="<?php echo e($subject['subject_name'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="sub_name" placeholder="Enter Subject Name...">
                                         </div>
                                         <?php if (array_key_exists('sub_name', $errors)) : ?>
                                             <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
@@ -124,7 +124,7 @@
                                         <?php endif; ?>
                                         <div class="form-group">
                                             <label for="exampleInputEmail3">Subject Code</label>
-                                            <input type="text" value="<?php echo e($oldFormData['sub_code'] ?? "");  ?>" class="form-control" id="exampleInputEmail3" name="sub_code" placeholder="Enter Subject Code">
+                                            <input type="text" value="<?php echo e($subject['subject_code'] ?? "");  ?>" class="form-control" id="exampleInputEmail3" name="sub_code" placeholder="Enter Subject Code">
                                         </div>
                                         <?php if (array_key_exists('sub_code', $errors)) : ?>
                                             <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
@@ -133,7 +133,7 @@
                                         <?php endif; ?>
                                         <div class="form-group">
                                             <label for="exampleInputPassword4">Class Names</label>
-                                            <input type="text" value="<?php echo e($oldFormData['class_names'] ?? "");  ?>" class="form-control" id="exampleInputPassword4" name="class_names" placeholder="Enter Classnames in Comma saperated values.....">
+                                            <input type="text" value="<?php echo e($subject['classroom_names'] ?? "");  ?>" class="form-control" id="exampleInputPassword4" name="class_names" placeholder="Enter Classnames in Comma saperated values.....">
                                         </div>
                                         <?php if (array_key_exists('class_names', $errors)) : ?>
                                             <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
@@ -159,7 +159,7 @@
                                         </div> -->
                                         <div class="form-group">
                                             <label for="exampleInputCity1">Teachers</label>
-                                            <input type="text" value="<?php echo e($oldFormData['teacher_names'] ?? "");  ?>" class="form-control" id="exampleInputCity1" name="teacher_names" placeholder="Enter teachers teaching subjects in comma saperated value with respect to class names.......">
+                                            <input type="text" value="<?php echo e($subject['teacher_names'] ?? "");  ?>" class="form-control" id="exampleInputCity1" name="teacher_names" placeholder="Enter teachers teaching subjects in comma saperated value with respect to class names.......">
                                         </div>
                                         <?php if (array_key_exists('teacher_names', $errors)) : ?>
                                             <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
@@ -170,11 +170,11 @@
                                             <label for="exampleTextarea1">Notes Or Remarks</label>
                                             <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
                                         </div> -->
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                        <a><button type="submit" class="btn btn-primary mr-2">Submit</button></a>
                                         <button type="button" class="btn btn-dark" onclick="reset_form()">Cancel</button>
                                         <script>
                                             function reset_form() {
-                                                document.getElementById("addSub").reset();
+                                                document.getElementById("editSub").reset();
                                             }
                                         </script>
                                     </form>

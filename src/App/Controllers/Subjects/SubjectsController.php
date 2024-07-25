@@ -19,6 +19,8 @@ class SubjectsController
     ) {
     }
 
+
+
     public function admin_subjects_view()
     {
         $profile = $this->profile_service->get_user_profile($_SESSION['user_id']);
@@ -66,10 +68,45 @@ class SubjectsController
 
         $this->subject_service->is_subject_added(strtoupper($_POST['sub_code']), $_POST['sub_name']);
         $this->subject_service->add_subject($_POST);
+        redirectTo($_SERVER['HTTP_REFERER']);
     }
 
     public function get_data()
     {
         return $this->subject_service->get_data();
+    }
+
+    public function edit_view($params = [])
+    {
+
+        $profile = $this->profile_service->get_user_profile($_SESSION['user_id']);
+        $this->total_subjects();
+
+
+        $subject = $this->subject_service->get_subject((int) $params['id']);
+
+        if (!$profile) {
+            redirectTo("/");
+        }
+        echo $this->view->render(
+            "admin/subjects/edit.php",
+            [
+                'profile' => $profile,
+                'subject' => $subject,
+            ]
+        );
+    }
+
+    public function delete($params = [])
+    {
+     
+        $this->subject_service->delete((int) $params['id']);
+        redirectTo($_SERVER['HTTP_REFERER']);
+    }
+    public function edit($params = [])
+    {
+        $this->subject_service->is_subject_added(strtoupper($_POST['sub_code']), $_POST['sub_name'], (int) $params['id']);
+        $this->subject_service->update($_POST, (int) $params['id']);
+        redirectTo($_SERVER['HTTP_REFERER']);
     }
 }

@@ -68,6 +68,8 @@ class Database
         $this->connection->commit();
     }
 
+
+
     public function cancelTransaction()
     {
         $this->connection->rollBack();
