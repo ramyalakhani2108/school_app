@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Config\Paths;
-use App\Services\{ClassService, ProfileService, StudentService, SubjectService, UserService, ValidatorService};
+use App\Services\{StandardService, ProfileService, StudentService, SubjectService, UserService, ValidatorService};
 
 use Framework\Container;
 use Framework\Database;
@@ -34,9 +34,9 @@ return [
     }, SubjectService::class => function (Container $container) {
         $db = $container->get(Database::class);
         return new SubjectService($db);
-    }, ClassService::class => function (Container $container) {
+    }, StandardService::class => function (Container $container) {
         $db = $container->get(Database::class);
-        return new ClassService($db);
+        return new StandardService($db);
     }, StudentService::class => function (Container $container) {
         $db = $container->get(Database::class);
         return new StudentService($db);

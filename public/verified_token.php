@@ -14,7 +14,9 @@ const KEY = "testtoken";
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (!isset($input['token'])) {
+
     echo json_encode(['valid' => false, 'message' => 'Token not provided']);
+
     exit;
 }
 // echo json_encode($input, true);
@@ -29,6 +31,6 @@ try {
     echo json_encode(['valid' => true, 'data' => (array) $decoded]);
 } catch (Exception $e) {
     // Token is invalid or other error
-    
+
     echo json_encode(['valid' => false, 'message' => 'Invalid token: ' . $e->getMessage()]);
 }

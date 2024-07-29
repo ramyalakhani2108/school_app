@@ -88,6 +88,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>School App Admin</title>
     <!-- plugins:css -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+
     <link rel="stylesheet" href="/assets/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="/assets/admin/assets/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
@@ -99,9 +105,14 @@
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <!-- endinject -->
-    <!-- Layout styles -->
+    <script src="/assets/vendors/select2/select2.min.js"></script>
+    <script src="/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
     <link rel="stylesheet" href="/assets/admin/assets/css/style.css">
     <!-- End layout styles -->
 
     <link rel="shortcut icon" href="/assets/admin/assets/images/favicon.png" />
+    <link rel="stylesheet" href="/assets/vendors/select2/select2.min.css">
+    <link rel="stylesheet" href="/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+    <!-- <script src="\assets\public\js\indexeddb.js"></script>
+    <script src="\assets\public\js\verify_token.js"></script> -->
 </head>

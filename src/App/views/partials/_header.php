@@ -24,9 +24,9 @@
     <!-- Main CSS File -->
     <!-- <script src="/public\assets\public\js\indexeddb.js"></script> -->
     <link href="/assets/public/css/main.css" rel="stylesheet">
+    <!-- <script src="/assets/public/js/indexeddb.js"></script>
     <script src="/assets/public/js/verify_token.js">
-    </script>
-    <script src="/assets/public/js/indexeddb.js"></script>
+    </script> -->
 
 
 </head>

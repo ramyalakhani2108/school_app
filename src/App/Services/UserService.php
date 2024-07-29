@@ -71,7 +71,9 @@ class UserService
         }
         session_regenerate_id();
         $_SESSION['user_id'] = $user['user_id'];
-        $this->set_token($_SESSION['user_id']);
+        if (!array_key_exists('token', $_COOKIE)) {
+            $this->set_token($_SESSION['user_id']);
+        }
         return $user;
     }
     public function set_token(int $id)
@@ -99,7 +101,15 @@ class UserService
                 $key,
                 'HS256'
             );
+            // dd($token);
+            $this->db->query(
+                "UPDATE `users` SET `token`= :newtoken WHERE `user_id`=:id;",
+                [
+                    'newtoken' => $token,
+                    'id' => $_SESSION['user_id']
+                ]
 
+            );
             setcookie("token", $token, time() + 3600);
         }
     }

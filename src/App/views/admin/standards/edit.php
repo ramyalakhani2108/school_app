@@ -110,11 +110,12 @@
                         <div class="col-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Subject</h4>
+
+                                    <h4 class="card-title">Edit Standard</h4>
                                     <!-- <p class="card-description"> Basic form elements </p> -->
-                                    <form id="editSub" class="forms-sample" action="/admin/subjects/edit_subjects/<?php echo e($subject['subject_id']); ?>" method="POST">
+                                    <form id="editSub" class="forms-sample" action="/admin/standards/edit_standard/<?php echo e($standard); ?>" method="POST">
                                         <div class="form-group">
-                                            <label for="exampleInputName1">Subject Name</label>
+                                            <label for="exampleInputName1">Standard Name</label>
                                             <input type="text" value="<?php echo e($subject['subject_name'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="sub_name" placeholder="Enter Subject Name...">
                                         </div>
                                         <?php if (array_key_exists('sub_name', $errors)) : ?>
@@ -122,24 +123,8 @@
                                                 <?php echo e($errors['sub_name'][0]); ?>
                                             </div>
                                         <?php endif; ?>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail3">Subject Code</label>
-                                            <input type="text" value="<?php echo e($subject['subject_code'] ?? "");  ?>" class="form-control" id="exampleInputEmail3" name="sub_code" placeholder="Enter Subject Code">
-                                        </div>
-                                        <?php if (array_key_exists('sub_code', $errors)) : ?>
-                                            <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                <?php echo e($errors['sub_code'][0]); ?>
-                                            </div>
-                                        <?php endif; ?>
-                                        <div class="form-group">
-                                            <label for="exampleInputPassword4">Standard Names</label>
-                                            <input type="text" value="<?php echo e($subject['standard_names'] ?? "");  ?>" class="form-control" id="exampleInputPassword4" name="standard_names" placeholder="Enter Standard in Comma saperated values.....">
-                                        </div>
-                                        <?php if (array_key_exists('standard_names', $errors)) : ?>
-                                            <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                <?php echo e($errors['standard_names'][0]); ?>
-                                            </div>
-                                        <?php endif; ?>
+
+
                                         <!-- <div class="form-group">
                                             <label for="exampleSelectGender">Gender</label>
                                             <select class="form-control" id="exampleSelectGender">
@@ -157,15 +142,7 @@
                                                 </span>
                                             </div>
                                         </div> -->
-                                        <div class="form-group">
-                                            <label for="exampleInputCity1">Teachers</label>
-                                            <input type="text" value="<?php echo e($subject['teacher_names'] ?? "");  ?>" class="form-control" id="exampleInputCity1" name="teacher_names" placeholder="Enter teachers teaching subjects in comma saperated value with respect to class names.......">
-                                        </div>
-                                        <?php if (array_key_exists('teacher_names', $errors)) : ?>
-                                            <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                <?php echo e($errors['teacher_names'][0]); ?>
-                                            </div>
-                                        <?php endif; ?>
+
                                         <!-- <div class="form-group">
                                             <label for="exampleTextarea1">Notes Or Remarks</label>
                                             <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
@@ -178,44 +155,92 @@
                                             }
                                         </script>
                                     </form>
+
                                 </div>
+
                             </div>
                         </div>
+
                     </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Visitors by Countries</h4>
+                                    <table class="table">
+                                        <thead align="center">
+                                            <tr>
+                                                <th>
+                                                    <input type="checkbox" id="selectAll" onclick="toggleCheckboxes(this)">
+                                                </th>
+                                                <th>ID</th>
+                                                <th>Student Name</th>
+                                                <th>Student Roll Number</th>
+                                                <!-- <th>Total Teachers</th> -->
+                                                <th>Edit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody align="center">
+                                            <?php $i = 0;
+                                            dd($standard[0]);
+                                            $students = explode(",", $standard[0]['student_names']);
+                                            $student_ids = explode(",", $standard[0]['student_ids']);
+                                            $student_rolls = explode(",", $standard[0]['student_rolls']);
+
+
+
+                                            ?>
+
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" name="selected_ids[]" value="<?php echo e($student_id); ?>" class="record-checkbox">
+                                                </td>
+                                                <td><?php echo e($students['id'][$i]); ?></td>
+                                                <td><?php echo e($students['name'][$i]); ?></td>
+                                                <td><?php echo e($students['rolls'][$i]); ?></td>
+
+                                            </tr>
+
+                                            <?php $i++;
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+
+                            <!-- content-wrapper ends -->
+                            <!-- partial:partials/_footer.html -->
+                            <?php $this->resolve("admin/partials/_footer.php") ?>
+                            <!-- partial -->
+                        </div>
+                        <!-- main-panel ends -->
+                    </div>
+                    <!-- page-body-wrapper ends -->
                 </div>
-
-            </div>
-
-            <!-- content-wrapper ends -->
-            <!-- partial:partials/_footer.html -->
-            <?php $this->resolve("admin/partials/_footer.php") ?>
-            <!-- partial -->
-        </div>
-        <!-- main-panel ends -->
-    </div>
-    <!-- page-body-wrapper ends -->
-    </div>
-    <!-- container-scroller -->
-    <!-- plugins:js -->
-    <script src="/assets/admin/assets/vendors/js/vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page -->
-    <script src="/assets/admin/assets/vendors/chart.js/Chart.min.js"></script>
-    <script src="/assets/admin/assets/vendors/progressbar.js/progressbar.min.js"></script>
-    <script src="/assets/admin/assets/vendors/jvectormap/jquery-jvectormap.min.js"></script>
-    <script src="/assets/admin/assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-    <script src="/assets/admin/assets/vendors/owl-carousel-2/owl.carousel.min.js"></script>
-    <!-- End plugin js for this page -->
-    <!-- inject:js -->
-    <script src="/assets/admin/assets/js/off-canvas.js"></script>
-    <script src="/assets/admin/assets/js/hoverable-collapse.js"></script>
-    <script src="/assets/admin/assets/js/misc.js"></script>
-    <script src="/assets/admin/assets/js/settings.js"></script>
-    <script src="/assets/admin/assets/js/todolist.js"></script>
-    <!-- endinject -->
-    <!-- Custom j/s for this page -->
-    <script src="/assets/admin/assets/js/dashboard.js"></script>
-    <!-- End custom js for this page -->
+                <!-- container-scroller -->
+                <!-- plugins:js -->
+                <script src="/assets/admin/assets/vendors/js/vendor.bundle.base.js"></script>
+                <!-- endinject -->
+                <!-- Plugin js for this page -->
+                <script src="/assets/admin/assets/vendors/chart.js/Chart.min.js"></script>
+                <script src="/assets/admin/assets/vendors/progressbar.js/progressbar.min.js"></script>
+                <script src="/assets/admin/assets/vendors/jvectormap/jquery-jvectormap.min.js"></script>
+                <script src="/assets/admin/assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+                <script src="/assets/admin/assets/vendors/owl-carousel-2/owl.carousel.min.js"></script>
+                <!-- End plugin js for this page -->
+                <!-- inject:js -->
+                <script src="/assets/admin/assets/js/off-canvas.js"></script>
+                <script src="/assets/admin/assets/js/hoverable-collapse.js"></script>
+                <script src="/assets/admin/assets/js/misc.js"></script>
+                <script src="/assets/admin/assets/js/settings.js"></script>
+                <script src="/assets/admin/assets/js/todolist.js"></script>
+                <!-- endinject -->
+                <!-- Custom j/s for this page -->
+                <script src="/assets/admin/assets/js/dashboard.js"></script>
+                <!-- End custom js for this page -->
 </body>
 
 </html>
+
+<?php dd([$students]); ?>

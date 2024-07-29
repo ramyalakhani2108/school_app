@@ -17,16 +17,15 @@ class AdminDashboardController
 
     public function admin_view(array $params = [])
     {
+        
         $profile = $this->profile_service->get_user_profile((int)$_SESSION['user_id']);
         // dd($profile);
         if (!$profile) {
             redirectTo("/");
         }
         echo $this->view->render(
-            "admin/dashboard.php",
-            [
-                'profile' => $profile
-            ]
+            "admin/dashboard.php"
+
         );
     }
 }

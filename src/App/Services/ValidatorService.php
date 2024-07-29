@@ -26,7 +26,7 @@ class ValidatorService
         $this->validator->add('name', new NameRule());
         $this->validator->add('subject_name', new SubjectNameRule());
         $this->validator->add('subject_teacher_name', new SubjectTeacherNameRule());
-        $this->validator->add('class_name', new ClassNameRule());
+        $this->validator->add('standard_names', new ClassNameRule());
         $this->validator->add('sub_code', new SubjectCodeRule());
     }
     public function validate_login(array $data)
@@ -75,7 +75,7 @@ class ValidatorService
         $fields = [
             'sub_name' => ['required', 'subject_name'],
             'sub_code' => ['required', 'sub_code'],
-            'class_names' => ['required', 'class_name'],
+            'standard_names' => ['required', 'standard_names'],
             'teacher_names' => ['required', 'subject_teacher_name']
         ];
         $this->validator->validate($data, $fields);

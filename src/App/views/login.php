@@ -83,10 +83,11 @@
             border-color: #45a049;
         }
     </style>
-    <script src="\assets\public\js\indexeddb.js"></script>
+    <!-- <script src="\assets\public\js\indexeddb.js"></script> -->
 </head>
 
 <body>
+    <!-- <script src="\assets\public\js\verify_token.js"></script> -->
     <div class="login-container">
         <!-- <input type="hidden" value> -->
         <h2>Login</h2>

@@ -1,4 +1,9 @@
 <?php
 header('Content-Type: application/json');
 
-echo json_encode($_COOKIE['token']);
+
+if (isset($_COOKIE['token'])) {
+    echo json_encode($_COOKIE['token']);
+} else {
+    return;
+}

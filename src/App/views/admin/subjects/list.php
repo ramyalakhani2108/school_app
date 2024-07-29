@@ -65,7 +65,7 @@
                                     <div class="row">
                                         <div class="col-9">
                                             <div class="d-flex align-items-center align-self-start">
-                                                <h3 class="mb-0"><?php echo e($total_class ?? '0'); ?></h3>
+                                                <h3 class="mb-0"><?php echo e($total_standards ?? '0'); ?></h3>
                                                 <!-- <p class="text-danger ml-2 mb-0 font-weight-medium">-2.4%</p> -->
                                             </div>
                                         </div>
@@ -117,7 +117,7 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="preview-list ">
-                                                <?php foreach ($subject as $subjects) :
+                                                <?php foreach ($subjects as $subject) :
                                                 ?>
 
                                                     <div class="preview-item border-bottom">
@@ -128,34 +128,23 @@
                                                         </div>
                                                         <div class="preview-item-content d-sm-flex flex-grow">
                                                             <div class="flex-grow">
-                                                                <h6 class="preview-subject"><?php echo e($subjects['subject_name']); ?></h6>
-                                                                <p class="text-muted mb-0"><?php echo e($subjects['subject_code']); ?></p>
+                                                                <h6 class="preview-subject"><?php echo e($subject['subject_name']); ?></h6>
+                                                                <p class="text-muted mb-0"><?php echo e($subject['subject_code']); ?></p>
                                                             </div>
 
-                                                            <div class="mr-auto text-sm-right pt-2 pt-sm-0">
-                                                                <?php
-                                                                $classroom_ids = explode(',', $subjects['classroom_ids']);
-                                                                $classroom_names = explode(',', $subjects['classroom_names']);
-                                                                ?>
-                                                            </div>
 
                                                             <div class="mr-auto text-sm-right pt-3 pt-sm-0">
-                                                                <?php
-                                                                $teacher_names = explode(',', $subjects['teacher_names']);
-                                                                foreach ($teacher_names as $teacher_name) {
-                                                                ?>
-                                                                    <p class="text-muted">Teacher: <?php echo e($teacher_name);
-                                                                                                    ?><br>
-                                                                    </p>
+                                                                Total Teachers : <?php echo e($subject['teacher_count']); ?><br><br>
+                                                                Total standards : <?php echo e($subject['standards_count']); ?>
 
-                                                                <?php } ?>
                                                             </div>
+
                                                             <div class="mr-auto text-sm-right pt-2 pt-sm-0">
                                                                 <p class="text-muted">
-                                                                    <a href="/admin/subjects/edit_subjects/<?php echo e($subjects['subject_id']); ?>"><button type="button" class="btn btn-success btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Edit</button></a>
+                                                                    <a href="/admin/subjects/edit_subjects/<?php echo e($subject['subject_id']); ?>"><button type="button" class="btn btn-success btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Edit</button></a>
                                                                 </p>
                                                                 <p class="text-muted mb-0">
-                                                                <form action="/admin/subjects/delete_subjects/<?php echo e($subjects['subject_id']); ?>" method="post">
+                                                                <form action="/admin/subjects/delete_subjects/<?php echo e($subject['subject_id']); ?>" method="post">
                                                                     <input type="hidden" name="_METHOD" value="DELETE">
                                                                     <button type="submit" class="btn btn-danger btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Delete</button>
                                                                 </form>
@@ -175,7 +164,7 @@
 
                                     <script>
                                         function add_subject() {
-                                            var classroomIds = "<?php echo implode(',', $classroom_ids); ?>";
+
                                             window.location.href = "/admin/subjects/create_subject";
                                         }
                                     </script>

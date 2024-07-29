@@ -29,9 +29,6 @@ class ProfileController
         }
         echo $this->view->render(
             "admin/profile.php",
-            [
-                'profile' => $profile
-            ]
         );
     }
     public function profile_update()

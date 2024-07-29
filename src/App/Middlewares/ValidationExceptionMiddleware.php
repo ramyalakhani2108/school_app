@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Middlewares;
 
 use Framework\Contracts\MiddlewareInterface;
+use Framework\Exceptions\JWTException;
 use Framework\Exceptions\ValidationException;
 
 class ValidationExceptionMiddleware implements MiddlewareInterface

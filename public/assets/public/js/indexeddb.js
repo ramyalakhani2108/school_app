@@ -17,22 +17,23 @@ function login() {
     const token = getCookie('token');
 
     // const deviceDetails = getDeviceDetails();
-    if (token) {
-        setToken(token);
+
+    if (token != null) {
+
+        verifyToken();
         console.log('Token set in localStorage:', token);
 
-    } else {
-        if (localStorage.getItem('authToken')) {
-            
-            localStorage.removeItem('authToken');
-        }
 
+    } else {
         console.log('No token found in cookies.');
+        return false;
+
 
     }
 }
 
-window.onload = login();
+window.onload = login;
+
 
 
 

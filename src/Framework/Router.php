@@ -29,7 +29,7 @@ class Router
     {
         $path = trim($path, '/'); //remove / from beginning and end
         $path = "/{$path}/"; //add slashes on both sides to get accurate paths
-        $path = preg_replace("#[/][2,]#", '/', $path); //if string have consecutive more than one slashes it changes it to one
+        $path = preg_replace("#[/][\2,]#", '/', $path); //if string have consecutive more than one slashes it changes it to one
         return $path;
     }
 
@@ -53,7 +53,6 @@ class Router
                 continue;
             }
             array_shift($param_values);
-
 
             preg_match_all("#{([^/]+)}#", $route['path'], $param_keys);
             $param_keys = $param_keys[1];
