@@ -8,13 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>School App Admin</title>
 
-    <link rel="stylesheet" href="/assets/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="/assets/admin/assets/vendors/css/vendor.bundle.base.css">
-    <link rel="stylesheet" href="/assets/admin/assets/vendors/jvectormap/jquery-jvectormap.css">
-    <link rel="stylesheet" href="/assets/admin/assets/vendors/flag-icon-css/css/flag-icon.min.css">
-    <link rel="stylesheet" href="/assets/admin/assets/vendors/owl-carousel-2/owl.carousel.min.css">
-    <link rel="stylesheet" href="/assets/admin/assets/vendors/owl-carousel-2/owl.theme.default.min.css">
-    <link rel="stylesheet" href="/assets/admin/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/mdi/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/css/vendor.bundle.base.css" />
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/jvectormap/jquery-jvectormap.css" />
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/flag-icon-css/css/flag-icon.min.css" />
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/owl-carousel-2/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/owl-carousel-2/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/select2/select2.min.css" />
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/admin/assets/css/style.css" />
     <link rel="shortcut icon" href="/assets/admin/assets/images/favicon.png" />
     <style type="text/css">
         body {
@@ -76,14 +78,6 @@
             color: #bcd0f7;
         }
     </style>
-</head>
-
-<!DOCTYPE html>
-<html lang="en">
-<?php  ?>
-
-<head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>School App Admin</title>
@@ -104,15 +98,25 @@
     <link rel="stylesheet" href="/assets/admin/assets/vendors/owl-carousel-2/owl.theme.default.min.css">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/jvectormap/jquery-jvectormap.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/owl-carousel-2/owl.carousel.min.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/owl-carousel-2/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/select2/select2.min.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/select2/select2.min.css" />
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css" />
     <!-- endinject -->
-    <script src="/assets/vendors/select2/select2.min.js"></script>
-    <script src="/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+
+    <!-- endinject -->
     <link rel="stylesheet" href="/assets/admin/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/assets/admin/vendors/css/vendor.bundle.base.css">
+
     <!-- End layout styles -->
 
     <link rel="shortcut icon" href="/assets/admin/assets/images/favicon.png" />
-    <link rel="stylesheet" href="/assets/vendors/select2/select2.min.css">
-    <link rel="stylesheet" href="/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
-    <!-- <script src="\assets\public\js\indexeddb.js"></script>
-    <script src="\assets\public\js\verify_token.js"></script> -->
 </head>

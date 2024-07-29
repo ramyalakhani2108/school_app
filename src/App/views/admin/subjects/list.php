@@ -138,7 +138,6 @@
                                                                 Total standards : <?php echo e($subject['standards_count']); ?>
 
                                                             </div>
-
                                                             <div class="mr-auto text-sm-right pt-2 pt-sm-0">
                                                                 <p class="text-muted">
                                                                     <a href="/admin/subjects/edit_subjects/<?php echo e($subject['subject_id']); ?>"><button type="button" class="btn btn-success btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Edit</button></a>
@@ -154,8 +153,6 @@
                                                     </div>
                                                 <?php endforeach; ?>
                                             </div>
-
-
                                         </div>
 
                                     </div>

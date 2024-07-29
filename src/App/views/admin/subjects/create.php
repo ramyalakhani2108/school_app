@@ -5,6 +5,9 @@
 
 
 <body>
+
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/select2/select2.min.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
     <div class="container-scroller">
         <!-- partial:partials/_sidebar.html -->
         <?php include $this->resolve("partials/admin/_sidebar.php"); ?>
@@ -177,21 +180,39 @@
                                                 document.getElementById("addSub").reset();
                                             }
                                         </script>
-                                    </form>
+
+
+                                        <div class="form-group">
+                                            <label>Single select box using select 2</label>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Multiple select using select 2</label>
+                                            <select class="js-example-basic-multiple" multiple="multiple" style="width:100%">
+                                                <option value="AL">Alabama</option>
+                                                <option value="WY">Wyoming</option>
+                                                <option value="AM">America</option>
+                                                <option value="CA">Canada</option>
+                                                <option value="RU">Russia</option>
+                                            </select>
+                                        </div>
                                 </div>
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-
             </div>
-
-            <!-- content-wrapper ends -->
-            <!-- partial:partials/_footer.html -->
-            <?php $this->resolve("admin/partials/_footer.php") ?>
-            <!-- partial -->
         </div>
-        <!-- main-panel ends -->
+
+    </div>
+
+    <!-- content-wrapper ends -->
+    <!-- partial:partials/_footer.html -->
+    <?php $this->resolve("admin/partials/_footer.php") ?>
+    <!-- partial -->
+    </div>
+    <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
     </div>
@@ -216,6 +237,23 @@
     <!-- Custom j/s for this page -->
     <script src="/assets/admin/assets/js/dashboard.js"></script>
     <!-- End custom js for this page -->
+
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="/assets/admin/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="/assets/admin/assets/vendors/select2/select2.min.js"></script>
+    <script src="/assets/admin/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+    <script src="/assets/admin/assets/js/file-upload.js"></script>
+    <script src="/assets/admin/assets/js/typeahead.js"></script>
+    <script src="/assets/admin/assets/js/select2.js"></script>
 </body>
 
 </html>
