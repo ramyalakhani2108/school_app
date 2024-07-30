@@ -126,53 +126,21 @@
                                             </div>
                                         <?php endif; ?>
                                         <div class="form-group">
-                                            <label for="exampleInputEmail3">Subject Code</label>
-                                            <input type="text" value="<?php echo e($oldFormData['sub_code'] ?? "");  ?>" class="form-control" id="exampleInputEmail3" name="sub_code" placeholder="Enter Subject Code">
+                                            <label for="exampleInputName1">Subject Code</label>
+                                            <input type="text" value="<?php echo e($oldFormData['sub_code'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="sub_code" placeholder="Enter Subject Code...">
                                         </div>
                                         <?php if (array_key_exists('sub_code', $errors)) : ?>
                                             <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
                                                 <?php echo e($errors['sub_code'][0]); ?>
                                             </div>
                                         <?php endif; ?>
-                                        <div class="form-group">
-                                            <label for="exampleInputPassword4">Standard Names</label>
-                                            <input type="text" value="<?php echo e($oldFormData['standard_names'] ?? "");  ?>" class="form-control" id="exampleInputPassword4" name="standard_names" placeholder="Enter Classnames in Comma saperated values.....">
-                                        </div>
-                                        <?php if (array_key_exists('standard_names', $errors)) : ?>
-                                            <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                <?php echo e($errors['standard_names'][0]); ?>
-                                            </div>
-                                        <?php endif; ?>
-                                        <!-- <div class="form-group">
-                                            <label for="exampleSelectGender">Gender</label>
-                                            <select class="form-control" id="exampleSelectGender">
-                                                <option>Male</option>
-                                                <option>Female</option>
-                                            </select>
-                                        </div> -->
-                                        <!-- <div class="form-group">
-                                            <label>File upload</label>
-                                            <input type="file" name="img[]" class="file-upload-default">
-                                            <div class="input-group col-xs-12">
-                                                <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
-                                                <span class="input-group-append">
-                                                    <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-                                                </span>
-                                            </div>
-                                        </div> -->
-                                        <div class="form-group">
-                                            <label for="exampleInputCity1">Teachers</label>
-                                            <input type="text" value="<?php echo e($oldFormData['teacher_names'] ?? "");  ?>" class="form-control" id="exampleInputCity1" name="teacher_names" placeholder="Enter teachers teaching subjects in comma saperated value with respect to class names.......">
-                                        </div>
-                                        <?php if (array_key_exists('teacher_names', $errors)) : ?>
-                                            <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                <?php echo e($errors['teacher_names'][0]); ?>
-                                            </div>
-                                        <?php endif; ?>
-                                        <!-- <div class="form-group">
-                                            <label for="exampleTextarea1">Notes Or Remarks</label>
-                                            <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
-                                        </div> -->
+
+
+
+
+
+
+
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                         <button type="button" class="btn btn-dark" onclick="reset_form()">Cancel</button>
                                         <script>
@@ -180,30 +148,97 @@
                                                 document.getElementById("addSub").reset();
                                             }
                                         </script>
+                                    </form>
 
 
-                                        <div class="form-group">
-                                            <label>Single select box using select 2</label>
-
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Multiple select using select 2</label>
-                                            <select class="js-example-basic-multiple" multiple="multiple" style="width:100%">
-                                                <option value="AL">Alabama</option>
-                                                <option value="WY">Wyoming</option>
-                                                <option value="AM">America</option>
-                                                <option value="CA">Canada</option>
-                                                <option value="RU">Russia</option>
-                                            </select>
-                                        </div>
                                 </div>
                             </div>
-                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Select Teachers</h4>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <form method="POST" action="/admin/subjects/add_teachers">
+                                                    <table class="table">
+                                                        <thead align="center">
+                                                            <tr>
+                                                                <th>
+                                                                    <input type="checkbox" id="selectAll" onclick="toggleCheckboxes(this)">
+                                                                </th>
+                                                                <th>ID</th>
+                                                                <th>Teacher Names</th>
+                                                                <th>Teacher Email</th>
+                                                                <th>Total Teachers</th>
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody align="center">
+                                                            <?php $i = 1;
+                                                            $teacher_ids = [];
+                                                            // dd($teachers_sub);
+                                                            function is_teacher_added(int $teacher_id, array $teachers_sub)
+                                                            {
+                                                                return in_array($teacher_id, $teachers_sub);
+                                                            }
+                                                            foreach ($teachers as $teacher) :
+                                                                $teacher_ids[] = $teacher['id'];
+                                                                $isAdded = is_teacher_added($teacher['id'], $teachers_sub);
+
+                                                            ?>
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <input type="checkbox" name="selected_ids[]" value="<?php echo e($teacher['id']); ?>" class="record-checkbox">
+                                                                    </td>
+                                                                    <td><?php echo e($i++); ?></td>
+                                                                    <td><?php echo e($teacher['name']); ?></td>
+                                                                    <td><?php echo e($teacher['email']); ?></td>
+                                                                    <td>
+                                                                        <?php if ($isAdded) : ?>
+                                                                            <a href="/admin/subjects/remove_teachers/<?php echo e($teacher['id']); ?>" class="btn btn-inverse-danger btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Remove</a>
+                                                                        <?php else : ?>
+                                                                            <a href="/admin/subjects/add_teacher/<?php echo e(urlencode($teacher['id'])); ?>" class="btn btn-inverse-success btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Add</a>
+                                                                        <?php endif; ?>
+                                                                    </td>
+                                                                </tr>
+                                                            <?php endforeach; ?>
+                                                        </tbody>
+
+                                                    </table>
+                                                    <br>
+                                                    <!-- <button type="submit" class="btn btn-inverse-danger btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Delete Selected</button> -->
+                                                    <button type="submit" class="btn btn-inverse-success btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Add Selected</button>
+                                                </form>
+
+                                                <script>
+                                                    function toggleCheckboxes(selectAllCheckbox) {
+                                                        // Get all checkboxes with the class "record-checkbox"
+                                                        const checkboxes = document.querySelectorAll('.record-checkbox');
+                                                        checkboxes.forEach(checkbox => {
+                                                            checkbox.checked = selectAllCheckbox.checked;
+                                                        });
+                                                    }
+                                                </script>
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
     </div>
 

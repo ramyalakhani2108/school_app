@@ -74,9 +74,7 @@ class ValidatorService
     {
         $fields = [
             'sub_name' => ['required', 'subject_name'],
-            'sub_code' => ['required', 'sub_code'],
-            'standard_names' => ['required', 'standard_names'],
-            'teacher_names' => ['required', 'subject_teacher_name']
+            'sub_code' => ['required', 'sub_code']
         ];
         $this->validator->validate($data, $fields);
     }

@@ -34,10 +34,14 @@ function register_routes(App $app)
     $app->get("/trainers", [TeacherController::class, 'teacher_view'])->add(AuthTokenMiddleware::class);
     $app->get("/admin/standards/editstandard/{std_id}", [StandardsController::class, 'edit_standard_view'])->add(AuthTokenMiddleware::class);
     $app->delete("/admin/subjects/delete_subjects/{id}", [SubjectsController::class, 'delete'])->add(AuthTokenMiddleware::class);
-    $app->get("/admin/subjects/edit_subjects/{id}", [SubjectsController::class, 'edit_view'])->add(AuthTokenMiddleware::class);
-    $app->post("/admin/subjects/edit_subjects/{id}", [SubjectsController::class, 'edit'])->add(AuthTokenMiddleware::class);
+
+    // $app->get("/admin/subjects/edit_subjects/{id}", [SubjectsController::class, 'edit_view'])->add(AuthTokenMiddleware::class);
+    // $app->post("/admin/subjects/edit_subjects/{id}", [SubjectsController::class, 'edit'])->add(AuthTokenMiddleware::class);
+    $app->post("/admin/subjects/add_teachers", [SubjectsController::class, 'add_teacher_subject'])->add(AuthTokenMiddleware::class);
+    $app->get("/admin/subjects/add_teacher/{tid}", [SubjectsController::class, 'add_teacher_subject'])->add(AuthTokenMiddleware::class);
+    $app->get("/admin/subjects/remove_teachers/{tid}", [SubjectsController::class, 'remove_teachers'])->add(AuthTokenMiddleware::class);
+    $app->get("/admin/subjects/remove_teachers/", [SubjectsController::class, 'remove_teachers'])->add(AuthTokenMiddleware::class);
     $app->get("/admin/subjects/create_subject", [SubjectsController::class, 'create_subjects_view'])->add(AuthTokenMiddleware::class);
-    $app->post("/admin/subjects/create_subject", [SubjectsController::class, 'create'])->add(AuthTokenMiddleware::class);
     $app->delete("/admin/standards/deletestandards", [StandardsController::class, 'delete_standards'])->add(AuthTokenMiddleware::class);
     $app->get("/admin/standards", [StandardsController::class, 'standards_view'])->add(AuthTokenMiddleware::class);
     $app->get("/admin/subjects", [SubjectsController::class, 'admin_subjects_view'])->add(AuthTokenMiddleware::class);

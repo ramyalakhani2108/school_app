@@ -2,13 +2,13 @@
 
 .select2-container--default {
   .select2-results__option--highlighted[aria-selected] {
-    background: theme-color(primary);
+    background: #2A3038;
   }
   .select2-selection--single,
   .select2-dropdown,
   .select2-selection--multiple {
     border-color: $border-color;
-    background: $content-bg;
+    background: #2A3038;
     .select2-search__field {
       border-color: $border-color;
     }
@@ -34,7 +34,7 @@
   }
   .select2-selection--multiple {
     .select2-selection__choice {
-      color: color(white);
+      color: black;
       border: 0;
       border-radius: 3px;
       padding: 6px;
@@ -45,7 +45,7 @@
         color: color(white);
       }
       &:nth-child(5n+1) {
-        background: theme-color(primary);
+        background: #2A3038;
       }
       &:nth-child(5n+2) {
         background: theme-color(success);
