@@ -67,7 +67,7 @@ class SubjectService
             throw new ValidationException(['sub_code' => ['couldn\'t add teachers']]);
         }
     }
-    public function remove_teacher_subject(int $teacher_id = 0, array $data = [])
+    public function add_std_sub(int $std_id = 0, array $data = [])
     {
 
         $query = "SELECT `id` FROM `subjects`";
@@ -75,15 +75,15 @@ class SubjectService
         $last_sub_id = end($last_sub_id)['id'];
         try {
             if (!empty($data)) {
-                $teachers = [];
+                $stds = [];
                 foreach ($data as $d) {
 
-                    $teachers[] = (int) $d;
+                    $stds[] = (int) $d;
                 }
-                $teachers = implode(",", $teachers);
-                // dd($teachers);
+                $stds = implode(",", $stds);
+                // dd($stds);
 
-                $query = "DELETE FROM  `teacher_subjects` WHERE `teacher_id` IN ($teachers) AND `subject_id`=:subid";
+                $query = "INSERT INTO `std_sub` (`subject_id`,`standard_id`) SELECT :subid,`id` FROM `standards` WHERE `id` IN ($stds)";
                 // dd($query);
                 $this->db->query(
                     $query,
@@ -94,11 +94,11 @@ class SubjectService
                 );
             } else {
 
-                $query = "DELETE FROM `teacher_subjects` WHERE `subject_id`=:sid AND `teacher_id`=:tid";
+                $query = "INSERT INTO `std_sub` SET `subject_id`=:sid, `standard_id`=:stid";
                 $this->db->query(
                     $query,
                     [
-                        'tid' => $teacher_id,
+                        'stid' => $std_id,
                         'sid' => $last_sub_id
                     ]
                 );
@@ -109,6 +109,141 @@ class SubjectService
         }
     }
 
+    public function create(array $data)
+    {
+
+        try {
+            $this->db->beginTransaction();
+            $query = "INSERT INTO `subjects` SET `name`=:name,`code`=:code";
+            $this->db->query(
+                $query,
+
+                [
+                    'name' => $data['sub_name'],
+                    'code' => strtoupper($data['sub_code'])
+                ]
+            );
+
+            $last_sub_id = $this->db->id();
+            $teachers = [];
+            foreach ($data['selected_teachers'] as $d) {
+
+                $teachers[] = (int) $d;
+            }
+            $teachers = implode(",", $teachers);
+            // dd($teachers);
+
+            $query = "INSERT INTO `teacher_subjects` (`subject_id`,`teacher_id`) SELECT :subid,`id` FROM `staff` WHERE `id` IN ($teachers)";
+
+            $this->db->query(
+                $query,
+                [
+                    'subid' => $last_sub_id,
+
+                ]
+            );
+
+
+            $stds = [];
+            foreach ($data['selected_standard'] as $d) {
+
+                $stds[] = (int) $d;
+            }
+            $stds = implode(",", $stds);
+            // dd($stds);
+
+            $query = "INSERT INTO `std_sub` (`subject_id`,`standard_id`) SELECT :subid,`id` FROM `standards` WHERE `id` IN ($stds)";
+            // dd($query);
+            $this->db->query(
+                $query,
+                [
+                    'subid' => $last_sub_id,
+                ]
+            );
+
+            $this->db->endTransaction();
+        } catch (Exception $e) {
+            $this->db->cancelTransaction();
+            dd($e->getMessage());
+        }
+    }
+    public function remove_teacher_sub(int $teacher_id = 0, int $sub_id = 0, array $data = [])
+    {
+
+        try {
+            if (!empty($data)) {
+                // $teachers = [];
+                // foreach ($data as $d) {
+
+                //     $teachers[] = (int) $d;
+                // }
+                // $teachers = implode(",", $teachers);
+                // // dd($teachers);
+
+                // $query = "DELETE FROM  `teacher_subjects` WHERE `teacher_id` IN ($teachers) AND `subject_id`=:subid";
+                // // dd($query);
+                // $this->db->query(
+                //     $query,
+                //     [
+                //         'subid' => $sub,
+
+                //     ]
+                // );
+            } else {
+
+                $query = "DELETE FROM `teacher_subjects` WHERE `subject_id`=:sid AND `teacher_id`=:tid";
+                $this->db->query(
+                    $query,
+                    [
+                        'tid' => $teacher_id,
+                        'sid' => $sub_id
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            dd($e->getMessage());
+            throw new ValidationException(['sub_code' => ['couldn\'t add teachers']]);
+        }
+    }
+    public function remove_std_sub(int $std_id = 0, int $sub_id = 0, array $data = [])
+    {
+
+
+        try {
+            if (!empty($data)) {
+                // $teachers = [];
+                // foreach ($data as $d) {
+
+                //     $teachers[] = (int) $d;
+                // }
+                // $teachers = implode(",", $teachers);
+                // // dd($teachers);
+
+                // $query = "DELETE FROM  `teacher_subjects` WHERE `teacher_id` IN ($teachers) AND `subject_id`=:subid";
+                // // dd($query);
+                // $this->db->query(
+                //     $query,
+                //     [
+                //         'subid' => $sub,
+
+                //     ]
+                // );
+            } else {
+
+                $query = "DELETE FROM `std_sub` WHERE `subject_id`=:sid AND `standard_id`=:stid";
+                $this->db->query(
+                    $query,
+                    [
+                        'stid' => $std_id,
+                        'sid' => $sub_id
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            dd($e->getMessage());
+            throw new ValidationException(['sub_code' => ['couldn\'t add teachers']]);
+        }
+    }
     public function total_subjects_per_standard(int $standard = 0)
     {
         if ($standard != 0) {
@@ -136,10 +271,10 @@ class SubjectService
 
     public function get_subject(int $id)
     {
-        $query = "SELECT s.id AS subject_id, s.name AS subject_name, s.code AS subject_code, GROUP_CONCAT(DISTINCT sc.standard_id ORDER BY sc.standard_id) AS standard_ids, GROUP_CONCAT(DISTINCT c.name ORDER BY sc.standard_id) AS standard_names, GROUP_CONCAT(DISTINCT t.first_name ORDER BY t.first_name ) AS teacher_names FROM subjects s JOIN subject_classroom sc ON s.id = sc.subject_id JOIN `standards` c ON c.id = sc.standard_id LEFT JOIN teachers t ON sc.teacher_id = t.id WHERE s.id = :subid GROUP BY s.id, s.name, s.code ORDER BY s.id;";
-        return $this->db->query($query, [
-            'subid' => $id
-        ])->find();
+        $query = "SELECT `id`,`name`,`code` FROM `subjects` WHERE `id`=:id";
+        return ($this->db->query($query, [
+            'id' => $id
+        ])->find());
     }
     public function add_subject(array $data)
     {
@@ -161,138 +296,53 @@ class SubjectService
         try {
             $this->db->beginTransaction();
 
+            $query = "UPDATE `subjects` SET `name`=:name, `code`=:code WHERE `id` = :id";
+            $this->db->query($query, [
+                'name' => $data['sub_name'],
+                'code' => $data['sub_code'],
+                'id' => $id,
 
-            $query = "UPDATE `subjects` SET `name`=:name, `code`=:code WHERE `id`=:id";
-            $this->db->query(
-                $query,
-                [
-                    'name' => $data['sub_name'],
-                    'code' => $data['sub_code'],
-                    'id' => $id
-                ]
-            );
-
-            $subject_id = $id;
-
-
-            $standard_names = explode(',', $data['standard_names']);
-            $placeholdersC = rtrim(str_repeat('?,', count($standard_names)), ',');
-            $query = "SELECT id,name,teacher_id FROM `standards` WHERE `name` IN ($placeholdersC)";
-            $standard_ids =
-                $this->db->query(
-                    $query,
-                    $standard_names
-                )->find_all();
-
-
-
-            if (count($standard_ids) < count($standard_names)) {
-                throw new ValidationException(['standard_names' => ['not all standards are available']]);
-            }
-
-            $teacher_names = explode(',', $data['teacher_names']);
-            $placeholdersT = rtrim(str_repeat('?,', count($teacher_names)), ',');
-            $query = "SELECT id FROM `teachers` WHERE `first_name` IN ($placeholdersT)";
-            $teacher_ids = $this->db->query(
-                $query,
-                $teacher_names
-            )->find_all();
-
-            if (count($teacher_ids) < count($teacher_names)) {
-                throw new ValidationException(['teacher_names' => ['Not all the teachers are available.']]);
-            }
-
-
-            $values = [];
-            foreach ($standard_ids as $standard) {
-                foreach ($teacher_ids as $teacher) {
-                    // Delete old teacher if necessary
-                    $deleteQuery = "DELETE FROM `subject_classroom` WHERE `subject_id` = :sid AND `standard_id` = :cid";
-                    $this->db->query(
-                        $deleteQuery,
-                        [
-                            'sid' => $subject_id,
-                            'cid' => $standard['id']
-                        ]
-                    );
+            ]);
+            $selected_teachers = [];
+            if (!empty($data['selected_teachers'])) {
+                foreach ($data['selected_teachers'] as $teacher) {
+                    $selected_teachers[] = (int) $teacher;
                 }
+                $selected_teachers = implode(",", $selected_teachers);
+                $query = "INSERT INTO `teacher_subjects` (`subject_id`,`teacher_id`) SELECT :subid,`id` FROM `staff` WHERE `id` IN ($selected_teachers)";
+                $this->db->query($query, ['subid' => $id]);
             }
 
+            $selected_standards = [];
 
-            $insertQuery = "INSERT INTO `subject_classroom` (`subject_id`, `standard_id`, `teacher_id`, `created_at`) VALUES ";
-            $values = [];
-
-            foreach ($standard_ids as $standard) {
-                foreach ($teacher_ids as $teacher) {
-                    $values[] = "($subject_id, {$standard['id']}, {$teacher['id']}, NOW())";
+            if (!empty($data['selected_standards'])) {
+                foreach ($data['selected_standards'] as $std) {
+                    $selected_standards[] = (int) $std;
                 }
+                $selected_standards = implode(",", $selected_standards);
+                $query = "INSERT INTO `std_sub` (`subject_id`,`standard_id`) SELECT :subid,`id` FROM `standards` WHERE `id` IN ($selected_standards)";
+                $this->db->query($query, ['subid' => $id]);
             }
-
-            $insertQuery .= implode(', ', $values);
-            $this->db->query($insertQuery);
-
-
             $this->db->endTransaction();
-        } catch (ValidationException $e) {
+        } catch (Exception $e) {
             $this->db->cancelTransaction();
-            $_SESSION['errors'] = $e->errors;
-            $excludedKeys = ['password', 'confirmPassowrd'];
-
-            $oldFormData = $_POST;
-            $formattedFormData = array_diff_key($oldFormData, array_flip($excludedKeys));
-
-
-            $_SESSION['oldFormData'] = $formattedFormData;
-
-            $referer = $_SERVER['HTTP_REFERER'];
-            //$_SERVER['HTTP_REFERER'] it is a special value available after the form submission stores the url after submission
-            redirectTo("{$referer}");
+            throw new ValidationException(['sub_code' => ['couldn\'t update the records']]);
         }
     }
 
 
     public function delete(int $id)
     {
+
         try {
+
             $this->db->beginTransaction();
-
-
-
-
-            $subject_id = $id;
-            // dd($subject_id);
-            // Delete old teacher if necessary
-            $deleteQuery = "DELETE FROM `subject_classroom` WHERE `subject_id` = :sid";
-            $this->db->query(
-                $deleteQuery,
-                [
-                    'sid' => $subject_id,
-                ]
-            );
-
-            // dd($id);
             $query = "DELETE FROM `subjects` WHERE `id`=:id";
-            $this->db->query(
-                $query,
-                [
-                    'id' => $id
-                ]
-            );
+            $this->db->query($query, ['id' => $id]);
             $this->db->endTransaction();
-        } catch (ValidationException $e) {
+        } catch (Exception $e) {
             $this->db->cancelTransaction();
-            $_SESSION['errors'] = ['sub_name' => 'couldn\' delete records'];
-            $excludedKeys = ['password', 'confirmPassowrd'];
-
-            $oldFormData = $_POST;
-            $formattedFormData = array_diff_key($oldFormData, array_flip($excludedKeys));
-
-
-            $_SESSION['oldFormData'] = $formattedFormData;
-
-            $referer = $_SERVER['HTTP_REFERER'];
-            //$_SERVER['HTTP_REFERER'] it is a special value available after the form submission stores the url after submission
-            redirectTo("{$referer}");
+            dd($e->getMessage());
         }
     }
 
@@ -349,14 +399,14 @@ GROUP BY
         } else {
             $where = " ";
         }
-
         $query = "SELECT * FROM `subjects` WHERE `code`=:code OR `name`=:name" . $where;
-
+        $sub = [];
         $sub = $this->db->query(
             $query,
             $params
         )->find();
-        if (!$sub_id && $sub_id != $sub['id']) {
+
+        if (!empty($sub) && $sub_id != $sub['id']) {
             if (strtoupper($sub['code']) == $subject_code) {
                 throw new ValidationException(['sub_code' => ['subject is already registered']]);
             }

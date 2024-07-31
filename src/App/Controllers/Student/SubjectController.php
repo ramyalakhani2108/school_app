@@ -15,7 +15,6 @@ class SubjectController
 
     public function subject_view()
     {
-
         echo $this->view->render("subjects/show_subjects.php");
     }
 }

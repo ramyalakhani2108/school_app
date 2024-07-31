@@ -26,6 +26,38 @@ class StandardService
         return (($this->db->query($query)->find())['COUNT(*)']);
     }
 
+    public function get_sub_std(int $id = 0)
+    {
+        $query = "SELECT `id`,`name` FROM `standards`";
+        return $this->db->query($query)->find_all();
+    }
+    public function get_sub_std_id(int $id = 0)
+    {
+        $query = "SELECT `id` FROM `subjects`";
+        $last_sub_id = $this->db->query($query)->find_all();
+        $last_sub_id = end($last_sub_id)['id'];
+
+        $query = "SELECT DISTINCT `std`.`id`, `std`.`name` FROM `standards` as `std` LEFT JOIN `std_sub` ON `std`.`id` = `std_sub`.`standard_id` WHERE `std_sub`.`subject_id`=:sid";
+
+        $params = [];
+        if ($id != 0) {
+            $params =
+                [
+                    'sid' => $id
+                ];
+        } else {
+            $params = [
+                'sid' => $last_sub_id
+            ];
+        }
+        return ($this->db->query(
+            $query,
+            $params
+        )->find_all());
+    }
+
+
+
     public function get_standards_data(int $id = 0)
     {
 

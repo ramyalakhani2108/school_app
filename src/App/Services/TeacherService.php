@@ -26,17 +26,18 @@ class TeacherService
         return (($this->db->query($query, ['rid' => 2])->find())['COUNT(*)']);
     }
 
-    public function get_teachers_subject()
+    public function get_teachers_subject(int $sid = 0)
     {
-        $query = "SELECT `id` FROM `subjects`";
-        $last_sub_id = $this->db->query($query)->find_all();
-        $last_sub_id = end($last_sub_id)['id'];
+        if ($sid != 0) {
 
-        $query = "SELECT `teacher_id` FROM `teacher_subjects` WHERE  `subject_id`=:sid ";
+            // SELECT DISTINCT `staff`.`name` FROM `staff` JOIN `teacher_subjects` ON `teacher_subjects`.`teacher_id` = `staff`.`id` WHERE `teacher_subjects`.`subject_id` = 119; //getting teacher name as per std table
 
-        return $this->db->query($query, [
-            'sid' => $last_sub_id
-        ])->find_all();
+            $query = "SELECT DISTINCT `teacher_subjects`.`subject_id`,`staff`.`id`,`staff`.`name`,`staff`.`email` FROM `staff` JOIN `teacher_subjects` ON `teacher_subjects`.`teacher_id` = `staff`.`id` WHERE `teacher_subjects`.`subject_id` = :sid; ";
+
+            return ($this->db->query($query, [
+                'sid' => $sid
+            ])->find_all());
+        }
     }
 
     public function get_teachers(int $id = 0)
@@ -49,8 +50,6 @@ class TeacherService
                     'rid' => 2
                 ]
             )->find_all());
-        } else {
-            $query = "SELECT `id` FROM `teacher_subjects` WHERE `subject_id`=`:sid`";
         }
     }
 }
