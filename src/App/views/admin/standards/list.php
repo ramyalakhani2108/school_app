@@ -81,7 +81,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Visitors by Countries</h4>
+                                    <h4 class="card-title">Standards</h4>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="table-responsive">
@@ -113,7 +113,7 @@
                                                                     <td><?php echo e($standard['student_count']); ?></td>
                                                                     <td class="text-end"><?php echo e($standard['teacher_count']); ?></td>
                                                                     <td>
-                                                                        <a href="/admin/standards/editstandard/<?php echo e(urlencode($standard['standards_name'])); ?>" class="btn btn-inverse-success btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Edit</a>
+                                                                        <a href="/admin/standards/editstandard/<?php echo e(urlencode($standard['standards_id'])); ?>" class="btn btn-inverse-success btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Edit</a>
                                                                     </td>
                                                                 </tr>
                                                             <?php endforeach; ?>
@@ -122,6 +122,15 @@
                                                     <br>
                                                     <button type="submit" class="btn btn-inverse-danger btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Delete Selected</button>
                                                 </form>
+                                                <button type="button" class="btn btn-success btn-fw mt-3 col-5  p-4" onclick="add_standards()">Add Subject</button>
+                                                <!-- <button type="button" class="btn btn-danger btn-fw mt-3 col-6 ml-0 p-4" style="padding:15px;font-size:20px;" onclick="delete_subject()">Delete Subject</button> -->
+
+                                                <script>
+                                                    function add_standards() {
+
+                                                        window.location.href = "/admin/standards/add_standards";
+                                                    }
+                                                </script>
 
                                                 <script>
                                                     function toggleCheckboxes(selectAllCheckbox) {

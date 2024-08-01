@@ -40,6 +40,29 @@ class TeacherService
         }
     }
 
+    public function get_teachers_std(int $stid = 0)
+    {
+        if ($stid != 0) {
+
+            // SELECT DISTINCT `staff`.`name` FROM `staff` JOIN `teacher_subjects` ON `teacher_subjects`.`teacher_id` = `staff`.`id` WHERE `teacher_subjects`.`subject_id` = 119; //getting teacher name as per std table
+
+            $query = "SELECT DISTINCT
+    `teachers_std`.`standard_id`,
+    `staff`.`id`,
+    `staff`.`name`,
+    `staff`.`email`
+FROM
+    `staff`
+JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id`
+WHERE
+    `teachers_std`.`standard_id` = :stid;";
+
+            return ($this->db->query($query, [
+                'stid' => $stid
+            ])->find_all());
+        }
+    }
+
     public function get_teachers(int $id = 0)
     {
         if ($id == 0) {

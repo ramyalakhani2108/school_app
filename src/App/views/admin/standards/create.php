@@ -5,6 +5,9 @@
 
 
 <body>
+
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/select2/select2.min.css">
+    <link rel="stylesheet" href="/assets/admin/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
     <div class="container-scroller">
         <!-- partial:partials/_sidebar.html -->
         <?php include $this->resolve("partials/admin/_sidebar.php"); ?>
@@ -110,93 +113,250 @@
                         <div class="col-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Subject</h4>
+                                    <h4 class="card-title">Add Standard</h4>
                                     <!-- <p class="card-description"> Basic form elements </p> -->
                                     <form class="forms-sample" id="addSub" method="POST">
                                         <div class="form-group">
-                                            <label for="exampleInputName1">Subject Name</label>
-                                            <input type="text" value="<?php echo e($oldFormData['sub_name'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="sub_name" placeholder="Enter Subject Name...">
+                                            <label for="exampleInputName1">Standard Name</label>
+                                            <input type="text" value="<?php echo e($oldFormData['sub_name'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="std_name" placeholder="Enter Standard Name...">
                                         </div>
-                                        <?php if (array_key_exists('sub_name', $errors)) : ?>
+                                        <?php if (array_key_exists('std_name', $errors)) : ?>
                                             <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                <?php echo e($errors['sub_name'][0]); ?>
+                                                <?php echo e($errors['std_name'][0]); ?>
                                             </div>
                                         <?php endif; ?>
+
+
+
+                                        <?php $i = 1;
+                                        $teacher_ids = [];
+                                        // dd($teachers_sub);
+                                        function is_teacher_added(int $teacher_id, array $teachers_sub)
+                                        {
+                                            return in_array($teacher_id, $teachers_sub);
+                                        }
+                                        foreach ($teachers as $teacher) :
+                                            $teacher_ids[] = $teacher['id'];
+                                            $isAdded = is_teacher_added($teacher['id'], $teachers_sub);
+
+                                        endforeach; ?>
                                         <div class="form-group">
-                                            <label for="exampleInputEmail3">Subject Code</label>
-                                            <input type="text" value="<?php echo e($oldFormData['sub_code'] ?? "");  ?>" class="form-control" id="exampleInputEmail3" name="sub_code" placeholder="Enter Subject Code">
+                                            <label for="exampleInputName1">Select Teachers</label>
+                                            <?php if (array_key_exists('selected_teachers', $errors)) : ?>
+                                                <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
+                                                    <?php echo e($errors['selected_teachers'][0]); ?>
+                                                </div>
+                                            <?php endif; ?>
+                                            <table class="table">
+                                                <thead align="center">
+                                                    <tr>
+                                                        <th>
+                                                            <input type="checkbox" id="selectAll" onclick="toggleCheckboxes(this)">
+                                                        </th>
+
+                                                        <th>Teacher Name</th>
+                                                        <th></th>
+                                                        <th>Teacher Name</th>
+                                                        <th>
+
+                                                        </th>
+                                                        <th>Teacher Name</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody align="center">
+                                                    <?php
+                                                    $total_teachers = count($teachers);
+                                                    $part = ceil($total_teachers / 3); // Divide teachers into 3 columns
+                                                    $first_part = array_slice($teachers, 0, $part);
+                                                    $second_part = array_slice($teachers, $part, $part);
+                                                    $third_part = array_slice($teachers, 2 * $part, $part);
+
+                                                    for ($i = 0; $i < $part; $i++) :
+                                                        $teacher1 = isset($first_part[$i]) ? $first_part[$i] : null;
+                                                        $teacher2 = isset($second_part[$i]) ? $second_part[$i] : null;
+                                                        $teacher3 = isset($third_part[$i]) ? $third_part[$i] : null;
+                                                    ?>
+                                                        <tr>
+                                                            <?php if ($teacher1) : ?>
+                                                                <td>
+                                                                    <input type="checkbox" name="selected_teachers[]" value="<?php echo e($teacher1['id']); ?>" class="record-checkbox">
+                                                                </td>
+                                                                <td><?php echo e($teacher1['name']); ?></td>
+                                                            <?php else : ?>
+                                                                <td colspan="2"></td>
+                                                            <?php endif; ?>
+
+                                                            <?php if ($teacher2) : ?>
+                                                                <td>
+                                                                    <input type="checkbox" name="selected_teachers[]" value="<?php echo e($teacher2['id']); ?>" class="record-checkbox">
+                                                                </td>
+                                                                <td><?php echo e($teacher2['name']); ?></td>
+                                                            <?php else : ?>
+                                                                <td colspan="2"></td>
+                                                            <?php endif; ?>
+
+                                                            <?php if ($teacher3) : ?>
+                                                                <td>
+                                                                    <input type="checkbox" name="selected_teachers[]" value="<?php echo e($teacher3['id']); ?>" class="record-checkbox">
+                                                                </td>
+                                                                <td><?php echo e($teacher3['name']); ?></td>
+                                                            <?php else : ?>
+                                                                <td colspan="2"></td>
+                                                            <?php endif; ?>
+                                                        </tr>
+                                                    <?php endfor; ?>
+                                                </tbody>
+                                            </table>
+
+
                                         </div>
-                                        <?php if (array_key_exists('sub_code', $errors)) : ?>
-                                            <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                <?php echo e($errors['sub_code'][0]); ?>
-                                            </div>
-                                        <?php endif; ?>
                                         <div class="form-group">
-                                            <label for="exampleInputPassword4">Standard Names</label>
-                                            <input type="text" value="<?php echo e($oldFormData['standard_names'] ?? "");  ?>" class="form-control" id="exampleInputPassword4" name="standard_names" placeholder="Enter Classnames in Comma saperated values.....">
-                                        </div>
-                                        <?php if (array_key_exists('standard_names', $errors)) : ?>
-                                            <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                <?php echo e($errors['standard_names'][0]); ?>
-                                            </div>
-                                        <?php endif; ?>
-                                        <!-- <div class="form-group">
-                                            <label for="exampleSelectGender">Gender</label>
-                                            <select class="form-control" id="exampleSelectGender">
-                                                <option>Male</option>
-                                                <option>Female</option>
-                                            </select>
-                                        </div> -->
-                                        <!-- <div class="form-group">
-                                            <label>File upload</label>
-                                            <input type="file" name="img[]" class="file-upload-default">
-                                            <div class="input-group col-xs-12">
-                                                <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
-                                                <span class="input-group-append">
-                                                    <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-                                                </span>
-                                            </div>
-                                        </div> -->
-                                        <div class="form-group">
-                                            <label for="exampleInputCity1">Teachers</label>
-                                            <input type="text" value="<?php echo e($oldFormData['teacher_names'] ?? "");  ?>" class="form-control" id="exampleInputCity1" name="teacher_names" placeholder="Enter teachers teaching subjects in comma saperated value with respect to class names.......">
-                                        </div>
-                                        <?php if (array_key_exists('teacher_names', $errors)) : ?>
-                                            <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                <?php echo e($errors['teacher_names'][0]); ?>
-                                            </div>
-                                        <?php endif; ?>
-                                        <!-- <div class="form-group">
-                                            <label for="exampleTextarea1">Notes Or Remarks</label>
-                                            <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
-                                        </div> -->
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type="button" class="btn btn-dark" onclick="reset_form()">Cancel</button>
-                                        <script>
-                                            function reset_form() {
-                                                document.getElementById("addSub").reset();
+                                            <label for="exampleInputName1">Select Subjects</label>
+                                            <?php if (array_key_exists('selected_subjects', $errors)) : ?>
+                                                <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
+                                                    <?php echo e($errors['selected_subjects'][0]); ?>
+                                                </div>
+                                            <?php endif; ?>
+                                            <?php $i = 1;
+                                            $std_id = [];
+
+                                            function is_std_added(int $std_id, array $std_ids)
+                                            {
+
+                                                return in_array($std_id, $std_ids);
                                             }
-                                        </script>
+                                            foreach ($subs as $std) :
+                                                $std_id[] = $std['id'];
+                                                $isAdded = is_std_added($std['id'], $std_ids);
+
+                                            endforeach; ?>
+                                            <table class="table">
+                                                <thead align="center">
+                                                    <tr>
+                                                        <th>
+                                                            <input type="checkbox" id="selectAllSubjects" onclick="toggleCheckboxes2(this)">
+                                                        </th>
+
+                                                        <th>Standard Name</th>
+                                                        <th></th>
+                                                        <th>Standard Name</th>
+                                                        <th>
+
+                                                        </th>
+                                                        <th>Standard Name</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody align="center">
+                                                    <?php
+                                                    $total_subs = count($subs);
+                                                    $part = ceil($total_subs / 3); // Divide subs into 3 columns
+                                                    $first_part = array_slice($subs, 0, $part);
+                                                    $second_part = array_slice($subs, $part, $part);
+                                                    $third_part = array_slice($subs, 2 * $part);
+
+                                                    for ($i = 0; $i < $part; $i++) :
+                                                        $std1 = isset($first_part[$i]) ? $first_part[$i] : null;
+                                                        $std2 = isset($second_part[$i]) ? $second_part[$i] : null;
+                                                        $std3 = isset($third_part[$i]) ? $third_part[$i] : null;
+                                                    ?>
+                                                        <tr>
+                                                            <?php if ($std1) : ?>
+                                                                <td>
+                                                                    <input type="checkbox" name="selected_subjects[]" value="<?php echo e($std1['id']); ?>" class="record-checkbox2">
+                                                                </td>
+                                                                <td><?php echo e($std1['name']); ?></td>
+                                                            <?php else : ?>
+                                                                <td colspan="2"></td>
+                                                            <?php endif; ?>
+
+                                                            <?php if ($std2) : ?>
+                                                                <td>
+                                                                    <input type="checkbox" name="selected_subjects[]" value="<?php echo e($std2['id']); ?>" class="record-checkbox2">
+                                                                </td>
+                                                                <td><?php echo e($std2['name']); ?></td>
+                                                            <?php else : ?>
+                                                                <td colspan="2"></td>
+                                                            <?php endif; ?>
+
+                                                            <?php if ($std3) : ?>
+                                                                <td>
+                                                                    <input type="checkbox" name="selected_subjects[]" value="<?php echo e($std3['id']); ?>" class="record-checkbox2">
+                                                                </td>
+                                                                <td><?php echo e($std3['name']); ?></td>
+                                                            <?php else : ?>
+                                                                <td colspan="2"></td>
+                                                            <?php endif; ?>
+                                                        </tr>
+                                                    <?php endfor; ?>
+                                                </tbody>
+                                            </table>
+                                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                            <button type="button" class="btn btn-dark" onclick="reset_form()">Cancel</button>
+                                            <script>
+                                                function reset_form() {
+                                                    document.getElementById("addSub").reset();
+                                                }
+                                            </script>
                                     </form>
+
+                                    <br>
+                                    <!-- <button type="submit" class="btn btn-inverse-danger btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Delete Selected</button> -->
+
+
+
+
+                                    <script>
+                                        function toggleCheckboxes(selectAllCheckbox) {
+                                            // Get all checkboxes with the class "record-checkbox"
+                                            const checkboxes = document.querySelectorAll('.record-checkbox');
+                                            checkboxes.forEach(checkbox => {
+                                                checkbox.checked = selectAllCheckbox.checked;
+                                            });
+                                        }
+
+                                        function toggleCheckboxes2(selectAllCheckbox) {
+                                            // Get all checkboxes with the class "record-checkbox"
+                                            const checkboxes = document.querySelectorAll('.record-checkbox2');
+                                            checkboxes.forEach(checkbox => {
+                                                checkbox.checked = selectAllCheckbox.checked;
+                                            });
+                                        }
+                                    </script>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
                 </div>
-
             </div>
-
-            <!-- content-wrapper ends -->
-            <!-- partial:partials/_footer.html -->
-            <?php $this->resolve("admin/partials/_footer.php") ?>
-            <!-- partial -->
         </div>
-        <!-- main-panel ends -->
+    </div>
+
+    </div>
+
+    <!-- content-wrapper ends -->
+    <!-- partial:partials/_footer.html -->
+    <?php $this->resolve("admin/partials/_footer.php") ?>
+    <!-- partial -->
+    </div>
+    <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
+
+    <!-- End custom js for this page -->
+
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+
+    <!-- endinject -->
+    <!-- Custom js for this page -->
     <script src="/assets/admin/assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
@@ -215,7 +375,6 @@
     <!-- endinject -->
     <!-- Custom j/s for this page -->
     <script src="/assets/admin/assets/js/dashboard.js"></script>
-    <!-- End custom js for this page -->
 </body>
 
 </html>

@@ -116,15 +116,7 @@
                                     <h4 class="card-title">Add Subject</h4>
                                     <!-- <p class="card-description"> Basic form elements </p> -->
                                     <form class="forms-sample" id="addSub" method="POST">
-                                        <div class="form-group">
-                                            <label for="exampleInputName1">Subject Name</label>
-                                            <input type="text" value="<?php echo e($oldFormData['sub_name'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="sub_name" placeholder="Enter Subject Name...">
-                                        </div>
-                                        <?php if (array_key_exists('sub_name', $errors)) : ?>
-                                            <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                <?php echo e($errors['sub_name'][0]); ?>
-                                            </div>
-                                        <?php endif; ?>
+
                                         <div class="form-group">
                                             <label for="exampleInputName1">Subject Code</label>
                                             <input type="text" value="<?php echo e($oldFormData['sub_code'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="sub_code" placeholder="Enter Subject Code...">
@@ -364,24 +356,5 @@
     <!-- endinject -->
     <!-- Custom j/s for this page -->
     <script src="/assets/admin/assets/js/dashboard.js"></script>
-    <!-- End custom js for this page -->
 
-    <!-- endinject -->
-    <!-- Plugin js for this page -->
-
-    <!-- End plugin js for this page -->
-    <!-- inject:js -->
-
-    <!-- endinject -->
-    <!-- Custom js for this page -->
-    <script src="/assets/admin/assets/vendors/js/vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page -->
-    <script src="/assets/admin/assets/vendors/select2/select2.min.js"></script>
-    <script src="/assets/admin/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
-    <script src="/assets/admin/assets/js/file-upload.js"></script>
-    <script src="/assets/admin/assets/js/typeahead.js"></script>
-    <script src="/assets/admin/assets/js/select2.js"></script>
-</body>
-
-</html>
+    </html>

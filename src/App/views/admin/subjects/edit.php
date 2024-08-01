@@ -169,7 +169,7 @@
                                                 </thead>
                                                 <tbody align="center">
                                                     <?php
-
+                                                    dd($teachers);
                                                     $total_teachers = count($teachers);
                                                     $part = ceil($total_teachers / 3); // Divide teachers into 3 columns
                                                     $first_part = array_slice($teachers, 0, $part);

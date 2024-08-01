@@ -322,8 +322,8 @@ class SubjectService
                 $selected_standards = implode(",", $selected_standards);
                 $query = "INSERT INTO `std_sub` (`subject_id`,`standard_id`) SELECT :subid,`id` FROM `standards` WHERE `id` IN ($selected_standards)";
                 $this->db->query($query, ['subid' => $id]);
+                $this->db->endTransaction();
             }
-            $this->db->endTransaction();
         } catch (Exception $e) {
             $this->db->cancelTransaction();
             throw new ValidationException(['sub_code' => ['couldn\'t update the records']]);
@@ -345,7 +345,11 @@ class SubjectService
             dd($e->getMessage());
         }
     }
-
+    public function get_std_sub()
+    {
+        $query = "SELECT `id`,`name`,`code` FROM `subjects`";
+        return $this->db->query($query)->find_all();
+    }
     public function get_data()
     {
         $query = "SELECT

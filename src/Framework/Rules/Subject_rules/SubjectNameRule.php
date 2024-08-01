@@ -20,6 +20,6 @@ class SubjectNameRule implements RuleInterface
 
     public function getMessage(array $formData, string $field, array $params): string
     {
-        return "The subject name must be at least 4 characters long, alphanumeric or alphabetic, may contain underscores and spaces, but cannot be only digits or contain other special characters.";
+        return "The name must be at least 4 characters long, alphanumeric or alphabetic, may contain underscores and spaces, but cannot be only digits or contain other special characters.";
     }
 }

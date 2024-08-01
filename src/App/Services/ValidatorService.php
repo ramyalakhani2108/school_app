@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Framework\Rules\{DateRule, RequiredRule, EmailRule, NameRule, PassRule, PhoneRule};
+use Framework\Rules\{DateRule, RequiredRule, EmailRule, NameRule, PassRule, PhoneRule, SelectRule};
 use Framework\Rules\Subject_rules\ClassNameRule;
 use Framework\Rules\Subject_rules\SubjectCodeRule;
 use Framework\Rules\Subject_rules\SubjectNameRule;
@@ -28,6 +28,7 @@ class ValidatorService
         $this->validator->add('subject_teacher_name', new SubjectTeacherNameRule());
         $this->validator->add('standard_names', new ClassNameRule());
         $this->validator->add('sub_code', new SubjectCodeRule());
+        $this->validator->add('select', new SelectRule());
     }
     public function validate_login(array $data)
     {
@@ -75,6 +76,16 @@ class ValidatorService
         $fields = [
             'sub_name' => ['required', 'subject_name'],
             'sub_code' => ['required', 'sub_code']
+        ];
+        $this->validator->validate($data, $fields);
+    }
+
+    public function validate_standards(array $data)
+    {
+        $fields = [
+            'std_name' => ['required'],
+            'selected_teachers' => ['select'],
+            'selected_subjects' => ['select'],
         ];
         $this->validator->validate($data, $fields);
     }

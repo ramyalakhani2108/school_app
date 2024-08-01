@@ -74,15 +74,18 @@ class SubjectsController
         $teachers = $this->teacher_service->get_teachers();
         $teachers_subject = $this->teacher_service->get_teachers_subject();
         $teacher_sub = [];
-        foreach ($teachers_subject as $t) {
-            $teacher_sub[] = $t['teacher_id'];
+        if (!empty($teachers_subject)) {
+            foreach ($teachers_subject as $t) {
+                $teacher_sub[] = $t['teacher_id'];
+            }
         }
-
         $stds = $this->standards_service->get_sub_std();
         $stds_sub = $this->standards_service->get_sub_std_id();
         $std_ids = [];
-        foreach ($stds_sub as $std) {
-            $std_ids[] = $std['standard_id'];
+        if (!empty($stds_sub)) {
+            foreach ($stds_sub as $std) {
+                $std_ids[] = $std['id'];
+            }
         }
         // dd($std_ids);
         echo $this->view->render(
@@ -127,6 +130,7 @@ class SubjectsController
 
         $stds = $this->standards_service->get_sub_std();
         $stds_sub = $this->standards_service->get_sub_std_id((int)$params['sub_id']);
+
         $std_ids = [];
 
         foreach ($stds_sub as $std) {
@@ -145,7 +149,7 @@ class SubjectsController
                 'teachers' => $filtered_teachers,
                 'teachers_sub' => $teacher_sub,
                 'stds' => $filtered_stds,
-                'standards' => $stds_sub,
+                'subjects' => $stds_sub,
                 'std_ids' => $std_ids,
                 'sub' => $sub
             ]
