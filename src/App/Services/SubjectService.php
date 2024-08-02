@@ -24,7 +24,45 @@ class SubjectService
             'user_id' => $_SESSION['user_id']
         ])->find();
     }
+    public function filtered_subject(array $names)
+    {
 
+        $names = implode("','", $names);
+
+        $query = "SELECT `subjects`.`name` AS `subject_names`,\n"
+
+            . "	`staff`.`name` as `staff_name`,\n"
+
+            . "    `teacher_subjects`.`teacher_id` AS `teacher_ids`,\n"
+
+            . "   GROUP_CONCAT( DISTINCT `standards`.`name` SEPARATOR ',') AS `standards`,\n"
+
+            . "    `subjects`.`id` AS `subject_ids`,\n"
+
+            . "    `subjects`.`code` AS `subject_codes`\n"
+
+            . "FROM\n"
+
+            . "    `subjects`\n"
+
+            . "JOIN `teacher_subjects` ON `teacher_subjects`.`subject_id` = `subjects`.`id`\n"
+
+            . "JOIN `staff` ON `staff`.`id` = `teacher_subjects`.`teacher_id`\n"
+
+            . "JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id`\n"
+
+            . "JOIN `standards` ON `teachers_std`.`standard_id` = `standards`.`id`\n"
+
+            . "WHERE\n"
+
+            . "    `staff`.`name` IN ('$names') "
+
+            . "GROUP BY \n"
+
+            . "	`staff`.`name`;";
+
+        return ($this->db->query($query)->find_all());
+    }
 
     public function add_teacher_subject(int $teacher_id = 0, array $data = [])
     {

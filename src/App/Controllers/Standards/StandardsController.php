@@ -26,13 +26,11 @@ class StandardsController
     public function remove_teachers_stds(array $params = [])
     {
 
-
         $this->standards_service->remove_teachers_stds((int) $params['tid'], (int) $params['std_id']);
         redirectTo($_SERVER['HTTP_REFERER']);
     }
     public function remove_subjects_stds(array $params = [])
     {
-
         $this->standards_service->remove_subjects_stds((int)$params['sub_id'], (int)$params['std_id']);
         redirectTo($_SERVER['HTTP_REFERER']);
     }
@@ -50,8 +48,6 @@ class StandardsController
 
     public function edit_standard_view(array $params)
     {
-
-
         $teachers = $this->teacher_service->get_teachers();
         $teachers_standard = $this->teacher_service->get_teachers_std((int)$params['std_id']);
         $teacher_sub = [];
@@ -59,9 +55,11 @@ class StandardsController
         foreach ($teachers_standard as $t) {
             $teacher_sub[] = $t['id'];
         }
+        // dd($teachers);
         $filtered_teachers = array_filter($teachers, function ($teacher) use ($teacher_sub) {
             return !in_array($teacher['id'], $teacher_sub);
         });
+
 
 
 
@@ -135,7 +133,7 @@ class StandardsController
     public function delete_standards()
     {
         $selected_standards = [];
-        
+
         $this->standards_service->delete_standards($selected_standards);
         redirectTo($_SERVER['HTTP_REFERER']);
     }
@@ -145,5 +143,6 @@ class StandardsController
 
         $this->standards_service->is_std_added($_POST['std_name'], (int) $params['std_id']);
         $this->standards_service->update($_POST, (int) $params['std_id']);
+        redirectTo($_SERVER['HTTP_REFERER']);
     }
 }

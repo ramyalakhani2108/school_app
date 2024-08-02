@@ -299,11 +299,10 @@
                     </div>
                 </div>
                 <div class="row">
-
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add Teachers</h4>
+                                <h4 class="card-title">Add teachers</h4>
 
                                 <form method="POST" action="/admin/subjects/add_teachers">
                                     <table class="table">
@@ -406,32 +405,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <!-- <div class="col-md-4 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Transaction History</h4>
-                                <canvas id="transaction-history" class="transaction-chart"></canvas>
-                                <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
-                                    <div class="text-md-center text-xl-left">
-                                        <h6 class="mb-1">Transfer to Paypal</h6>
-                                        <p class="text-muted mb-0">07 Jan 2019, 09:12AM</p>
-                                    </div>
-                                    <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
-                                        <h6 class="font-weight-bold mb-0">$236</h6>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
-                                    <div class="text-md-center text-xl-left">
-                                        <h6 class="mb-1">Tranfer to Stripe</h6>
-                                        <p class="text-muted mb-0">07 Jan 2019, 09:12AM</p>
-                                    </div>
-                                    <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
-                                        <h6 class="font-weight-bold mb-0">$593</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
+
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
@@ -456,19 +430,20 @@
                                             </tr>
                                         </thead>
                                         <tbody align="center">
-                                            <?php
+                                            <tr>
+                                                <?php
 
-                                            $total_subjects = count($subjects);
-                                            $part = ceil($total_subjects / 2);
-                                            $first_part = array_slice($subjects, 0, $part);
-                                            $second_part = array_slice($subjects, $part, $part);
+                                                $total_subjects = count($subjects);
+                                                $part = ceil($total_subjects / 2);
+                                                $first_part = array_slice($subjects, 0, $part);
+                                                $second_part = array_slice($subjects, $part, $part);
 
-                                            for ($i = 0; $i < $part; $i++) :
-                                                $std1 = isset($first_part[$i]) ? $first_part[$i] : null;
+                                                for ($i = 0; $i < $part; $i++) :
+                                                    $std1 = isset($first_part[$i]) ? $first_part[$i] : null;
 
-                                                $std2 = isset($second_part[$i]) ? $second_part[$i] : null;
-                                            ?>
-                                                <tr>
+                                                    $std2 = isset($second_part[$i]) ? $second_part[$i] : null;
+                                                ?>
+
                                                     <?php if ($std1) : ?>
                                                         <td>
                                                             <input type="checkbox" name="selected_ids[]" value="<?php echo e($std1['id']); ?>" class="record-checkbox2">
@@ -508,8 +483,8 @@
                                                         <td colspan="5"></td>
                                                     <?php endif; ?>
 
-                                                </tr>
-                                            <?php endfor; ?>
+                                            </tr>
+                                        <?php endfor; ?>
                                         </tbody>
                                     </table>
 

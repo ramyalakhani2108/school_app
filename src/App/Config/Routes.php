@@ -32,6 +32,8 @@ function register_routes(App $app)
     $app->get("/about", [AboutController::class, 'about_view'])->add(AuthTokenMiddleware::class);
     $app->get("/courses", [SubjectController::class, 'subject_view'])->add(AuthTokenMiddleware::class);
     $app->get("/trainers", [TeacherController::class, 'teacher_view'])->add(AuthTokenMiddleware::class);
+    $app->post("/admin/subjects/filtered_by/", [SubjectsController::class, 'filtered_subject'])->add(AuthTokenMiddleware::class);
+    // $app->get("/admin/subjects/filtered_by/", [SubjectsController::class, 'filtered_subject'])->add(AuthTokenMiddleware::class);
     $app->get("/admin/standards/remove_teachers/{tid}/{std_id}", [StandardsController::class, 'remove_teachers_stds'])->add(AuthTokenMiddleware::class);
     $app->get("/admin/standards/remove_subs/{sub_id}/{std_id}", [StandardsController::class, 'remove_subjects_stds'])->add(AuthTokenMiddleware::class);
     $app->get("/admin/standards/editstandard/{std_id}", [StandardsController::class, 'edit_standard_view'])->add(AuthTokenMiddleware::class);

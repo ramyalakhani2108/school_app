@@ -25,6 +25,32 @@ class SubjectsController
     ) {
     }
 
+
+    public  function filtered_subject(array $params = [])
+    {
+        // dd($_POST);
+        $params = $_POST['teacher_names'];
+
+        $names = [];
+        foreach ($params as $param) {
+            $names[] = urldecode($param);
+        }
+        $teachers = $this->teacher_service->get_teachers();
+        $teacher_names = [];
+        foreach ($teachers as $teacher) {
+            $teacher_names[] = $teacher['name'];
+        }
+        $filtered_subject = $this->subject_service->filtered_subject($names);
+
+
+        echo $this->view->render(
+            "admin/subjects/filtered_subject.php",
+            [
+                'filtered_subjects' => $filtered_subject,
+                'teachers' => $teacher_names
+            ]
+        );
+    }
     public function create()
     {
         $this->validator_service->validate_subject($_POST);
@@ -37,11 +63,17 @@ class SubjectsController
     {
         // $this->total_subjects();
         $data = $this->get_data();
+        $teachers = $this->teacher_service->get_teachers();
+        $teacher_names = [];
+        foreach ($teachers as $teacher) {
+            $teacher_names[] = $teacher['name'];
+        }
 
         echo $this->view->render(
             "admin/subjects/list.php",
             [
-                'subjects' => $data
+                'subjects' => $data,
+                'teachers' => $teacher_names,
             ]
         );
     }

@@ -3,6 +3,7 @@
 
 ?>
 
+
 <body>
     <div class="container-scroller">
         <!-- partial:partials/_sidebar.html -->
@@ -29,6 +30,7 @@
                                                 <!-- <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%</p> -->
                                             </div>
                                         </div>
+
                                         <div class="col-3">
                                             <div class="icon icon-box-success ">
                                                 <span class="mdi mdi-arrow-top-right icon-item"></span>
@@ -80,6 +82,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-md-12 grid-margin stretch-card">
                             <div class="card">
@@ -109,12 +112,26 @@
                                                 </form>
                                             </div>
                                         </div>
+
+                                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+                                        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+                                        <script>
+                                            $(document).ready(function() {
+                                                $('.dropdown-submenu .dropdown-toggle').on("click", function(e) {
+                                                    $(this).next('.dropdown-menu').toggle();
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                });
+                                            });
+                                        </script>
                                     </div>
 
-                                    <div class="row mt-4">
+                                    <div class="row">
                                         <div class="col-12">
                                             <div class="preview-list">
-                                                <?php foreach ($subjects as $subject) : ?>
+                                                <?php foreach ($filtered_subjects as $subject) {
+                                                ?>
                                                     <div class="preview-item border-bottom">
                                                         <div class="preview-thumbnail">
                                                             <div class="preview-icon bg-primary">
@@ -123,19 +140,21 @@
                                                         </div>
                                                         <div class="preview-item-content d-sm-flex flex-grow">
                                                             <div class="flex-grow">
-                                                                <h6 class="preview-subject"><?php echo htmlspecialchars($subject['subject_name']); ?></h6>
-                                                                <p class="text-muted mb-0"><?php echo htmlspecialchars($subject['subject_code']); ?></p>
+                                                                <h6 class="preview-subject"><?php echo e($subject['subject_names']); ?></h6>
+                                                                <p class="text-muted mb-0"><?php echo e($subject['subject_codes']); ?></p>
                                                             </div>
                                                             <div class="mr-auto text-sm-right pt-3 pt-sm-0">
-                                                                Total Teachers : <?php echo htmlspecialchars($subject['teacher_count']); ?><br><br>
-                                                                Total standards : <?php echo htmlspecialchars($subject['standards_count']); ?>
+                                                                Total Teachers : <?php echo e($subject['staff_name']); ?><br><br>
+                                                                Total standards : <?php echo e($subject['standards']); ?>
                                                             </div>
+
+
                                                             <div class="mr-auto text-sm-right pt-2 pt-sm-0">
                                                                 <p class="text-muted">
-                                                                    <a href="/admin/subjects/edit_subjects/<?php echo htmlspecialchars($subject['subject_id']); ?>"><button type="button" class="btn btn-success btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Edit</button></a>
+                                                                    <a href="/admin/subjects/edit_subjects/<?php echo e($subject['subject_ids']); ?>"><button type="button" class="btn btn-success btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Edit</button></a>
                                                                 </p>
                                                                 <p class="text-muted mb-0">
-                                                                <form action="/admin/subjects/delete_subjects/<?php echo htmlspecialchars($subject['subject_id']); ?>" method="post">
+                                                                <form action="/admin/subjects/delete_subjects/<?php echo e($subject['subject_ids']); ?>" method="post">
                                                                     <input type="hidden" name="_METHOD" value="DELETE">
                                                                     <button type="submit" class="btn btn-danger btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Delete</button>
                                                                 </form>
@@ -143,9 +162,11 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                <?php endforeach; ?>
+
+                                                <?php } ?>
                                             </div>
                                         </div>
+
                                     </div>
                                     <button type="button" class="btn btn-success btn-fw mt-3 col-5 ml-5 p-4" style="padding:15px;font-size:20px;margin-right:20px;" onclick="add_subject()">Add Subject</button>
                                     <script>
@@ -157,8 +178,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- jQuery -->
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                     <!-- Bootstrap JS -->
                     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -247,11 +266,12 @@
                             background-color: #f1f1f1;
                         }
                     </style>
+
                 </div>
             </div>
             <!-- container-scroller -->
             <!-- plugins:js -->
-            <script sr/assets/admin/assets/vendors/js/vendor.bundle.base.js"></script>
+            <script src="/assets/admin/assets/vendors/js/vendor.bundle.base.js"></script>
             <!-- endinject -->
             <!-- Plugin js for this page -->
             <script src="/assets/admin/assets/vendors/chart.js/Chart.min.js"></script>
