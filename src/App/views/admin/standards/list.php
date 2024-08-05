@@ -1,6 +1,5 @@
 <?php include $this->resolve("partials/admin/_header.php"); ?>
 
-
 <body>
     <div class="container-scroller">
         <!-- partial:partials/_sidebar.html -->
@@ -82,6 +81,8 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Standards</h4>
+                                    <?php include $this->resolve("admin/standards/partials/_searchbar.php"); ?>
+                                    <?php include $this->resolve("admin/standards/partials/_filter.php"); ?>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="table-responsive">
@@ -93,16 +94,29 @@
                                                                 <th>
                                                                     <input type="checkbox" id="selectAll" onclick="toggleCheckboxes(this)">
                                                                 </th>
-                                                                <th>ID</th>
-                                                                <th>Standard Names</th>
-                                                                <th>Total Students</th>
-                                                                <th>Total Teachers</th>
+                                                                <th>ID
+                                                                    <a href="?sort=id&order=asc"><i class="fas fa-arrow-up"></i></a>
+                                                                    <a href="?sort=id&order=desc"><i class="fas fa-arrow-down"></i></a>
+                                                                </th>
+                                                                <th>Standard Names
+                                                                    <a href="?sort=name&order=asc"><i class="fas fa-arrow-up"></i></a>
+                                                                    <a href="?sort=name&order=desc"><i class="fas fa-arrow-down"></i></a>
+                                                                </th>
+                                                                <th>Total Students
+                                                                    <a href="?sort=students&order=asc"><i class="fas fa-arrow-up"></i></a>
+                                                                    <a href="?sort=students&order=desc"><i class="fas fa-arrow-down"></i></a>
+                                                                </th>
+                                                                <th>Total Teachers
+                                                                    <a href="?sort=teachers&order=asc"><i class="fas fa-arrow-up"></i></a>
+                                                                    <a href="?sort=teachers&order=desc"><i class="fas fa-arrow-down"></i></a>
+                                                                </th>
                                                                 <th>Edit</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody align="center">
                                                             <?php $i = 1;
-                                                            foreach ($standards as $standard) : ?>
+
+                                                            foreach ($filtered_standard as $standard) : ?>
 
                                                                 <tr>
                                                                     <td>
@@ -127,21 +141,16 @@
 
                                                 <script>
                                                     function add_standards() {
-
                                                         window.location.href = "/admin/standards/add_standards";
                                                     }
-                                                </script>
 
-                                                <script>
                                                     function toggleCheckboxes(selectAllCheckbox) {
-                                                        // Get all checkboxes with the class "record-checkbox"
                                                         const checkboxes = document.querySelectorAll('.record-checkbox');
                                                         checkboxes.forEach(checkbox => {
                                                             checkbox.checked = selectAllCheckbox.checked;
                                                         });
                                                     }
                                                 </script>
-
 
                                             </div>
 
@@ -158,10 +167,62 @@
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
-        <?php
+        <?php $this->resolve("admin/partials/_footer.php") ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const searchInput = document.getElementById('searchInput');
+                const searchButton = document.getElementById('searchButton');
+                const searchHistoryDropdown = document.getElementById('searchHistoryDropdown');
+                let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
-        // dd($standards);
-        $this->resolve("admin/partials/_footer.php") ?>
+                // Function to update the dropdown with search history
+                function updateDropdown() {
+                    searchHistoryDropdown.innerHTML = '';
+                    if (searchHistory.length > 0) {
+                        searchHistoryDropdown.style.display = 'block';
+                        searchHistory.slice(-5).reverse().forEach((term) => {
+                            const item = document.createElement('div');
+                            item.classList.add('dropdown-item');
+                            item.textContent = term;
+                            item.addEventListener('click', () => {
+                                searchInput.value = term;
+                                searchHistoryDropdown.style.display = 'none';
+                            });
+                            searchHistoryDropdown.appendChild(item);
+                        });
+                    } else {
+                        searchHistoryDropdown.style.display = 'none';
+                    }
+                }
+
+                // Add event listener to the search button
+                searchButton.addEventListener('click', () => {
+                    const searchTerm = searchInput.value.trim();
+                    if (searchTerm) {
+                        if (!searchHistory.includes(searchTerm)) {
+                            searchHistory.push(searchTerm);
+                            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                        }
+                        updateDropdown();
+                    }
+                });
+
+                // Show the dropdown when the search input is focused
+                searchInput.addEventListener('focus', () => {
+                    updateDropdown();
+                });
+
+                // Hide the dropdown when clicking outside
+                document.addEventListener('click', (event) => {
+                    if (!event.target.closest('.search-container')) {
+                        searchHistoryDropdown.style.display = 'none';
+                    }
+                });
+
+                // Initialize the dropdown with search history
+                updateDropdown();
+            });
+        </script>
         <!-- partial -->
     </div>
     <!-- main-panel ends -->
@@ -190,5 +251,11 @@
     <script src="/assets/admin/assets/js/dashboard.js"></script>
     <!-- End custom js for this page -->
 </body>
+
+<head>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Your other styles and scripts -->
+</head>
 
 </html>

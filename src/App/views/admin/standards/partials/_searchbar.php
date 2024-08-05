@@ -1,5 +1,5 @@
 <div class="search-container1">
-    <form action="/admin/subjects/filtered_by" method="GET">
+    <form action="" method="GET">
         <input type="text" name="s" id="searchInput" placeholder="Search subject name,teacher name,standard name, subject_code...">
         <button type="submit" id="searchButton">Search</button>
         <div class="dropdown1" id="searchHistoryDropdown"></div>

@@ -37,11 +37,73 @@ class StandardsController
     public function standards_view()
     {
 
-        $standards = $this->standards_service->get_standards_data();
+        $subject_names = [];
+        $subjects = $this->subject_service->get_std_sub();
+
+
+
+        foreach ($subjects as $subject) {
+            $subject_names[] = $subject['name'];
+        }
+        $filtered_standard = [];
+        $teachers = $this->teacher_service->get_teachers();
+        $teacher_names = [];
+        foreach ($teachers as $teacher) {
+            $teacher_names[] = $teacher['name'];
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            if (array_key_exists('teacher_names', $_POST)) {
+                $params = $_POST['teacher_names'];
+                $names = [];
+                foreach ($params as $param) {
+                    $names[] = urldecode($param);
+                }
+                $filtered_standard[] = $this->standards_service->filtered_standards($names, 'staff');
+            }
+
+            if (array_key_exists('subjects_name', $_POST)) {
+                $params = $_POST['subjects_name'];
+
+                $names = [];
+                foreach ($params as $param) {
+                    $names[] = urldecode($param);
+                }
+                $filtered_standard[] = $this->standards_service->filtered_standards($names, 'subjects');
+            }
+        }
+
+
+        $search = 0;
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['s'])) {
+            $search = urldecode(htmlspecialchars(trim($_GET['s'])));
+            $filtered_standard[] = array_merge($filtered_standard, $this->subject_service->get_search_results($search));
+        } else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['sort']) && isset($_GET['order'])) {
+            $filtered_standard[] = $this->standards_service->get_standards_data(order_by: $_GET['sort'], order: $_GET['order']);
+            // dd($filtered_standard);
+        } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $filtered_standard[] = $this->standards_service->get_standards_data();
+        }
+
+
+
+        $filtered_standards = [];
+        // dd($filtered_standard);
+        foreach ($filtered_standard as $standard) {
+
+            $filtered_standards = array_merge($filtered_standards, $standard);
+        }
+
+
+
+
         echo $this->view->render(
             "/admin/standards/list.php",
             [
-                'standards' => $standards
+                // 'standards' => $standards,
+                'filtered_standard' => $filtered_standards,
+                'teachers' => $teacher_names,
+                'subjects' => $subject_names
             ]
         );
     }

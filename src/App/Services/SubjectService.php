@@ -33,41 +33,25 @@ class SubjectService
 
 
         $query
-            = "SELECT  `subjects`.`name` AS `subject_names`,\n"
-
-            . "	`staff`.`name` as `staff_name`,\n"
-
-            . "    `teacher_subjects`.`teacher_id` AS `teacher_ids`,\n"
-
-            . "       `subjects`.`id`   AS `subject_ids`,\n"
-
-            . "       `teachers_std`.`id` as `tid`,\n"
-
-            . "    GROUP_CONCAT(DISTINCT standards.name SEPARATOR ',') AS standards,\n"
-
-            . " \n"
-
-            . "    `subjects`.`code` AS `subject_codes`\n"
-
-            . "FROM\n"
-
-            . "    `subjects`\n"
-
-            . "LEFT JOIN `teacher_subjects` ON `teacher_subjects`.`subject_id` = `subjects`.`id`\n"
-
-            . "LEFT JOIN `staff` ON `staff`.`id` = `teacher_subjects`.`teacher_id`\n"
-
-            . "LEFT JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id`\n"
-
-            . "LEFT JOIN `standards` ON `teachers_std`.`standard_id` = `standards`.`id`\n"
-
-            . "WHERE\n"
-
-            . "    `$table_name`.`name` IN ('$names')\n"
-
-            . "   GROUP BY \n"
-
-            . "	`teacher_subjects`.`id`;";
+            = "SELECT 
+    `subjects`.`name` AS `subject_names`,
+    `staff`.`name` as `staff_name`,
+    `teacher_subjects`.`teacher_id` AS `teacher_ids`,
+    `subjects`.`id` AS `subject_ids`,
+    `teachers_std`.`id` as `tid`,
+    GROUP_CONCAT(DISTINCT `standards`.`name` SEPARATOR ',') AS `standards`,
+    `subjects`.`code` AS `subject_codes`
+FROM
+    `subjects`
+LEFT JOIN `teacher_subjects` ON `teacher_subjects`.`subject_id` = `subjects`.`id`
+LEFT JOIN `staff` ON `staff`.`id` = `teacher_subjects`.`teacher_id`
+LEFT JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id`
+LEFT JOIN `standards` ON `teachers_std`.`standard_id` = `standards`.`id`
+WHERE
+    `subjects`.`name` IN ('$names')
+GROUP BY 
+    `teacher_subjects`.`id`;
+";
         // dd($query);
         return ($this->db->query($query)->find_all());
     }
@@ -318,7 +302,53 @@ class SubjectService
     public function get_search_results(string|int $search)
     {
 
-        $query = "SELECT `subjects`.`name` AS `subject_names`, `staff`.`name` AS `staff_name`, `teacher_subjects`.`teacher_id` AS `teacher_ids`, `subjects`.`id` AS `subject_ids`, `teachers_std`.`id` AS `tid`, GROUP_CONCAT(DISTINCT `standards`.`name` SEPARATOR ',') AS `standards`, `subjects`.`code` AS `subject_codes` FROM `subjects` LEFT JOIN `teacher_subjects` ON `teacher_subjects`.`subject_id` = `subjects`.`id` LEFT JOIN `staff` ON `staff`.`id` = `teacher_subjects`.`teacher_id` LEFT JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id` LEFT JOIN `standards` ON `teachers_std`.`standard_id` = `standards`.`id` WHERE `staff`.`name` LIKE '%$search%' OR `subjects`.`name` LIKE '%$search%' OR `standards`.`name` LIKE '%$search%' OR `subjects`.`code` LIKE '%$search%' GROUP BY `subjects`.`code`;";
+        $query = "SELECT
+    `std`.id AS `standards_id`,
+    `std`.`name` AS `standards_name`,
+  	GROUP_CONCAT(`teachers_std`.`teacher_id` SEPARATOR ',')as `teacher_name`,
+	GROUP_CONCAT(DISTINCT `staff`.`name` SEPARATOR ',' ) as `staff name`,
+	GROUP_CONCAT(DISTINCT `subjects`.`name` SEPARATOR ',' ) as `staff name`,
+
+    (
+    SELECT
+        COUNT(`sub`.`subject_id`)
+    FROM
+        `std_sub` AS `sub`
+    WHERE
+        `sub`.`standard_id` = `std`.`id`
+) AS `subjects_count`,
+(
+    SELECT
+        COUNT(`teachers_std`.`teacher_id`)
+    FROM
+        `teachers_std`
+    WHERE
+        `teachers_std`.`standard_id` = `std`.`id`
+) AS `teacher_count`,
+(
+    SELECT
+        COUNT(`student`.`id`)
+    FROM
+        `student`
+    JOIN `standards` ON `standards`.`id` = `student`.`standard_id`
+    WHERE
+        `student`.`standard_id` = `std`.`id`
+) AS `student_count`
+	
+FROM
+    `standards` AS `std`
+LEFT JOIN `std_sub` ON `std`.`id` = `std_sub`.`standard_id`
+LEFT JOIN `subjects` ON `std_sub`.`subject_id` = `subjects`.`id`
+LEFT JOIN `teachers_std` ON `teachers_std`.`standard_id`=`std_sub`.`standard_id`
+LEFT JOIN `staff` ON `staff`.`id` = `teachers_std`.`teacher_id`
+WHERE `subjects`.`name` LIKE '%$search%'
+OR `staff`.`name` LIKE '%$search%'
+OR `subjects`.`code` LIKE '%$search%'
+OR `std`.`name` LIKE '%$search%' 
+
+GROUP BY
+    `std`.`id`,
+    `std`.`name`;";
         return ($this->db->query($query)->find_all());
     }
     public function get_subject(int $id)

@@ -77,7 +77,6 @@ class SubjectsController
             $filtered_subject[] = array_merge($filtered_subject, $this->subject_service->get_search_results($search));
         }
 
-
         $filtered_subjects = [];
         foreach ($filtered_subject as $subjects) {
 

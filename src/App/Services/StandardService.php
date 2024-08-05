@@ -28,6 +28,61 @@ class StandardService
         return (($this->db->query($query)->find())['COUNT(*)']);
     }
 
+
+    public function filtered_standards(array $names, string $table_name)
+    {
+
+        $names = implode("','", $names);
+
+
+        $query
+            = "SELECT
+    `std`.id AS `standards_id`,
+    `std`.`name` AS `standards_name`,
+  	GROUP_CONCAT(`teachers_std`.`teacher_id` SEPARATOR ',')as `teacher_name`,
+	GROUP_CONCAT(DISTINCT `staff`.`name` SEPARATOR ',' ) as `staff name`,
+	GROUP_CONCAT(DISTINCT `subjects`.`name` SEPARATOR ',' ) as `staff name`,
+
+    (
+    SELECT
+        COUNT(`sub`.`subject_id`)
+    FROM
+        `std_sub` AS `sub`
+    WHERE
+        `sub`.`standard_id` = `std`.`id`
+) AS `subjects_count`,
+(
+    SELECT
+        COUNT(`teachers_std`.`teacher_id`)
+    FROM
+        `teachers_std`
+    WHERE
+        `teachers_std`.`standard_id` = `std`.`id`
+) AS `teacher_count`,
+(
+    SELECT
+        COUNT(`student`.`id`)
+    FROM
+        `student`
+    JOIN `standards` ON `standards`.`id` = `student`.`standard_id`
+    WHERE
+        `student`.`standard_id` = `std`.`id`
+) AS `student_count`
+	
+FROM
+    `standards` AS `std`
+LEFT JOIN `std_sub` ON `std`.`id` = `std_sub`.`standard_id`
+LEFT JOIN `subjects` ON `std_sub`.`subject_id` = `subjects`.`id`
+LEFT JOIN `teachers_std` ON `teachers_std`.`standard_id`=`std_sub`.`standard_id`
+LEFT JOIN `staff` ON `staff`.`id` = `teachers_std`.`teacher_id`
+WHERE `$table_name`.`name` IN ('$names')
+
+GROUP BY
+    `std`.`id`,
+    `std`.`name`;";
+        // dd($query);
+        return ($this->db->query($query)->find_all());
+    }
     public function get_standard(int $id = 0)
     {
         if ($id == 0) {
@@ -118,24 +173,78 @@ class StandardService
         )->find_all());
     }
 
-    public function get_standards_data(int $id = 0)
+    public function get_standards_data(string|int $name = 0, string $order_by = "id", $order = "ASC")
     {
 
-
-        if ($id != 0) {
-            $query = "";
+        if ($order_by == "id") {
+            $order_by = " ORDER BY `std`.`id`  ";
+        } else if ($order_by == "students") {
+            $order_by = " ORDER BY `subjects_count`  ";
+        } else if ($order_by == "teachers") {
+            $order_by = " ORDER BY `teacher_count`  ";
+        } else if ($order_by == "name") {
+            $order_by = " ORDER BY `std`.`name`  ";
         } else {
-            $query = "SELECT `std`.id AS `standards_id`, `std`.`name` AS `standards_name`, ( SELECT COUNT(`sub`.`subject_id`) FROM `std_sub` AS `sub` WHERE `sub`.`standard_id` = `std`.`id` ) AS `subjects_count`, ( SELECT COUNT(`teachers_std`.`teacher_id`) FROM `teachers_std` WHERE `teachers_std`.`standard_id` = `std`.`id` ) AS `teacher_count`, ( SELECT COUNT(`student`.`id`) FROM `student` JOIN `standards` ON `standards`.`id` = `student`.`standard_id` WHERE `student`.`standard_id` = `std`.`id` ) AS `student_count` FROM `standards` AS `std` LEFT JOIN `std_sub` ON `std`.`id` = `std_sub`.`standard_id` GROUP BY `std`.`id`, `std`.`name`;";
+            $order_by = " ORDER BY `std`.`id`  ";
         }
 
-        if ($id != 0) {
-            $params = [
-                'name' => $id
-            ];
+
+        if ($name != 0) {
+            $query = "SELECT
+    `std`.id AS `standards_id`,
+    `std`.`name` AS `standards_name`,
+  	GROUP_CONCAT(`teachers_std`.`teacher_id` SEPARATOR ',')as `teacher_name`,
+	GROUP_CONCAT(DISTINCT `staff`.`name` SEPARATOR ',' ) as `staff name`,
+	GROUP_CONCAT(DISTINCT `subjects`.`name` SEPARATOR ',' ) as `staff name`,
+
+    (
+    SELECT
+        COUNT(`sub`.`subject_id`)
+    FROM
+        `std_sub` AS `sub`
+    WHERE
+        `sub`.`standard_id` = `std`.`id`
+) AS `subjects_count`,
+(
+    SELECT
+        COUNT(`teachers_std`.`teacher_id`)
+    FROM
+        `teachers_std`
+    WHERE
+        `teachers_std`.`standard_id` = `std`.`id`
+) AS `teacher_count`,
+(
+    SELECT
+        COUNT(`student`.`id`)
+    FROM
+        `student`
+    JOIN `standards` ON `standards`.`id` = `student`.`standard_id`
+    WHERE
+        `student`.`standard_id` = `std`.`id`
+) AS `student_count`
+	
+FROM
+    `standards` AS `std`
+LEFT JOIN `std_sub` ON `std`.`id` = `std_sub`.`standard_id`
+LEFT JOIN `subjects` ON `std_sub`.`subject_id` = `subjects`.`id`
+LEFT JOIN `teachers_std` ON `teachers_std`.`standard_id`=`std_sub`.`standard_id`
+LEFT JOIN `staff` ON `staff`.`id` = `teachers_std`.`teacher_id`
+WHERE `std`.`name` LIKE '%$name%'
+OR `staff`.`name` LIKE '%$name%'
+OR `subjects`.`name` LIKE '%$name%'
+
+GROUP BY
+    `std`.`id`,
+    `std`.`name`
+  " . $order_by . $order . "  
+    ;";
         } else {
-            $params = [];
+            $query = "SELECT `std`.id AS `standards_id`, `std`.`name` AS `standards_name`, ( SELECT COUNT(`sub`.`subject_id`) FROM `std_sub` AS `sub` WHERE `sub`.`standard_id` = `std`.`id` ) AS `subjects_count`, ( SELECT COUNT(`teachers_std`.`teacher_id`) FROM `teachers_std` WHERE `teachers_std`.`standard_id` = `std`.`id` ) AS `teacher_count`, ( SELECT COUNT(`student`.`id`) FROM `student` JOIN `standards` ON `standards`.`id` = `student`.`standard_id` WHERE `student`.`standard_id` = `std`.`id` ) AS `student_count` FROM `standards` AS `std` LEFT JOIN `std_sub` ON `std`.`id` = `std_sub`.`standard_id` GROUP BY `std`.`id`, `std`.`name` " . $order_by . $order . "  
+   
+    ;";
         }
-        return ($this->db->query($query, $params)->find_all());
+
+        return ($this->db->query($query)->find_all());
     }
 
 
@@ -233,10 +342,7 @@ class StandardService
         $subject_code = strtoupper(trim($std_name));
 
         $params = [
-
-
             'name' => $std_name
-
         ];
         if ($std_id > 0) {
 
