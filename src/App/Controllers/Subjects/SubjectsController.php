@@ -24,30 +24,72 @@ class SubjectsController
         private StandardService $standards_service,
     ) {
     }
+    public function get_standards()
+    {
+    }
 
+    public function get_search_results(array $search)
+    {
+    }
 
     public  function filtered_subject(array $params = [])
     {
-        // dd($_POST);
-        $params = $_POST['teacher_names'];
 
-        $names = [];
-        foreach ($params as $param) {
-            $names[] = urldecode($param);
-        }
+
+
+
+        $filtered_subject = [];
         $teachers = $this->teacher_service->get_teachers();
         $teacher_names = [];
         foreach ($teachers as $teacher) {
             $teacher_names[] = $teacher['name'];
         }
-        $filtered_subject = $this->subject_service->filtered_subject($names);
+        if (array_key_exists('teacher_names', $_POST)) {
+            $params = $_POST['teacher_names'];
 
+            // dd($standards);
+            $names = [];
+            foreach ($params as $param) {
+                $names[] = urldecode($param);
+            }
+            $filtered_subject[] = $this->subject_service->filtered_subject($names, 'staff');
+        }
+        $standards = $this->standards_service->get_standard();
+
+
+        $standard_names = [];
+        foreach ($standards as $standard) {
+            $standard_names[] = $standard['name'];
+        }
+        if (array_key_exists('standards_name', $_POST)) {
+            $params = $_POST['standards_name'];
+
+            $names = [];
+            foreach ($params as $param) {
+                $names[] = urldecode($param);
+            }
+
+
+            $filtered_subject[] = $this->subject_service->filtered_subject($names, 'standards');
+        }
+        if (isset($_GET['s'])) {
+            $search = urldecode(htmlspecialchars(trim($_GET['s'])));
+            $filtered_subject[] = array_merge($filtered_subject, $this->subject_service->get_search_results($search));
+        }
+
+
+        $filtered_subjects = [];
+        foreach ($filtered_subject as $subjects) {
+
+            $filtered_subjects = array_merge($filtered_subjects, $subjects);
+        }
 
         echo $this->view->render(
             "admin/subjects/filtered_subject.php",
             [
-                'filtered_subjects' => $filtered_subject,
-                'teachers' => $teacher_names
+                'filtered_subjects' => $filtered_subjects,
+                'teachers' => $teacher_names,
+                'standards' => $standard_names
             ]
         );
     }
@@ -63,17 +105,23 @@ class SubjectsController
     {
         // $this->total_subjects();
         $data = $this->get_data();
+        $standards = $this->standards_service->get_standard();
+
         $teachers = $this->teacher_service->get_teachers();
         $teacher_names = [];
         foreach ($teachers as $teacher) {
             $teacher_names[] = $teacher['name'];
         }
-
+        $standard_names = [];
+        foreach ($standards as $standard) {
+            $standard_names[] = $standard['name'];
+        }
         echo $this->view->render(
             "admin/subjects/list.php",
             [
                 'subjects' => $data,
                 'teachers' => $teacher_names,
+                'standards' => $standard_names
             ]
         );
     }
@@ -172,8 +220,7 @@ class SubjectsController
 
         $filtered_stds = array_filter($stds, function ($std) use ($std_ids) {
             return !in_array($std['id'], $std_ids);
-        });
-        // dd($stds_sub);
+        });;
         echo $this->view->render(
             "admin/subjects/edit.php",
             [
@@ -181,9 +228,9 @@ class SubjectsController
                 'teachers' => $filtered_teachers,
                 'teachers_sub' => $teacher_sub,
                 'stds' => $filtered_stds,
-                'subjects' => $stds_sub,
+                'standards' => $stds_sub,
                 'std_ids' => $std_ids,
-                'sub' => $sub
+                'sub' => $sub,
             ]
 
         );

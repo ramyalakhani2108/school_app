@@ -92,46 +92,24 @@
                                             <h4 class="card-title mb-1">Subjects</h4>
                                             <p class="text-muted mb-1">Subjects for all class</p>
                                         </div>
-                                        <div class="custom-dropdown">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false">
-                                                <i class="mdi mdi-filter-outline"></i> Filter
-                                            </button>
-                                            <div class="custom-dropdown-menu p-3" id="customDropdownMenu">
-                                                <form id="filterForm" action="/admin/subjects/filtered_by/" method="POST">
-                                                    <div class="dropdown-item">
-                                                        <span class="dropdown-label" style="color:black">Teachers</span>
-                                                        <div class="dropdown-submenu">
-                                                            <?php foreach ($teachers as $teacher) : ?>
-                                                                <label>
-                                                                    <input type="checkbox" name="teacher_names[]" value="<?php echo htmlspecialchars($teacher); ?>"> <?php echo htmlspecialchars($teacher); ?>
-                                                                </label>
-                                                            <?php endforeach; ?>
-                                                        </div>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-primary mt-2">Apply Filter</button>
-                                                </form>
-                                            </div>
-                                        </div>
+                                        <?php include $this->resolve("admin/subjects/partials/_searchbar.php"); ?>
 
-                                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                                        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-                                        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-                                        <script>
-                                            $(document).ready(function() {
-                                                $('.dropdown-submenu .dropdown-toggle').on("click", function(e) {
-                                                    $(this).next('.dropdown-menu').toggle();
-                                                    e.stopPropagation();
-                                                    e.preventDefault();
-                                                });
-                                            });
-                                        </script>
+                                        <?php include $this->resolve("admin/subjects/partials/_filter.php"); ?>
+
+
                                     </div>
 
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="preview-list">
-                                                <?php foreach ($filtered_subjects as $subject) {
+                                                <?php
+                                                $subjects = [];
+
+                                                $subjects = array_merge($subjects, $filtered_subjects);
+
+                                                foreach ($subjects as  $subject) {
                                                 ?>
+
                                                     <div class="preview-item border-bottom">
                                                         <div class="preview-thumbnail">
                                                             <div class="preview-icon bg-primary">
@@ -144,8 +122,8 @@
                                                                 <p class="text-muted mb-0"><?php echo e($subject['subject_codes']); ?></p>
                                                             </div>
                                                             <div class="mr-auto text-sm-right pt-3 pt-sm-0">
-                                                                Total Teachers : <?php echo e($subject['staff_name']); ?><br><br>
-                                                                Total standards : <?php echo e($subject['standards']); ?>
+                                                                Teachers : <?php echo e($subject['staff_name']); ?><br><br>
+                                                                Standards : <?php echo e($subject['standards']); ?>
                                                             </div>
 
 
@@ -163,7 +141,8 @@
                                                         </div>
                                                     </div>
 
-                                                <?php } ?>
+                                                <?php  }
+                                                ?>
                                             </div>
                                         </div>
 
@@ -178,95 +157,6 @@
                             </div>
                         </div>
                     </div>
-                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                    <!-- Bootstrap JS -->
-                    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-                    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const dropdownButton = document.getElementById('dropdownMenuButton');
-                            const customDropdownMenu = document.getElementById('customDropdownMenu');
-
-                            dropdownButton.addEventListener('click', function(e) {
-                                e.stopPropagation();
-                                customDropdownMenu.style.display = customDropdownMenu.style.display === 'block' ? 'none' : 'block';
-                            });
-
-                            document.addEventListener('click', function(e) {
-                                if (!dropdownButton.contains(e.target) && !customDropdownMenu.contains(e.target)) {
-                                    customDropdownMenu.style.display = 'none';
-                                }
-                            });
-                        });
-                    </script>
-                    <style>
-                        .custom-dropdown {
-                            position: relative;
-                            display: inline-block;
-                        }
-
-                        .custom-dropdown-menu {
-                            display: none;
-                            position: absolute;
-                            background-color: white;
-                            min-width: 250px;
-                            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-                            z-index: 1;
-                            padding: 10px;
-                            border-radius: 4px;
-                        }
-
-                        .dropdown-item {
-                            position: relative;
-
-                        }
-
-                        .dropdown-item:hover {
-                            position: relative;
-                            background-color: aquamarine;
-                            color: black;
-
-                        }
-
-                        .dropdown-label {
-                            display: block;
-                            padding: 8px 10px;
-                            cursor: pointer;
-                            font-weight: bold;
-                        }
-
-
-                        .dropdown-submenu {
-                            display: none;
-                            position: absolute;
-                            left: 0;
-                            top: 100%;
-                            background-color: white;
-                            min-width: 200px;
-                            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-                            padding: 10px;
-                            border-radius: 4px;
-                        }
-
-                        .custom-dropdown:hover .custom-dropdown-menu {
-                            display: block;
-                        }
-
-                        .dropdown-item:hover .dropdown-submenu {
-                            display: block;
-                        }
-
-                        .dropdown-submenu label {
-                            display: block;
-                            padding: 8px 10px;
-                            cursor: pointer;
-                        }
-
-                        .dropdown-submenu label:hover {
-                            background-color: #f1f1f1;
-                        }
-                    </style>
-
                 </div>
             </div>
             <!-- container-scroller -->

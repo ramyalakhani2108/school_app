@@ -24,20 +24,28 @@ class SubjectService
             'user_id' => $_SESSION['user_id']
         ])->find();
     }
-    public function filtered_subject(array $names)
+
+
+    public function filtered_subject(array $names, string $table_name)
     {
 
         $names = implode("','", $names);
 
-        $query = "SELECT `subjects`.`name` AS `subject_names`,\n"
+
+        $query
+            = "SELECT  `subjects`.`name` AS `subject_names`,\n"
 
             . "	`staff`.`name` as `staff_name`,\n"
 
             . "    `teacher_subjects`.`teacher_id` AS `teacher_ids`,\n"
 
-            . "   GROUP_CONCAT( DISTINCT `standards`.`name` SEPARATOR ',') AS `standards`,\n"
+            . "       `subjects`.`id`   AS `subject_ids`,\n"
 
-            . "    `subjects`.`id` AS `subject_ids`,\n"
+            . "       `teachers_std`.`id` as `tid`,\n"
+
+            . "    GROUP_CONCAT(DISTINCT standards.name SEPARATOR ',') AS standards,\n"
+
+            . " \n"
 
             . "    `subjects`.`code` AS `subject_codes`\n"
 
@@ -45,22 +53,22 @@ class SubjectService
 
             . "    `subjects`\n"
 
-            . "JOIN `teacher_subjects` ON `teacher_subjects`.`subject_id` = `subjects`.`id`\n"
+            . "LEFT JOIN `teacher_subjects` ON `teacher_subjects`.`subject_id` = `subjects`.`id`\n"
 
-            . "JOIN `staff` ON `staff`.`id` = `teacher_subjects`.`teacher_id`\n"
+            . "LEFT JOIN `staff` ON `staff`.`id` = `teacher_subjects`.`teacher_id`\n"
 
-            . "JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id`\n"
+            . "LEFT JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id`\n"
 
-            . "JOIN `standards` ON `teachers_std`.`standard_id` = `standards`.`id`\n"
+            . "LEFT JOIN `standards` ON `teachers_std`.`standard_id` = `standards`.`id`\n"
 
             . "WHERE\n"
 
-            . "    `staff`.`name` IN ('$names') "
+            . "    `$table_name`.`name` IN ('$names')\n"
 
-            . "GROUP BY \n"
+            . "   GROUP BY \n"
 
-            . "	`staff`.`name`;";
-
+            . "	`teacher_subjects`.`id`;";
+        // dd($query);
         return ($this->db->query($query)->find_all());
     }
 
@@ -307,6 +315,12 @@ class SubjectService
         return $this->db->query($query)->find()['COUNT(*)'];
     }
 
+    public function get_search_results(string|int $search)
+    {
+
+        $query = "SELECT `subjects`.`name` AS `subject_names`, `staff`.`name` AS `staff_name`, `teacher_subjects`.`teacher_id` AS `teacher_ids`, `subjects`.`id` AS `subject_ids`, `teachers_std`.`id` AS `tid`, GROUP_CONCAT(DISTINCT `standards`.`name` SEPARATOR ',') AS `standards`, `subjects`.`code` AS `subject_codes` FROM `subjects` LEFT JOIN `teacher_subjects` ON `teacher_subjects`.`subject_id` = `subjects`.`id` LEFT JOIN `staff` ON `staff`.`id` = `teacher_subjects`.`teacher_id` LEFT JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id` LEFT JOIN `standards` ON `teachers_std`.`standard_id` = `standards`.`id` WHERE `staff`.`name` LIKE '%$search%' OR `subjects`.`name` LIKE '%$search%' OR `standards`.`name` LIKE '%$search%' OR `subjects`.`code` LIKE '%$search%' GROUP BY `subjects`.`code`;";
+        return ($this->db->query($query)->find_all());
+    }
     public function get_subject(int $id)
     {
         $query = "SELECT `id`,`name`,`code` FROM `subjects` WHERE `id`=:id";
@@ -360,8 +374,8 @@ class SubjectService
                 $selected_standards = implode(",", $selected_standards);
                 $query = "INSERT INTO `std_sub` (`subject_id`,`standard_id`) SELECT :subid,`id` FROM `standards` WHERE `id` IN ($selected_standards)";
                 $this->db->query($query, ['subid' => $id]);
-                $this->db->endTransaction();
             }
+            $this->db->endTransaction();
         } catch (Exception $e) {
             $this->db->cancelTransaction();
             throw new ValidationException(['sub_code' => ['couldn\'t update the records']]);

@@ -1,7 +1,4 @@
-<?php include $this->resolve("partials/admin/_header.php");
-
-
-?>
+<?php include $this->resolve("partials/admin/_header.php"); ?>
 
 <body>
     <div class="container-scroller">
@@ -15,9 +12,7 @@
 
             <!-- partial -->
             <div class="main-panel">
-
                 <div class="content-wrapper">
-
                     <div class="row">
                         <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
                             <div class="card">
@@ -26,11 +21,10 @@
                                         <div class="col-9">
                                             <div class="d-flex align-items-center align-self-start">
                                                 <h3 class="mb-0"><?php echo e($total_subjects ?? ''); ?></h3>
-                                                <!-- <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%</p> -->
                                             </div>
                                         </div>
                                         <div class="col-3">
-                                            <div class="icon icon-box-success ">
+                                            <div class="icon icon-box-success">
                                                 <span class="mdi mdi-arrow-top-right icon-item"></span>
                                             </div>
                                         </div>
@@ -46,7 +40,6 @@
                                         <div class="col-9">
                                             <div class="d-flex align-items-center align-self-start">
                                                 <h3 class="mb-0"><?php echo e($total_students ?? '0'); ?></h3>
-
                                             </div>
                                         </div>
                                         <div class="col-3">
@@ -66,7 +59,6 @@
                                         <div class="col-9">
                                             <div class="d-flex align-items-center align-self-start">
                                                 <h3 class="mb-0"><?php echo e($total_standards ?? '0'); ?></h3>
-                                                <!-- <p class="text-danger ml-2 mb-0 font-weight-medium">-2.4%</p> -->
                                             </div>
                                         </div>
                                         <div class="col-3">
@@ -80,6 +72,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Search Bar Section -->
                     <div class="row">
                         <div class="col-md-12 grid-margin stretch-card">
                             <div class="card">
@@ -89,26 +83,9 @@
                                             <h4 class="card-title mb-1">Subjects</h4>
                                             <p class="text-muted mb-1">Subjects for all class</p>
                                         </div>
-                                        <div class="custom-dropdown">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false">
-                                                <i class="mdi mdi-filter-outline"></i> Filter
-                                            </button>
-                                            <div class="custom-dropdown-menu p-3" id="customDropdownMenu">
-                                                <form id="filterForm" action="/admin/subjects/filtered_by/" method="POST">
-                                                    <div class="dropdown-item">
-                                                        <span class="dropdown-label" style="color:black">Teachers</span>
-                                                        <div class="dropdown-submenu">
-                                                            <?php foreach ($teachers as $teacher) : ?>
-                                                                <label>
-                                                                    <input type="checkbox" name="teacher_names[]" value="<?php echo htmlspecialchars($teacher); ?>"> <?php echo htmlspecialchars($teacher); ?>
-                                                                </label>
-                                                            <?php endforeach; ?>
-                                                        </div>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-primary mt-2">Apply Filter</button>
-                                                </form>
-                                            </div>
-                                        </div>
+
+                                        <?php include $this->resolve("admin/subjects/partials/_searchbar.php"); ?>
+                                        <?php include $this->resolve("admin/subjects/partials/_filter.php"); ?>
                                     </div>
 
                                     <div class="row mt-4">
@@ -159,99 +136,11 @@
                     </div>
 
                     <!-- jQuery -->
-                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                    <!-- Bootstrap JS -->
-                    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-                    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const dropdownButton = document.getElementById('dropdownMenuButton');
-                            const customDropdownMenu = document.getElementById('customDropdownMenu');
-
-                            dropdownButton.addEventListener('click', function(e) {
-                                e.stopPropagation();
-                                customDropdownMenu.style.display = customDropdownMenu.style.display === 'block' ? 'none' : 'block';
-                            });
-
-                            document.addEventListener('click', function(e) {
-                                if (!dropdownButton.contains(e.target) && !customDropdownMenu.contains(e.target)) {
-                                    customDropdownMenu.style.display = 'none';
-                                }
-                            });
-                        });
-                    </script>
-                    <style>
-                        .custom-dropdown {
-                            position: relative;
-                            display: inline-block;
-                        }
-
-                        .custom-dropdown-menu {
-                            display: none;
-                            position: absolute;
-                            background-color: white;
-                            min-width: 250px;
-                            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-                            z-index: 1;
-                            padding: 10px;
-                            border-radius: 4px;
-                        }
-
-                        .dropdown-item {
-                            position: relative;
-
-                        }
-
-                        .dropdown-item:hover {
-                            position: relative;
-                            background-color: aquamarine;
-                            color: black;
-
-                        }
-
-                        .dropdown-label {
-                            display: block;
-                            padding: 8px 10px;
-                            cursor: pointer;
-                            font-weight: bold;
-                        }
-
-
-                        .dropdown-submenu {
-                            display: none;
-                            position: absolute;
-                            left: 0;
-                            top: 100%;
-                            background-color: white;
-                            min-width: 200px;
-                            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-                            padding: 10px;
-                            border-radius: 4px;
-                        }
-
-                        .custom-dropdown:hover .custom-dropdown-menu {
-                            display: block;
-                        }
-
-                        .dropdown-item:hover .dropdown-submenu {
-                            display: block;
-                        }
-
-                        .dropdown-submenu label {
-                            display: block;
-                            padding: 8px 10px;
-                            cursor: pointer;
-                        }
-
-                        .dropdown-submenu label:hover {
-                            background-color: #f1f1f1;
-                        }
-                    </style>
                 </div>
             </div>
             <!-- container-scroller -->
             <!-- plugins:js -->
-            <script sr/assets/admin/assets/vendors/js/vendor.bundle.base.js"></script>
+            <script src="/assets/admin/assets/vendors/js/vendor.bundle.base.js"></script>
             <!-- endinject -->
             <!-- Plugin js for this page -->
             <script src="/assets/admin/assets/vendors/chart.js/Chart.min.js"></script>
@@ -267,9 +156,65 @@
             <script src="/assets/admin/assets/js/settings.js"></script>
             <script src="/assets/admin/assets/js/todolist.js"></script>
             <!-- endinject -->
-            <!-- Custom j/s for this page -->
+            <!-- Custom js for this page -->
             <script src="/assets/admin/assets/js/dashboard.js"></script>
             <!-- End custom js for this page -->
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const searchInput = document.getElementById('searchInput');
+                    const searchButton = document.getElementById('searchButton');
+                    const searchHistoryDropdown = document.getElementById('searchHistoryDropdown');
+                    let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+                    // Function to update the dropdown with search history
+                    function updateDropdown() {
+                        searchHistoryDropdown.innerHTML = '';
+                        if (searchHistory.length > 0) {
+                            searchHistoryDropdown.style.display = 'block';
+                            searchHistory.slice(-5).reverse().forEach((term) => {
+                                const item = document.createElement('div');
+                                item.classList.add('dropdown-item');
+                                item.textContent = term;
+                                item.addEventListener('click', () => {
+                                    searchInput.value = term;
+                                    searchHistoryDropdown.style.display = 'none';
+                                });
+                                searchHistoryDropdown.appendChild(item);
+                            });
+                        } else {
+                            searchHistoryDropdown.style.display = 'none';
+                        }
+                    }
+
+                    // Add event listener to the search button
+                    searchButton.addEventListener('click', () => {
+                        const searchTerm = searchInput.value.trim();
+                        if (searchTerm) {
+                            if (!searchHistory.includes(searchTerm)) {
+                                searchHistory.push(searchTerm);
+                                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                            }
+                            updateDropdown();
+                        }
+                    });
+
+                    // Show the dropdown when the search input is focused
+                    searchInput.addEventListener('focus', () => {
+                        updateDropdown();
+                    });
+
+                    // Hide the dropdown when clicking outside
+                    document.addEventListener('click', (event) => {
+                        if (!event.target.closest('.search-container')) {
+                            searchHistoryDropdown.style.display = 'none';
+                        }
+                    });
+
+                    // Initialize the dropdown with search history
+                    updateDropdown();
+                });
+            </script>
+
 </body>
 
 </html>

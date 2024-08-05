@@ -30,9 +30,15 @@ class StandardService
 
     public function get_standard(int $id = 0)
     {
-        $query = "SELECT `id`,`name` FROM `standards` WHERE `id`=:id";
-        return $this->db->query($query, ['id' => $id])->find();
+        if ($id == 0) {
+            $query = "SELECT `id`,`name` FROM `standards`";
+            return $this->db->query($query)->find_all();
+        } else {
+            $query = "SELECT `id`,`name` FROM `standards` WHERE `id`=:id";
+            return $this->db->query($query, ['id' => $id])->find();
+        }
     }
+
     public function get_sub_std(int $id = 0)
     {
         $query = "SELECT `id`,`name` FROM `standards`";
