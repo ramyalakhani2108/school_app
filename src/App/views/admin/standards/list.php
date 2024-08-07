@@ -95,20 +95,20 @@
                                                                     <input type="checkbox" id="selectAll" onclick="toggleCheckboxes(this)">
                                                                 </th>
                                                                 <th>ID
-                                                                    <a href="?sort=id&order=asc"><i class="fas fa-arrow-up"></i></a>
-                                                                    <a href="?sort=id&order=desc"><i class="fas fa-arrow-down"></i></a>
+                                                                    <a href="#" onclick="sort('id','asc')"><i class="fas fa-arrow-up"></i></a>
+                                                                    <a href="#" onclick="sort('id','desc')"><i class="fas fa-arrow-down"></i></a>
                                                                 </th>
                                                                 <th>Standard Names
-                                                                    <a href="?sort=name&order=asc"><i class="fas fa-arrow-up"></i></a>
-                                                                    <a href="?sort=name&order=desc"><i class="fas fa-arrow-down"></i></a>
+                                                                    <a href="#" onclick="sort('name','asc')"><i class="fas fa-arrow-up"></i></a>
+                                                                    <a href="#" onclick="sort('name','desc')"><i class="fas fa-arrow-down"></i></a>
                                                                 </th>
                                                                 <th>Total Students
-                                                                    <a href="?sort=students&order=asc"><i class="fas fa-arrow-up"></i></a>
-                                                                    <a href="?sort=students&order=desc"><i class="fas fa-arrow-down"></i></a>
+                                                                    <a href="#" onclick="sort('students','asc')"><i class="fas fa-arrow-up"></i></a>
+                                                                    <a href="#" onclick="sort('students','desc')"><i class="fas fa-arrow-down"></i></a>
                                                                 </th>
                                                                 <th>Total Teachers
-                                                                    <a href="?sort=teachers&order=asc"><i class="fas fa-arrow-up"></i></a>
-                                                                    <a href="?sort=teachers&order=desc"><i class="fas fa-arrow-down"></i></a>
+                                                                    <a href="#" onclick="sort('teachers','asc')"><i class="fas fa-arrow-up"></i></a>
+                                                                    <a href="#" onclick="sort('teachers','desc')"><i class="fas fa-arrow-down"></i></a>
                                                                 </th>
                                                                 <th>Edit</th>
                                                             </tr>
@@ -116,7 +116,7 @@
                                                         <tbody align="center">
                                                             <?php $i = 1;
 
-                                                            foreach ($filtered_standard as $standard) : ?>
+                                                            foreach ($filtered_standard   as $standard) : ?>
 
                                                                 <tr>
                                                                     <td>
@@ -155,7 +155,10 @@
                                             </div>
 
                                         </div>
+                                        <div class="hiddeninputs">
 
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -249,6 +252,7 @@
     <!-- endinject -->
     <!-- Custom j/s for this page -->
     <script src="/assets/admin/assets/js/dashboard.js"></script>
+
     <!-- End custom js for this page -->
 </body>
 

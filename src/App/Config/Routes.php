@@ -53,6 +53,7 @@ function register_routes(App $app)
     $app->get("/admin/standards/add_standards", [StandardsController::class, 'add_standards_view'])->add(AuthTokenMiddleware::class);
     $app->get("/admin/standards", [StandardsController::class, 'standards_view'])->add(AuthTokenMiddleware::class);
     $app->post("/admin/standards", [StandardsController::class, 'standards_view'])->add(AuthTokenMiddleware::class);
+    $app->get("/admin/teachers", [TeacherController::class, 'admin_teacher_view'])->add(AuthTokenMiddleware::class);
     $app->get("/admin/subjects", [SubjectsController::class, 'admin_subjects_view'])->add(AuthTokenMiddleware::class);
     $app->get("/admin/{id}", [ProfileController::class, 'profile_view'])->add(AuthTokenMiddleware::class);
     $app->post("/admin/{id}", [ProfileController::class, 'profile_update'])->add(AuthTokenMiddleware::class);

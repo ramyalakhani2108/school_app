@@ -1,33 +1,91 @@
 <div class="custom-dropdown">
+
+    <?php
+    $teacher_names = [];
+
+    if (array_key_exists('_filter_teachers_', $_POST)) {
+        $teacher_names = array_merge($teacher_names, $_POST['teacher_names']);
+    }
+
+
+    ?>
+
+    <?php
+    $subject_names = [];
+    if (array_key_exists('_filter_subs_', $_POST)) {
+        $subject_names = array_merge($subject_names, $_POST['subjects_name']);
+    }
+
+    ?>
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false">
         <i class="mdi mdi-filter-outline"></i> Filter
     </button>
     <div class="custom-dropdown-menu p-3" id="customDropdownMenu">
-        <form id="filterForm" action="/admin/standards" method="POST">
-            <div class="dropdown-item">
-                <span class="dropdown-label" style="color:black">Teachers</span>
-                <div class="dropdown-submenu">
-                    <?php foreach ($teachers as $teacher) : ?>
+        <!-- <form id="filterForm" action="/admin/standards" method="POST"> -->
+
+        <div class="dropdown-item">
+            <span class="dropdown-label" style="color:black">Teachers</span>
+            <div class="dropdown-submenu">
+                <?php foreach ($teachers as $teacher) :
+
+                    if (in_array($teacher, $teacher_names)) :
+                ?>
                         <label>
-                            <input type="checkbox" name="teacher_names[]" value="<?php echo htmlspecialchars($teacher); ?>"> <?php echo htmlspecialchars($teacher); ?>
+
+                            <input type="checkbox" name="teacher_names[]" value="<?php echo htmlspecialchars($teacher); ?>" checked> <?php echo htmlspecialchars($teacher); ?>
                         </label>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-            <div class="dropdown-item">
-                <span class="dropdown-label" style="color:black">Subjects</span>
-                <div class="dropdown-submenu">
 
                     <?php
+                    else :
+                    ?>
+                        <label>
 
-                    foreach ($subjects as $subject) : ?>
+                            <input type="checkbox" name="teacher_names[]" value="<?php echo htmlspecialchars($teacher); ?>"> <?php echo htmlspecialchars($teacher); ?>
+                        </label>
+
+                    <?php endif; ?>
+
+
+
+
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div class="dropdown-item">
+            <span class="dropdown-label" style="color:black">Subjects</span>
+            <div class="dropdown-submenu">
+
+                <?php
+
+                foreach ($subjects as $subject) :
+
+                    if (in_array($subject, $subject_names)) : ?>
+                        <label>
+                            <input type="checkbox" name="subjects_name[]" value="<?php echo htmlspecialchars($subject); ?>" checked> <?php echo htmlspecialchars($subject); ?>
+                        </label>
+                    <?php else : ?>
                         <label>
                             <input type="checkbox" name="subjects_name[]" value="<?php echo htmlspecialchars($subject); ?>"> <?php echo htmlspecialchars($subject); ?>
                         </label>
-                    <?php endforeach; ?>
-                </div>
+                    <?php endif; ?>
+
+                <?php endforeach; ?>
             </div>
-            <button type="submit" class="btn btn-primary mt-2">Apply Filter</button>
+        </div>
+        <input type="hidden" id="order_by" name="order_by" value="name">
+        <input type="hidden" id="order" name="order" value="asc">
+        <input type="hidden" name="_search_input_" value="<?php echo e($_POST['s'] ?? ''); ?>">
+        <?php if (array_key_exists('teacher_names', $_POST)) : foreach ($_POST['teacher_names'] as $teacher) : ?>
+                <input type="hidden" id="_filter_teachers_[]" name="_filter_teachers_[]" value="<?php echo e($teacher ?? ''); ?>">
+
+            <?php endforeach; ?>
+        <?php endif; ?>
+        <?php if (array_key_exists('subjects_name', $_POST)) : foreach ($_POST['subjects_name'] as $sub) : ?>
+                <input type="hidden" id="_filter_subs_[]" name="_filter_subs_[]" value="<?php echo e($sub ?? ''); ?>">
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+        <button type="button" onclick="form_submit()" class="btn btn-primary mt-2">Apply Filter</button>
         </form>
     </div>
 </div>
@@ -58,7 +116,31 @@
                 submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
             });
         });
+        const form_search = document.getElementById("form_search");
+
     });
+
+    function form_submit() {
+        // Select all hidden elements
+        const hiddenElements = document.querySelectorAll('input[type="hidden"]');
+
+        // Log all hidden element values to the console
+        hiddenElements.forEach(element => {
+            console.log(element.name + ": " + element.value);
+        });
+
+        form_search.submit();
+        // Add your form submission logic here
+        // For example: document.getElementById('filterForm').submit();
+    }
+
+    function sort(order_by = "name", order = "asc") {
+        const hidden_element_order_by = document.getElementById('order_by');
+        const hidden_element_order = document.getElementById('order');
+        hidden_element_order.value = order;
+        hidden_element_order_by.value = order_by;
+        console.log(hidden_element_order_by, hidden_element_order);
+    }
 </script>
 <style>
     .custom-dropdown {

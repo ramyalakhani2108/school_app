@@ -88,41 +88,134 @@
                                         <?php include $this->resolve("admin/subjects/partials/_filter.php"); ?>
                                     </div>
 
-                                    <div class="row mt-4">
-                                        <div class="col-12">
-                                            <div class="preview-list">
-                                                <?php foreach ($subjects as $subject) : ?>
-                                                    <div class="preview-item border-bottom">
-                                                        <div class="preview-thumbnail">
-                                                            <div class="preview-icon bg-primary">
-                                                                <i class="mdi mdi-file-document"></i>
-                                                            </div>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <div class="form-check form-check-muted m-0">
+                                                            <label class="form-check-label">
+                                                                <input type="checkbox" class="form-check-input">
+                                                            </label>
                                                         </div>
-                                                        <div class="preview-item-content d-sm-flex flex-grow">
-                                                            <div class="flex-grow">
-                                                                <h6 class="preview-subject"><?php echo htmlspecialchars($subject['subject_name']); ?></h6>
-                                                                <p class="text-muted mb-0"><?php echo htmlspecialchars($subject['subject_code']); ?></p>
-                                                            </div>
-                                                            <div class="mr-auto text-sm-right pt-3 pt-sm-0">
-                                                                Total Teachers : <?php echo htmlspecialchars($subject['teacher_count']); ?><br><br>
-                                                                Total standards : <?php echo htmlspecialchars($subject['standards_count']); ?>
-                                                            </div>
-                                                            <div class="mr-auto text-sm-right pt-2 pt-sm-0">
-                                                                <p class="text-muted">
-                                                                    <a href="/admin/subjects/edit_subjects/<?php echo htmlspecialchars($subject['subject_id']); ?>"><button type="button" class="btn btn-success btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Edit</button></a>
-                                                                </p>
-                                                                <p class="text-muted mb-0">
-                                                                <form action="/admin/subjects/delete_subjects/<?php echo htmlspecialchars($subject['subject_id']); ?>" method="post">
-                                                                    <input type="hidden" name="_METHOD" value="DELETE">
-                                                                    <button type="submit" class="btn btn-danger btn-fw mt-2 col-5 ml-5 pt-3 pb-3 pl-2 pr-2">Delete</button>
-                                                                </form>
-                                                                </p>
-                                                            </div>
+                                                    </th>
+                                                    <th> Client Name </th>
+                                                    <th> Order No </th>
+                                                    <th> Product Cost </th>
+                                                    <th> Project </th>
+                                                    <th> Payment Mode </th>
+                                                    <th> Start Date </th>
+                                                    <th> Payment Status </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check form-check-muted m-0">
+                                                            <label class="form-check-label">
+                                                                <input type="checkbox" class="form-check-input">
+                                                            </label>
                                                         </div>
-                                                    </div>
-                                                <?php endforeach; ?>
-                                            </div>
-                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <img src="assets/images/faces/face1.jpg" alt="image" />
+                                                        <span class="pl-2">Henry Klein</span>
+                                                    </td>
+                                                    <td> 02312 </td>
+                                                    <td> $14,500 </td>
+                                                    <td> Dashboard </td>
+                                                    <td> Credit card </td>
+                                                    <td> 04 Dec 2019 </td>
+                                                    <td>
+                                                        <div class="badge badge-outline-success">Approved</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check form-check-muted m-0">
+                                                            <label class="form-check-label">
+                                                                <input type="checkbox" class="form-check-input">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <img src="assets/images/faces/face2.jpg" alt="image" />
+                                                        <span class="pl-2">Estella Bryan</span>
+                                                    </td>
+                                                    <td> 02312 </td>
+                                                    <td> $14,500 </td>
+                                                    <td> Website </td>
+                                                    <td> Cash on delivered </td>
+                                                    <td> 04 Dec 2019 </td>
+                                                    <td>
+                                                        <div class="badge badge-outline-warning">Pending</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check form-check-muted m-0">
+                                                            <label class="form-check-label">
+                                                                <input type="checkbox" class="form-check-input">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <img src="assets/images/faces/face5.jpg" alt="image" />
+                                                        <span class="pl-2">Lucy Abbott</span>
+                                                    </td>
+                                                    <td> 02312 </td>
+                                                    <td> $14,500 </td>
+                                                    <td> App design </td>
+                                                    <td> Credit card </td>
+                                                    <td> 04 Dec 2019 </td>
+                                                    <td>
+                                                        <div class="badge badge-outline-danger">Rejected</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check form-check-muted m-0">
+                                                            <label class="form-check-label">
+                                                                <input type="checkbox" class="form-check-input">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <img src="assets/images/faces/face3.jpg" alt="image" />
+                                                        <span class="pl-2">Peter Gill</span>
+                                                    </td>
+                                                    <td> 02312 </td>
+                                                    <td> $14,500 </td>
+                                                    <td> Development </td>
+                                                    <td> Online Payment </td>
+                                                    <td> 04 Dec 2019 </td>
+                                                    <td>
+                                                        <div class="badge badge-outline-success">Approved</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check form-check-muted m-0">
+                                                            <label class="form-check-label">
+                                                                <input type="checkbox" class="form-check-input">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <img src="assets/images/faces/face4.jpg" alt="image" />
+                                                        <span class="pl-2">Sallie Reyes</span>
+                                                    </td>
+                                                    <td> 02312 </td>
+                                                    <td> $14,500 </td>
+                                                    <td> Website </td>
+                                                    <td> Credit card </td>
+                                                    <td> 04 Dec 2019 </td>
+                                                    <td>
+                                                        <div class="badge badge-outline-success">Approved</div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                     <button type="button" class="btn btn-success btn-fw mt-3 col-5 ml-5 p-4" style="padding:15px;font-size:20px;margin-right:20px;" onclick="add_subject()">Add Subject</button>
                                     <script>
@@ -134,7 +227,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- jQuery -->
                 </div>
             </div>
@@ -186,7 +279,6 @@
                         }
                     }
 
-
                     // Add event listener to the search button
                     searchButton.addEventListener('click', () => {
                         const searchTerm = searchInput.value.trim();
@@ -215,6 +307,7 @@
                     updateDropdown();
                 });
             </script>
+
 </body>
 
 </html>

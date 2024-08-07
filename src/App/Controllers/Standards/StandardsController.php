@@ -75,20 +75,21 @@ class StandardsController
 
 
         $search = 0;
-        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['s'])) {
-            $search = urldecode(htmlspecialchars(trim($_GET['s'])));
-            $filtered_standard[] = array_merge($filtered_standard, $this->subject_service->get_search_results($search));
-        } else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['sort']) && isset($_GET['order'])) {
-            $filtered_standard[] = $this->standards_service->get_standards_data(order_by: $_GET['sort'], order: $_GET['order']);
-            // dd($filtered_standard);
-        } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        // if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['s'])) {
+        //     $search = urldecode(htmlspecialchars(trim($_GET['s'])));
+        //     $filtered_standard[] = array_merge($filtered_standard, $this->subject_service->get_search_results($search));
+        // } else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['sort']) && isset($_GET['order'])) {
+        //     $filtered_standard[] = $this->standards_service->get_standards_data(order_by: $_GET['sort'], order: $_GET['order']);
+        //     // dd($filtered_standard);
+        //} else
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $filtered_standard[] = $this->standards_service->get_standards_data();
         }
 
 
 
         $filtered_standards = [];
-        // dd($filtered_standard);
+
         foreach ($filtered_standard as $standard) {
 
             $filtered_standards = array_merge($filtered_standards, $standard);

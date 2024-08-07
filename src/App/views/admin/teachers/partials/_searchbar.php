@@ -1,11 +1,9 @@
 <div class="search-container1">
-    <form id='form_search' action="" method="POST">
-        <input type="text" name="s" id="searchInput" value="<?php echo e($_POST['s'] ?? $_POST['_search_input_'] ?? $_POST['_search_input_'] ?? ''); ?>" placeholder="Search subject name,teacher name,standard name, subject_code...">
-        <button type="button" onclick="form_submit()" id="searchButton">Search</button>
+    <form action="/admin/subjects/filtered_by" method="GET">
+        <input type="text" name="s" id="searchInput" placeholder="Search subject name,teacher name,standard name, subject_code...">
+        <button type="submit" id="searchButton">Search</button>
         <div class="dropdown1" id="searchHistoryDropdown"></div>
-
-
-
+    </form>
 </div>
 <style>
     .search-container1 {

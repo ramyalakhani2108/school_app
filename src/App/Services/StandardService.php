@@ -172,7 +172,61 @@ GROUP BY
             $params
         )->find_all());
     }
+    public function get_search_results(string|int $search)
+    {
 
+        $query = "SELECT
+    `std`.id AS `standards_id`,
+    `std`.`name` AS `standards_name`,
+  	GROUP_CONCAT(`teachers_std`.`teacher_id` SEPARATOR ',')as `teacher_ids`,
+	GROUP_CONCAT(DISTINCT `staff`.`name` SEPARATOR ',' ) as `staff name`,
+	GROUP_CONCAT(DISTINCT `subjects`.`name` SEPARATOR ',' ) as `staff name`,
+
+    (
+    SELECT
+        COUNT(`sub`.`subject_id`)
+    FROM
+        `std_sub` AS `sub`
+    WHERE
+        `sub`.`standard_id` = `std`.`id`
+) AS `subjects_count`,
+(
+    SELECT
+        COUNT(`teachers_std`.`teacher_id`)
+    FROM
+        `teachers_std`
+    WHERE
+        `teachers_std`.`standard_id` = `std`.`id`
+) AS `teacher_count`,
+(
+    SELECT
+        COUNT(`student`.`id`)
+    FROM
+        `student`
+    JOIN `standards` ON `standards`.`id` = `student`.`standard_id`
+    WHERE
+        `student`.`standard_id` = `std`.`id`
+) AS `student_count`
+	
+FROM
+    `standards` AS `std`
+LEFT JOIN `std_sub` ON `std`.`id` = `std_sub`.`standard_id`
+LEFT JOIN `subjects` ON `std_sub`.`subject_id` = `subjects`.`id`
+LEFT JOIN `teachers_std` ON `teachers_std`.`standard_id`=`std_sub`.`standard_id`
+LEFT JOIN `staff` ON `staff`.`id` = `teachers_std`.`teacher_id`
+WHERE 
+	`subjects`.`name` LIKE '%$search%'
+    OR
+    `std`.`name`  LIKE '%$search%'
+    OR 
+    `staff`.`name` LIKE '%$search%'
+GROUP BY
+    `std`.`id`,
+    `std`.`name`;
+
+";
+        return ($this->db->query($query)->find_all());
+    }
     public function get_standards_data(string|int $name = 0, string $order_by = "id", $order = "ASC")
     {
 

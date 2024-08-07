@@ -28,8 +28,6 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-primary mt-2">Apply Filter</button>
-
-
         </form>
     </div>
 </div>
@@ -61,6 +59,8 @@
             });
         });
     });
+
+    const form = document.getElementById();
 </script>
 <style>
     .custom-dropdown {
