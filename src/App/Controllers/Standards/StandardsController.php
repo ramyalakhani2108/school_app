@@ -19,7 +19,8 @@ class StandardsController
         private ValidatorService $validator_service,
         private StandardService $standards_service,
         private TeacherService $teacher_service,
-        private SubjectService $subject_service
+        private SubjectService $subject_service,
+        private UserService $user_service
     ) {
     }
 
@@ -37,11 +38,12 @@ class StandardsController
     public function standards_view()
     {
 
+
         $subject_names = [];
         $subjects = $this->subject_service->get_std_sub();
 
 
-
+        // dd($_POST);
         foreach ($subjects as $subject) {
             $subject_names[] = $subject['name'];
         }
@@ -51,16 +53,32 @@ class StandardsController
         foreach ($teachers as $teacher) {
             $teacher_names[] = $teacher['name'];
         }
+        $order_by = "id";
+        $order = "ASC";
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+            if (array_key_exists('order_by', $_POST)) {
+                $order_by = $_POST['order_by'];
+                $order = $_POST['order'];
+            }
             if (array_key_exists('teacher_names', $_POST)) {
                 $params = $_POST['teacher_names'];
                 $names = [];
+
                 foreach ($params as $param) {
                     $names[] = urldecode($param);
                 }
-                $filtered_standard[] = $this->standards_service->filtered_standards($names, 'staff');
+                if ($_POST['s']) {;
+                    // dd($_POST['_search_input_']);
+                    $filtered_standard[] = $this->standards_service->filtered_standards($names, 'staff', $_POST['s'], $order_by, $order);
+                } else {
+                    // dd($_POST);
+
+
+                    $filtered_standard[] = $this->standards_service->filtered_standards($names, 'staff', order_by: $order_by, order: $order);
+                }
             }
+
+
 
             if (array_key_exists('subjects_name', $_POST)) {
                 $params = $_POST['subjects_name'];
@@ -69,11 +87,29 @@ class StandardsController
                 foreach ($params as $param) {
                     $names[] = urldecode($param);
                 }
-                $filtered_standard[] = $this->standards_service->filtered_standards($names, 'subjects');
+
+                if ($_POST['s'] ?? '') {
+
+                    $filtered_standard[] = $this->standards_service->filtered_standards($names, 'subjects', $_POST['_search_input_'], order_by: $order_by, order: $order);
+                } else {
+                    $filtered_standard[] = $this->standards_service->filtered_standards($names, 'subjects', order_by: $order_by, order: $order);
+                }
+            }
+
+            if (array_key_exists('s', $_POST) && empty($_POST['subjects_name']) && empty($_POST['teacher_names'])) {
+
+                if ($_POST['s']) {
+
+                    $search = urldecode(htmlspecialchars(trim($_POST['s'])));
+
+                    $filtered_standard[] = array_merge($filtered_standard, $this->standards_service->get_search_results($search, order_by: $order_by, order: $order));
+                }
             }
         }
+        if (empty(($_POST['s'])) && empty($_POST['_search_input_']) && empty($_POST['subjects_name']) && empty($_POST['teacher_names'])) {
 
-
+            $filtered_standard[] = $this->standards_service->get_standards_data(order_by: $order_by, order: $order);
+        }
         $search = 0;
         // if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['s'])) {
         //     $search = urldecode(htmlspecialchars(trim($_GET['s'])));
@@ -82,20 +118,22 @@ class StandardsController
         //     $filtered_standard[] = $this->standards_service->get_standards_data(order_by: $_GET['sort'], order: $_GET['order']);
         //     // dd($filtered_standard);
         //} else
-        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $filtered_standard[] = $this->standards_service->get_standards_data();
-        }
+        // if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        //     $filtered_standard[] = $this->standards_service->get_standards_data();
+        // }
+
+
 
 
 
         $filtered_standards = [];
 
         foreach ($filtered_standard as $standard) {
-
             $filtered_standards = array_merge($filtered_standards, $standard);
         }
+        // dd($filtered_standards);
 
-
+        // dd($filtered_standards);
 
 
         echo $this->view->render(
@@ -189,7 +227,9 @@ class StandardsController
 
     public function add_standards()
     {
+        // dd($_POST);
         $this->validator_service->validate_standards($_POST);
+        $this->user_service->is_record_added('standards', 'name', $_POST['std_name']);
         $this->standards_service->add_standards($_POST);
         redirectTo($_SERVER['HTTP_REFERER']);
     }

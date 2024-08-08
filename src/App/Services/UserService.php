@@ -19,6 +19,17 @@ class UserService
     {
     }
 
+    public function is_record_added($table, $column, $value, $condition = null)
+    {
+
+        // for checking the duplicate records 
+
+        $query = " SELECT COUNT(*) FROM `$table` WHERE `$column` = :value " . (($condition != null) ? ". AND " . $condition :  "");
+        $columns = $this->db->query($query, ['value' => $value])->fetchColumn();
+        if ($columns > 0) {
+            throw new ValidationException(['std_name' => ['subject is already added']]);
+        }
+    }
     public function is_email_taken_profile(string $email, int $id)
     {
         $query = "SELECT COUNT(*) FROM `staff` WHERE `email`=:email AND `user_id`!=:id";

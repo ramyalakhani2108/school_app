@@ -3,7 +3,7 @@
     <?php
     $teacher_names = [];
 
-    if (array_key_exists('_filter_teachers_', $_POST)) {
+    if (array_key_exists('teacher_names', $_POST)) {
         $teacher_names = array_merge($teacher_names, $_POST['teacher_names']);
     }
 
@@ -12,7 +12,7 @@
 
     <?php
     $subject_names = [];
-    if (array_key_exists('_filter_subs_', $_POST)) {
+    if (array_key_exists('subjects_name', $_POST)) {
         $subject_names = array_merge($subject_names, $_POST['subjects_name']);
     }
 
@@ -140,6 +140,7 @@
         hidden_element_order.value = order;
         hidden_element_order_by.value = order_by;
         console.log(hidden_element_order_by, hidden_element_order);
+        form_search.submit();
     }
 </script>
 <style>

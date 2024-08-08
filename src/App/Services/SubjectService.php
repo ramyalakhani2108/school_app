@@ -26,12 +26,25 @@ class SubjectService
     }
 
 
-    public function filtered_subject(array $names, string $table_name)
+    public function filtered_subject(array $names, string $table_name, string $searched = "")
     {
 
         $names = implode("','", $names);
-
-
+        $searched = "%{$searched}%";
+        // dd($searched);
+        $params = [];
+        if ($searched != '') {
+            $search_query = "AND (
+	`staff`.`name` IN (SELECT `staff`.`name` FROM `staff` WHERE `staff`.`name` LIKE :searched)
+    OR 
+	`subjects`.`name` IN (SELECT `subjects`.`name` FROM `subjects` WHERE `subjects`.`name` LIKE :searched)
+	OR 
+	`standards`.`name` IN (SELECT `standards`.`name` FROm `standards` WHERE `standards`.`name` LIKE :searched)
+    )";
+            $params['searched'] = $searched;
+        } else {
+            $search_query = "";
+        }
         $query
             = "SELECT 
     `subjects`.`name` AS `subject_names`,
@@ -48,12 +61,13 @@ LEFT JOIN `staff` ON `staff`.`id` = `teacher_subjects`.`teacher_id`
 LEFT JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id`
 LEFT JOIN `standards` ON `teachers_std`.`standard_id` = `standards`.`id`
 WHERE
-    `subjects`.`name` IN ('$names')
+    $table_name.`name` IN ('$names') 
+	$search_query
 GROUP BY 
     `teacher_subjects`.`id`;
 ";
         // dd($query);
-        return ($this->db->query($query)->find_all());
+        return ($this->db->query($query, $params)->find_all());
     }
 
     public function add_teacher_subject(int $teacher_id = 0, array $data = [])
@@ -409,30 +423,34 @@ OR `standards`.`name` LIKE '%$search%'
     public function get_data()
     {
         $query = "SELECT
-    `sub`.`name` AS `subject_name`,
-    `sub`.`id` AS `subject_id`,
-    `sub`.`code` AS `subject_code`,
+    `subjects`.`name` AS `subject_names`,
+    `subjects`.`id` AS `subject_ids`,
+    `subjects`.`code` AS `subject_codes`,
     (
-    SELECT
-        COUNT(`teacher_subjects`.`teacher_id`)
-    FROM
-        `teacher_subjects`
-    WHERE
-        `teacher_subjects`.`subject_id` = `sub`.`id`
-) AS `teacher_count`,
-(
     SELECT
         COUNT(`std_sub`.`standard_id`)
     FROM
         `std_sub`
     WHERE
-        `std_sub`.`subject_id` = `sub`.`id`
-) AS `standards_count`
+        `std_sub`.`subject_id` = `subjects`.`id`
+) AS `standards`,
+(
+    SELECT
+        COUNT(`teacher_subjects`.`teacher_id`)
+    FROM
+        `teacher_subjects`
+    WHERE
+        `teacher_subjects`.`subject_id` = `subjects`.`id`
+) AS `staff_name`
 FROM
-    `subjects` AS `sub`
+    `subjects`
+LEFT JOIN `teacher_subjects` ON `teacher_subjects`.`subject_id` = `subjects`.`id`
+LEFT JOIN `staff` ON `teacher_subjects`.`teacher_id` = `staff`.`id`
+LEFT JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id`
+LEFT JOIN `standards` ON `standards`.`id` = teachers_std.id
 GROUP BY
-    `sub`.`id`;
-        
+    `subjects`.`id`,
+    `subjects`.`name`;
         
         ";
         // dd($query);

@@ -39,6 +39,12 @@ class ValidatorService
             'password' => ['required']
         ]);
     }
+    
+    
+    
+    
+    
+    
 
     public function validate_register(array $data)
     {

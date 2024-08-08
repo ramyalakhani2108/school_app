@@ -115,9 +115,11 @@
                                                         </thead>
                                                         <tbody align="center">
                                                             <?php $i = 1;
-
+                                                            // dd($filtered_standard);
                                                             foreach ($filtered_standard   as $standard) : ?>
-
+                                                                <?php if (empty($standard)) {
+                                                                    continue;
+                                                                } ?>
                                                                 <tr>
                                                                     <td>
                                                                         <input type="checkbox" name="selected_ids[]" value="<?php echo e($standard['standards_name']); ?>" class="record-checkbox">
