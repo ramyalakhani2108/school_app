@@ -116,9 +116,9 @@
                 submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
             });
         });
-        const form_search = document.getElementById("form_search");
 
     });
+    const form_search = document.getElementById("form_search");
 
     function form_submit() {
         // Select all hidden elements

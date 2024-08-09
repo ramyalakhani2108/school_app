@@ -39,12 +39,24 @@ class ValidatorService
             'password' => ['required']
         ]);
     }
-    
-    
-    
-    
-    
-    
+
+    public function validate_teacher(array $data)
+    {
+        $fields = [
+            'name' => ['required', 'name'],
+            'email' => ['required', 'email'],
+            'department' => ['required'],
+            'phone' => ['required', 'phone'],
+            'dob' => ['required'],
+            'gender' => ['required']
+        ];
+        $this->validator->validate($data, $fields);
+    }
+
+
+
+
+
 
     public function validate_register(array $data)
     {
@@ -93,6 +105,7 @@ class ValidatorService
             'selected_teachers' => ['select'],
             'selected_subjects' => ['select'],
         ];
+
         $this->validator->validate($data, $fields);
     }
 }

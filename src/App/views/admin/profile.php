@@ -1,7 +1,7 @@
 <?php include $this->resolve("partials/admin/_header.php"); ?>
 <?php
 $path = '/storage/';
-if ($profile['storage_filename'] != null) {
+if ($profile['storage_filename'] != null || $profile['storage_filename'] != '') {
     $path .= $profile['storage_filename'];
 } else {
     $path .= 'default.png';

@@ -1,5 +1,5 @@
 <div class="search-container1">
-    <form id="search_input" action="" method="POST">
+    <form id="form_search" action="" method="POST">
         <input type="text" name="s" id="searchInput" value="<?php echo e($_POST['s'] ?? $_POST['_search_input_'] ?? $_POST['_search_input_'] ?? ''); ?>" placeholder="Search subject name,teacher name,standard name, subject_code...">
         <button type="submit" id="searchButton">Search</button>
         <div class="dropdown1" id="searchHistoryDropdown"></div>

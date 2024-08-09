@@ -295,11 +295,11 @@ class SubjectsController
         // $this->total_subjects();
         // $this->teacher_service->get_teachers();
         // $data = $this->get_data();
+
         $sub = $this->subject_service->get_subject((int)$params['sub_id']);
         $teachers = $this->teacher_service->get_teachers();
         $teachers_subject = $this->teacher_service->get_teachers_subject((int)$params['sub_id']);
         $teacher_sub = [];
-
         foreach ($teachers_subject as $t) {
             $teacher_sub[] = $t['id'];
         }
@@ -308,8 +308,8 @@ class SubjectsController
         });
 
 
-        $stds = $this->standards_service->get_sub_std();
         $stds_sub = $this->standards_service->get_sub_std_id((int)$params['sub_id']);
+        $stds = $this->standards_service->get_sub_std();
 
         $std_ids = [];
 

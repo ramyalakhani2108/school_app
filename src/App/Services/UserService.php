@@ -24,10 +24,24 @@ class UserService
 
         // for checking the duplicate records 
 
-        $query = " SELECT COUNT(*) FROM `$table` WHERE `$column` = :value " . (($condition != null) ? ". AND " . $condition :  "");
+        $query = " SELECT COUNT(*) FROM `$table` WHERE `$column` = :value " . (($condition != null) ? " AND " . $condition :  "");
+
         $columns = $this->db->query($query, ['value' => $value])->fetchColumn();
         if ($columns > 0) {
-            throw new ValidationException(['std_name' => ['subject is already added']]);
+            throw new ValidationException(["$column" => ["$table is already added"]]);
+        }
+    }
+    public function delete_record(string $table, string $condition)
+    {
+        $query = "DELETE FROM $table WHERE $condition";
+        try {
+            $this->db->beginTransaction();
+            $this->db->query($query);
+            $this->db->endTransaction();
+        } catch (Exception $e) {
+            $this->db->cancelTransaction();
+            dd($e->getMessage());
+            throw new ValidationException(['email' => 'can\'t delete ']);
         }
     }
     public function is_email_taken_profile(string $email, int $id)

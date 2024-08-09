@@ -126,6 +126,7 @@ class StandardService
     public function get_standard(int $id = 0)
     {
         if ($id == 0) {
+
             $query = "SELECT `id`,`name` FROM `standards`";
             return $this->db->query($query)->find_all();
         } else {
@@ -184,6 +185,7 @@ class StandardService
     }
     public function get_standard_sub()
     {
+
         $query = "SELECT `id`,`name`,`code` FROM `subjects`";
         return $this->db->query($query)->find_all();
     }
@@ -194,7 +196,6 @@ class StandardService
         $query = "SELECT `id` FROM `standards`";
         $last_std_id = $this->db->query($query)->find_all();
         $last_std_id = end($last_std_id)['id'];
-
         $query = "SELECT DISTINCT `sub`.`id`, `sub`.`name`,`sub`.`code` FROM `subjects` as `sub` LEFT JOIN `std_sub` ON `sub`.`id` = `std_sub`.`subject_id` WHERE `std_sub`.`standard_id`=:sid";
 
         $params = [];

@@ -91,17 +91,14 @@
                                 <div class="card-body">
                                     <h4 class="card-title">Edit Standard</h4>
                                     <!-- <p class="card-description"> Basic form elements </p> -->
+
                                     <form class="forms-sample" id="addSub" method="POST">
                                         <div class="form-group">
                                             <label for="exampleInputName1">Subject Name</label>
 
                                             <input type="text" value="<?php echo e($std['name'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="std_name" placeholder="Enter Subject Name...">
                                         </div>
-                                        <?php if (array_key_exists('std_name', $errors)) : ?>
-                                            <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                <?php echo e($errors['std_name'][0]); ?>
-                                            </div>
-                                        <?php endif; ?>
+
 
 
 

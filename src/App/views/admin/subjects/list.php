@@ -1,6 +1,5 @@
 <?php include $this->resolve("partials/admin/_header.php");
 
-
 ?>
 
 

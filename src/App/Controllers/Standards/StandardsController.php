@@ -38,7 +38,6 @@ class StandardsController
     public function standards_view()
     {
 
-
         $subject_names = [];
         $subjects = $this->subject_service->get_std_sub();
 
@@ -50,6 +49,7 @@ class StandardsController
         $filtered_standard = [];
         $teachers = $this->teacher_service->get_teachers();
         $teacher_names = [];
+        // dd(12);
         foreach ($teachers as $teacher) {
             $teacher_names[] = $teacher['name'];
         }
