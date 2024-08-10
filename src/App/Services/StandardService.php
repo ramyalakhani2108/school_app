@@ -133,10 +133,30 @@ class StandardService
         }
     }
 
-    public function get_sub_std(int $id = 0)
+    public function get_standards(int $id = 0, array $ignore = [])
     {
-        $query = "SELECT `id`,`name` FROM `standards`";
-        return $this->db->query($query)->find_all();
+        $ids = [];
+        $where = "";
+        if (!empty($ignore)) {
+            foreach ($ignore as $ig) {
+                foreach ($ig as $i) {
+                    $ids[] = $i['id'];
+                }
+            }
+            $ids = implode(",", $ids);
+            $where = " WHERE  id NOT IN ($ids)";
+        } else {
+            $where = "";
+        }
+
+        $params = [];
+        if ($id != 0) {
+            $query = "SELECT DISTINCT `std`.`id`, `std`.`name` FROM `standards` as `std` LEFT JOIN `std_sub` ON `std`.`id` = `std_sub`.`standard_id` WHERE `std_sub`.`subject_id`=:sid";
+            $params['sid'] = $id;
+        } else {
+            $query = "SELECT `id`,`name` FROM `standards`" . $where;
+        }
+        return $this->db->query($query, $params)->find_all();
     }
 
     public function delete_standards($selected_standards)

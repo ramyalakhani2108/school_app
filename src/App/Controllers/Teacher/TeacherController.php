@@ -44,7 +44,7 @@ class TeacherController
         $teachers = $this->teacher_service->get_teachers((int) $params['tid']);
 
         $teachers_std = $this->teacher_service->get_std_teacher((int) $params['tid']);
-        $stds = $this->standards_service->get_sub_std();
+        $stds = $this->standards_service->get_standards();
 
         $std_ids = [];
 
@@ -120,7 +120,7 @@ class TeacherController
             $subject_names[] = $subject['name'];
         }
         $standard_names = [];
-        $standards = $this->standards_service->get_sub_std();
+        $standards = $this->standards_service->get_standards();
 
 
 

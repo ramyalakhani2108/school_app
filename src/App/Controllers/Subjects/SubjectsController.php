@@ -104,7 +104,7 @@ class SubjectsController
         // $this->total_subjects();
         // dd($_POST);
         $standard_names = [];
-        $standards = $this->standards_service->get_sub_std();
+        $standards = $this->standards_service->get_standards();
         // dd($standards);
 
 
@@ -258,7 +258,7 @@ class SubjectsController
                 $teacher_sub[] = $t['teacher_id'];
             }
         }
-        $stds = $this->standards_service->get_sub_std();
+        $stds = $this->standards_service->get_standards();
         $stds_sub = $this->standards_service->get_sub_std_id();
         $std_ids = [];
         if (!empty($stds_sub)) {
@@ -308,9 +308,9 @@ class SubjectsController
         });
 
 
-        $stds_sub = $this->standards_service->get_sub_std_id((int)$params['sub_id']);
-        // dd($stds_sub);
-        $stds = $this->standards_service->get_sub_std();
+        $stds_sub = $this->standards_service->get_standards((int)$params['sub_id']);
+
+        $stds = $this->standards_service->get_standards(ignore: [$stds_sub]);
 
         $std_ids = [];
 
@@ -318,17 +318,13 @@ class SubjectsController
             $std_ids[] = $std['id'];
         }
 
-
-        $filtered_stds = array_filter($stds, function ($std) use ($std_ids) {
-            return !in_array($std['id'], $std_ids);
-        });;
         echo $this->view->render(
             "admin/subjects/edit.php",
             [
                 'teachers_subject' => $teachers_subject,
                 'teachers' => $filtered_teachers,
                 'teachers_sub' => $teacher_sub,
-                'stds' => $filtered_stds,
+                'stds' => $stds,
                 'standards' => $stds_sub,
                 'std_ids' => $std_ids,
                 'sub' => $sub,
