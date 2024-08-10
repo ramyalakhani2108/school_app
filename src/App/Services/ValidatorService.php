@@ -30,6 +30,8 @@ class ValidatorService
         $this->validator->add('sub_code', new SubjectCodeRule());
         $this->validator->add('select', new SelectRule());
     }
+
+
     public function validate_login(array $data)
     {
 
@@ -100,11 +102,18 @@ class ValidatorService
 
     public function validate_standards(array $data)
     {
+        if (!array_key_exists('selected_teachers', $data)) {
+            $data['selected_teachers'] = [];
+        }
+        if (!array_key_exists('selected_subjects', $data)) {
+            $data['selected_subjects'] = [];
+        }
         $fields = [
             'std_name' => ['required'],
             'selected_teachers' => ['select'],
             'selected_subjects' => ['select'],
         ];
+
 
         $this->validator->validate($data, $fields);
     }

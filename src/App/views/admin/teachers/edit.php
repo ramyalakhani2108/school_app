@@ -208,6 +208,7 @@
                                             <tbody align="center">
                                                 <?php
                                                 $total_stds = count($teacher_stds);
+                                                // dd($total_stds);
 
                                                 $part = ceil($total_stds / 3); // Divide subs into 3 columns
 
@@ -277,13 +278,13 @@
                                                     <th>
                                                         <input type="checkbox" id="selectAll" onclick="toggleCheckboxes2(this)">
                                                     </th>
-                                                    <th>Standard Name</th>
+                                                    <th>Subject Name</th>
                                                     <!-- Empty header for the second column -->
                                                     <th></th>
-                                                    <th>Standard Name</th>
+                                                    <th>Subject Name</th>
                                                     <th></th> <!-- Empty header for the third column -->
 
-                                                    <th>Standard Name</th>
+                                                    <th>Subject Name</th>
                                                 </tr>
                                             </thead>
                                             <tbody align="center">
@@ -376,6 +377,213 @@
                         </div>
 
                     </div>
+                    <div class="row">
+
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Add subjects</h4>
+                                    <!-- <p class="card-description"> Basic form elements </p> -->
+                                    <form method="POST" action="/admin/subjects/add_teachers">
+                                        <table class="table">
+                                            <thead align="center">
+                                                <tr>
+                                                    <th>
+                                                        <input type="checkbox" id="selectAll" onclick="toggleCheckboxes2(this)">
+                                                    </th>
+                                                    <th>ID</th>
+                                                    <th>subjects Names</th>
+                                                    <th>Teacher Email</th>
+                                                    <th>Action</th>
+                                                    <th>ID</th>
+                                                    <th>Teacher Names</th>
+                                                    <th>Teacher Email</th>
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody align="center">
+                                                <tr>
+                                                    <?php
+
+                                                    $total_subjects = count($subjects);
+                                                    $part = ceil($total_subjects / 2);
+                                                    $first_part = array_slice($subjects, 0, $part);
+                                                    $second_part = array_slice($subjects, $part, $part);
+
+                                                    for ($i = 0; $i < $part; $i++) :
+                                                        $std1 = isset($first_part[$i]) ? $first_part[$i] : null;
+
+                                                        $std2 = isset($second_part[$i]) ? $second_part[$i] : null;
+                                                    ?>
+
+                                                        <?php if ($std1) : ?>
+                                                            <td>
+                                                                <input type="checkbox" name="selected_ids[]" value="<?php echo e($std1['id']); ?>" class="record-checkbox2">
+                                                            </td>
+                                                            <td><?php echo e($std1['id']); ?></td>
+                                                            <td><?php echo e($std1['name']); ?></td>
+
+
+                                                            <td>
+
+                                                                <a href="/admin/teachers/remove_subs/<?php echo e($std1['id']) ?>/<?php echo e($teacher['id']); ?>" class="btn btn-inverse-danger btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Remove</a>
+
+                                                            </td>
+                                                        <?php else : ?>
+                                                            <td colspan="5"></td>
+                                                        <?php endif; ?>
+
+                                                        <?php if ($std2) :  ?>
+                                                            <td>
+                                                                <input type="checkbox" name="selected_ids[]" value="<?php echo e($std2['id']); ?>" class="record-checkbox2">
+                                                            </td>
+                                                            <td><?php echo e($std2['id']); ?></td>
+                                                            <td><?php echo e($std2['name']); ?></td>
+
+
+                                                            <td>
+
+                                                                <a href="/admin/teachers/remove_subs/<?php echo e($std2['id']) ?>/<?php echo e($teacher['id']); ?>" class="btn btn-inverse-danger btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Remove</a>
+
+
+                                                            </td>
+                                                        <?php else : ?>
+                                                            <td colspan="5"></td>
+                                                        <?php endif; ?>
+
+                                                </tr>
+                                            <?php endfor; ?>
+                                            </tbody>
+                                        </table>
+
+                                        <br>
+                                    </form>
+
+                                    <script>
+                                        function toggleCheckboxes(selectAllCheckbox) {
+                                            // Get all checkboxes with the class "record-checkbox"
+                                            const checkboxes = document.querySelectorAll('.record-checkbox');
+                                            checkboxes.forEach(checkbox => {
+                                                checkbox.checked = selectAllCheckbox.checked;
+                                            });
+                                        }
+
+                                        function toggleCheckboxes2(selectAllCheckbox) {
+                                            // Get all checkboxes with the class "record-checkbox"
+                                            const checkboxes = document.querySelectorAll('.record-checkbox2');
+                                            checkboxes.forEach(checkbox => {
+                                                checkbox.checked = selectAllCheckbox.checked;
+                                            });
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Add Standards</h4>
+                                    <!-- <p class="card-description"> Basic form elements </p> -->
+                                    <form method="POST" action="/admin/subjects/add_teachers">
+                                        <table class="table">
+                                            <thead align="center">
+                                                <tr>
+                                                    <th>
+                                                        <input type="checkbox" id="selectAll" onclick="toggleCheckboxes2(this)">
+                                                    </th>
+                                                    <th>ID</th>
+                                                    <th>Standards Names</th>
+                                                    <th>Action</th>
+                                                    <th></th>
+                                                    <th>ID</th>
+                                                    <th>Standards Names</th>
+                                                    <th>Action</th>
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody align="center">
+                                                <?php
+                                                $total_standards = count($standards);
+                                                $part = ceil($total_standards / 2);
+                                                $first_part = array_slice($standards, 0, $part);
+                                                $second_part = array_slice($standards, $part, $part);
+
+                                                for ($i = 0; $i < $part; $i++) :
+                                                    $std1 = isset($first_part[$i]) ? $first_part[$i] : null;
+
+                                                    $std2 = isset($second_part[$i]) ? $second_part[$i] : null;
+                                                ?>
+                                                    <tr>
+                                                        <?php if ($std1) : ?>
+                                                            <td>
+                                                                <input type="checkbox" name="selected_ids[]" value="<?php echo e($std1['id']); ?>" class="record-checkbox2">
+                                                            </td>
+                                                            <td><?php echo e($std1['id']); ?></td>
+                                                            <td><?php echo e($std1['name']); ?></td>
+
+
+                                                            <td>
+
+                                                                <a href="/admin/teachers/remove_stds/<?php echo e($std1['id']) ?>/<?php echo e($teacher['id']); ?>" class="btn btn-inverse-danger btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Remove</a>
+
+                                                            </td>
+                                                        <?php else : ?>
+                                                            <td colspan="5"></td>
+                                                        <?php endif; ?>
+
+                                                        <?php if ($std2) :  ?>
+                                                            <td>
+                                                                <input type="checkbox" name="selected_ids[]" value="<?php echo e($std2['id']); ?>" class="record-checkbox2">
+                                                            </td>
+                                                            <td><?php echo e($std2['id']); ?></td>
+                                                            <td><?php echo e($std2['name']); ?></td>
+
+
+                                                            <td>
+
+                                                                <a href="/admin/teachers/remove_stds/<?php echo e($std2['id']) ?>/<?php echo e($teacher['id']); ?>" class="btn btn-inverse-danger btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Remove</a>
+
+
+                                                            </td>
+                                                        <?php else : ?>
+                                                            <td colspan="5"></td>
+                                                        <?php endif; ?>
+
+                                                    </tr>
+                                                <?php endfor; ?>
+                                            </tbody>
+                                        </table>
+
+                                        <br>
+                                    </form>
+
+                                    <script>
+                                        function toggleCheckboxes(selectAllCheckbox) {
+                                            // Get all checkboxes with the class "record-checkbox"
+                                            const checkboxes = document.querySelectorAll('.record-checkbox');
+                                            checkboxes.forEach(checkbox => {
+                                                checkbox.checked = selectAllCheckbox.checked;
+                                            });
+                                        }
+
+                                        function toggleCheckboxes2(selectAllCheckbox) {
+                                            // Get all checkboxes with the class "record-checkbox"
+                                            const checkboxes = document.querySelectorAll('.record-checkbox2');
+                                            checkboxes.forEach(checkbox => {
+                                                checkbox.checked = selectAllCheckbox.checked;
+                                            });
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
 

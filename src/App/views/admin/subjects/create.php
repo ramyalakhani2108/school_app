@@ -116,7 +116,15 @@
                                     <h4 class="card-title">Add Subject</h4>
                                     <!-- <p class="card-description"> Basic form elements </p> -->
                                     <form class="forms-sample" id="addSub" method="POST">
-
+                                        <div class="form-group">
+                                            <label for="exampleInputName1">Subject Name</label>
+                                            <input type="text" value="<?php echo e($oldFormData['sub_name'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="sub_name" placeholder="Enter Subject Code...">
+                                        </div>
+                                        <?php if (array_key_exists('sub_name', $errors)) : ?>
+                                            <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
+                                                <?php echo e($errors['sub_name'][0]); ?>
+                                            </div>
+                                        <?php endif; ?>
                                         <div class="form-group">
                                             <label for="exampleInputName1">Subject Code</label>
                                             <input type="text" value="<?php echo e($oldFormData['sub_code'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="sub_code" placeholder="Enter Subject Code...">

@@ -11,24 +11,22 @@ use Framework\Exceptions\ValidationException;
 
 class UserService
 {
-    public function __construct(private Database $db)
-    {
-    }
+    public function __construct(private Database $db) {}
 
-    public function check_role(string $id)
-    {
-    }
+    public function check_role(string $id) {}
 
-    public function is_record_added($table, $column, $value, $condition = null)
+    public function is_record_added($table, $column, $value, $condition = null, $field = "email")
     {
 
         // for checking the duplicate records 
 
         $query = " SELECT COUNT(*) FROM `$table` WHERE `$column` = :value " . (($condition != null) ? " AND " . $condition :  "");
-
+        // dd($query);
         $columns = $this->db->query($query, ['value' => $value])->fetchColumn();
+
         if ($columns > 0) {
-            throw new ValidationException(["$column" => ["$table is already added"]]);
+
+            throw new ValidationException(["$field" => ["$table is already added"]]);
         }
     }
     public function delete_record(string $table, string $condition)

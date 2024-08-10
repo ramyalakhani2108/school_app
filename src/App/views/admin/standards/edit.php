@@ -97,6 +97,11 @@
                                             <label for="exampleInputName1">Subject Name</label>
 
                                             <input type="text" value="<?php echo e($std['name'] ?? "");  ?>" class="form-control" id="exampleInputName1" name="std_name" placeholder="Enter Subject Name...">
+                                            <?php if (array_key_exists('std_name', $errors)) : ?>
+                                                <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
+                                                    <?php echo e($errors['std_name'][0]); ?>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
 
 
@@ -109,6 +114,7 @@
                                         {
                                             return in_array($teacher_id, $teachers_sub);
                                         }
+
                                         foreach ($teachers as $teacher) :
                                             $teacher_ids[] = $teacher['id'];
                                             $isAdded = is_teacher_added($teacher['id'], $teachers_sub);
@@ -116,7 +122,11 @@
                                         endforeach; ?>
                                         <div class="form-group">
                                             <label for="exampleInputName1">Select Teachers</label>
-
+                                            <?php if (array_key_exists('selected_teachers', $errors)) : ?>
+                                                <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
+                                                    <?php echo e($errors['selected_teachers'][0]); ?>
+                                                </div>
+                                            <?php endif; ?>
                                             <table class="table">
                                                 <thead align="center">
                                                     <tr>
@@ -183,7 +193,11 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputName1">Select subjects</label>
-
+                                            <?php if (array_key_exists('selected_subjects', $errors)) : ?>
+                                                <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
+                                                    <?php echo e($errors['selected_subjects'][0]); ?>
+                                                </div>
+                                            <?php endif; ?>
                                             <?php $i = 1;
                                             $std_id = [];
                                             // dd($teachers_sub);
@@ -473,13 +487,11 @@
                                                             <?php $isAdded = is_std_added($std2['id'], $subjects); ?>
                                                             <?php if ($isAdded) : ?>
                                                                 <a href="/admin/standards/remove_subs/<?php echo e($std2['id']) ?>/<?php echo e($std['id']); ?>" class="btn btn-inverse-danger btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Remove</a>
-
                                                             <?php endif; ?>
                                                         </td>
                                                     <?php else : ?>
                                                         <td colspan="5"></td>
                                                     <?php endif; ?>
-
                                             </tr>
                                         <?php endfor; ?>
                                         </tbody>

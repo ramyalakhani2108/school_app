@@ -15,7 +15,7 @@ class SubjectNameRule implements RuleInterface
 
         // Check if the subject name is at least 4 characters long, alphanumeric or alphabetic, allows underscores and spaces,
         // but cannot be only digits or contain other special characters
-        return strlen($subjectName) >= 4 && preg_match('/^(?!^\d+$)[a-zA-Z0-9_ ]+$/', $subjectName) === 1;
+        return strlen($subjectName) >= 2 && preg_match('/^(?!^\d+$)[a-zA-Z0-9_ ]+$/', $subjectName) === 1;
     }
 
     public function getMessage(array $formData, string $field, array $params): string

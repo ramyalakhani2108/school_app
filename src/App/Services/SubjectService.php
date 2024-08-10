@@ -12,9 +12,7 @@ use Framework\Exceptions\ValidationException;
 class SubjectService
 {
     private int $last_sub_id = 0;
-    public function __construct(private Database $db)
-    {
-    }
+    public function __construct(private Database $db) {}
 
     public function get_user_profile(int $id)
     {
@@ -22,7 +20,14 @@ class SubjectService
         $query = "SELECT *,DATE_FORMAT(dob,'%Y-%m-%d') as fomatted_date FROM staff WHERE user_id = :user_id";
         return $this->db->query($query, [
             'user_id' => $_SESSION['user_id']
+
         ])->find();
+    }
+
+    public function get_teacher_subs(int $id)
+    {
+        $query = "SELECT DISTINCT `sub`.`id`, `sub`.`name`,`sub`.`code` FROM `subjects` as `sub`  JOIN `teacher_subjects` ON `sub`.`id` = `teacher_subjects`.`subject_id` WHERE `teacher_subjects`.`teacher_id`=:tid AND `teacher_subjects`.`status` = 1;";
+        return $this->db->query($query, ['tid' => $id])->find_all();
     }
 
 
@@ -339,12 +344,19 @@ OR `standards`.`name` LIKE '%$search%'
 ";
         return ($this->db->query($query)->find_all());
     }
-    public function get_subject(int $id)
+    public function get_subject(int $id = 0)
     {
-        $query = "SELECT `id`,`name`,`code` FROM `subjects` WHERE `id`=:id";
-        return ($this->db->query($query, [
-            'id' => $id
-        ])->find());
+        if ($id != 0) {
+            $query = "SELECT `id`,`name`,`code` FROM `subjects` WHERE `id`=:id";
+            return ($this->db->query($query, [
+                'id' => $id
+            ])->find());
+        } else {
+            $query = "SELECT `id`,`name`,`code` FROM `subjects`";
+            return ($this->db->query($query, [
+                'id' => $id
+            ])->find_all());
+        }
     }
     public function add_subject(array $data)
     {
@@ -417,7 +429,7 @@ OR `standards`.`name` LIKE '%$search%'
     }
     public function get_std_sub()
     {
-        $query = "SELECT `id`,`name`,`code` FROM `subjects`";
+        $query = "SELECT DISTINCT `id`,`name`,`code` FROM `subjects` ";
         return $this->db->query($query)->find_all();
     }
     public function get_data()

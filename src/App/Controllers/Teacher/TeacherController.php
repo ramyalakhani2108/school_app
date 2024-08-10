@@ -20,14 +20,24 @@ class TeacherController
         private StandardService $standards_service,
         private ValidatorService $validator_service,
         private UserService $user_service
-    ) {
-    }
+    ) {}
 
     public function teacher_view()
     {
         echo $this->view->render("teacher/show_teachers.php");
     }
+    public function remove_subs_teacher(array $params = [])
+    {
 
+        $this->teacher_service->remove_subs_teacher((int) $params['sub_id'], (int) $params['tid']);
+        redirectTo($_SERVER['HTTP_REFERER']);
+    }
+    public function remove_stds_teacher(array $params = [])
+    {
+
+        $this->teacher_service->remove_stds_teacher((int) $params['std_id'], (int) $params['tid']);
+        redirectTo($_SERVER['HTTP_REFERER']);
+    }
     public function edit_teacher(array $params = [])
     {
         // dd($params);
@@ -49,22 +59,28 @@ class TeacherController
 
         $teachers_subs = $this->teacher_service->get_sub_teacher((int) $params['tid']);
         $subs = $this->subject_service->get_std_sub();
+        $subjects = $this->subject_service->get_teacher_subs((int) $params['tid']);
+
+        $standards = $this->teacher_service->get_teacher_subs((int) $params['tid']);
         $std_ids = [];
         if (!empty($teachers_subs)) {
             foreach ($teachers_subs as $std) {
-
                 $std_ids[] = $std['id'];
             }
         }
         $filtered_subs = array_filter($subs, function ($std) use ($std_ids) {
+
             return !in_array($std['id'], $std_ids);
         });
+
         echo $this->view->render(
             '/admin/teachers/edit.php',
             [
                 'teachers' => $teachers,
                 'teacher_stds' => $filtered_stds,
-                'subs' => $filtered_subs
+                'subs' => $filtered_subs,
+                'subjects' => $subjects,
+                'standards' => $standards
             ]
         );
     }
@@ -73,7 +89,9 @@ class TeacherController
     {
         $this->validator_service->validate_teacher($_POST);
         $this->user_service->is_record_added('staff', 'email', $_POST['email'], ' id!=' . $_POST['tid']);
+        $this->user_service->is_record_added('staff', 'phone', $_POST['phone'], ' id!=' . $_POST['tid']);
         $this->teacher_service->update($_POST);
+        redirectTo($_SERVER['HTTP_REFERER']);
     }
 
     public function admin_teacher_view()

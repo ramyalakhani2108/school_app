@@ -9,6 +9,7 @@ use App\Services\ProfileService;
 use App\Services\StandardService;
 use App\Services\SubjectService;
 use App\Services\TeacherService;
+use App\Services\UserService;
 use App\Services\ValidatorService;
 use Framework\TemplateEngine;
 
@@ -18,19 +19,15 @@ class SubjectsController
     public function __construct(
         private TemplateEngine $view,
         private ProfileService $profile_service,
+        private UserService $user_service,
         private SubjectService $subject_service,
         private ValidatorService $validator_service,
         private TeacherService $teacher_service,
         private StandardService $standards_service,
-    ) {
-    }
-    public function get_standards()
-    {
-    }
+    ) {}
+    public function get_standards() {}
 
-    public function get_search_results(array $search)
-    {
-    }
+    public function get_search_results(array $search) {}
 
     public  function filtered_subject(array $params = [])
     {
@@ -94,8 +91,10 @@ class SubjectsController
     }
     public function create()
     {
+
         $this->validator_service->validate_subject($_POST);
-        $this->subject_service->is_subject_added($_POST['sub_code'], $_POST['sub_name']);
+        $this->user_service->is_record_added('subjects', 'code', $_POST['sub_code'], field: 'sub_code');
+        $this->user_service->is_record_added('subjects', 'name', $_POST['sub_name'], field: 'sub_name');
         $this->subject_service->create($_POST);
         redirectTo($_SERVER['HTTP_REFERER']);
     }
@@ -298,7 +297,8 @@ class SubjectsController
 
         $sub = $this->subject_service->get_subject((int)$params['sub_id']);
         $teachers = $this->teacher_service->get_teachers();
-        $teachers_subject = $this->teacher_service->get_teachers_subject((int)$params['sub_id']);
+        $teachers_subject = $this->teacher_service->get_teachers(sid: (int)$params['sub_id']);
+        // dd($teachers_subject);
         $teacher_sub = [];
         foreach ($teachers_subject as $t) {
             $teacher_sub[] = $t['id'];
@@ -309,6 +309,7 @@ class SubjectsController
 
 
         $stds_sub = $this->standards_service->get_sub_std_id((int)$params['sub_id']);
+        // dd($stds_sub);
         $stds = $this->standards_service->get_sub_std();
 
         $std_ids = [];
@@ -344,7 +345,9 @@ class SubjectsController
     }
     public function edit($params = [])
     {
-        $this->subject_service->is_subject_added(strtoupper($_POST['sub_code']), $_POST['sub_name'], (int) $params['sub_id']);
+        // $this->subject_service->is_subject_added(strtoupper($_POST['sub_code']), $_POST['sub_name'], (int) $params['sub_id']);
+        $this->user_service->is_record_added('subjects', 'code', $_POST['sub_code'], '`id`!=' . (int) $params['sub_id'], 'sub_code');
+        $this->user_service->is_record_added('subjects', 'name', $_POST['sub_name'], '`id`!=' . (int) $params['sub_id'], 'sub_name');
         $this->subject_service->update($_POST, (int) $params['sub_id']);
         redirectTo($_SERVER['HTTP_REFERER']);
     }

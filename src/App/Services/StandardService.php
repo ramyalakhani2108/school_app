@@ -18,9 +18,7 @@ class StandardService
 {
 
 
-    public function __construct(private Database $db)
-    {
-    }
+    public function __construct(private Database $db) {}
 
     public function total_standards()
     {
@@ -159,6 +157,7 @@ class StandardService
             $this->db->cancelTransaction();
         }
     }
+
     public function get_sub_std_id(int $id = 0)
     {
         $query = "SELECT `id` FROM `subjects`";

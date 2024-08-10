@@ -18,35 +18,80 @@ class TeacherService
 {
 
 
-    public function __construct(private Database $db)
-    {
-    }
+    public function __construct(private Database $db) {}
 
+    public function  remove_subs_teacher(int $sub_id, int $tid)
+    {
+
+        $query = "UPDATE `teacher_subjects` SET `status`='0' WHERE `subject_id`=:subid AND `teacher_id`=:tid";
+        // dd($query);
+        $this->db->query(
+            $query,
+            [
+                'subid' => $sub_id,
+                'tid' => $tid
+            ]
+        );
+    }
+    public function  remove_stds_teacher(int $std_id, int $tid)
+    {
+
+        $query = "UPDATE `teachers_std` SET `status`='0' WHERE `standard_id`=:std_id AND `teacher_id`=:tid";
+        // dd($query);
+        $this->db->query(
+            $query,
+            [
+                'std_id' => $std_id,
+                'tid' => $tid
+            ]
+        );
+    }
     public function update(array $data)
     {
         try {
             $this->db->beginTransaction();
             $fields = [];
-            $selected_ids = [];
+            $params = [];
             foreach ($data as $k => $v) {
+
+
                 if ($k == 'selected_standards' || $k == 'selected_subjects') {
                     ${"$k"} = [];
 
                     foreach ($data[$k] as $value) {
                         ${"$k"}[] = (int) $value;
                     }
-                    dd($selected_subjects);
+                    ${"$k"} = implode(",", ${"$k"});
+                    // $fields[] = "`$k`" . " IN (" . ${"$k"} . ")";
+
                     continue;
                 }
-                $fields[] = "`$k`=:$v";
+                $params[$k] = $v;
+                if ($k == 'tid') {
+                    continue;
+                }
+                $fields[] = "`$k`=:$k";
             }
-            dd(implode(",", $fields));
+            $fields = (implode(",", $fields));
+            $params['gender'] = strtoupper($params['gender'][0]);
 
-            $query = "UPDATE `staff` SET `name`";
+            $query = "UPDATE `staff` SET " . $fields . " WHERE `id`=:tid";
+            $this->db->query($query, $params);
+
+            if (array_key_exists('selected_standards', $data)) {
+                // dd($selected_standards);
+                $query = "INSERT INTO `teachers_std` (`teacher_id`,`standard_id`) SELECT :tid,`id`FROM `standards` WHERE `id` IN ($selected_standards) ";
+                // dd($query);
+                $this->db->query($query, ['tid' => (int)$data['tid']]);
+            }
+            if (array_key_exists('selected_subjects', $data)) {
+                $query = "INSERT INTO `teacher_subjects` (`teacher_id`,`subject_id`) SELECT :tid,`id` FROM `subjects` WHERE `id` IN ($selected_subjects)";
+                $this->db->query($query, ['tid' => (int)$data['tid']]);
+            }
             $this->db->endTransaction();
         } catch (Exception $e) {
             $this->db->cancelTransaction();
-            dd($e->getMessage());
+            // dd($e->getMessage());
             throw new ValidationException(['name' => ['couldn\'t update the records']]);
         }
     }
@@ -174,6 +219,15 @@ GROUP BY
         // dd($this->db->query($query)->find_all());
     }
 
+    public function get_teacher_subs(int $tid)
+    {
+        $query = "SELECT `std`.`id`,`std`.`name`
+FROM `standards` as `std`
+JOIN `teachers_std`
+ON `teachers_std`.`standard_id`=`std`.`id`
+WHERE `teachers_std`.`teacher_id`=:tid AND `status`=1;";
+        return $this->db->query($query, ['tid' => $tid])->find_all();
+    }
     public function filtered_teacher(array $names, string $table_name, string $searched = '', string $order_by = "id", string $order = "ASC")
     {
 
@@ -329,7 +383,7 @@ FROM
     `standards`
 JOIN `teachers_std` ON `teachers_std`.`standard_id` = `standards`.`id`
 WHERE
-    `teachers_std`.`teacher_id` = :tid;";
+    `teachers_std`.`teacher_id` = :tid AND `teachers_std`.`status`=1";
 
             return $this->db->query($query, ['tid' => $id])->find_all();
         }
@@ -337,14 +391,14 @@ WHERE
     public function get_sub_teacher(int $id = 0)
     {
         if ($id != 0) {
-            $query = "SELECT
+            $query = "SELECT DISTINCT
     `subjects`.`name` ,`subjects`.`id`
 FROM
     `subjects`
 JOIN `teacher_subjects` ON `teacher_subjects`.`subject_id` = `subjects`.`id`
 WHERE
-    `teacher_subjects`.`teacher_id` = :tid;";
-
+    `teacher_subjects`.`teacher_id` = :tid AND `teacher_subjects`.`status`=1";
+            // dd($query);
             return $this->db->query($query, ['tid' => $id])->find_all();
         }
     }
@@ -454,20 +508,36 @@ $order_by $order
 
         return $this->db->query($query)->find_all();
     }
-    public function get_teachers(int $id = 0)
+    public function get_teachers(int $id = 0, int $sid = 0)
     {
         $params = [
             'rid' => 2
         ];
-        if ($id == 0) {
-            $query = "SELECT `id`,`name` FROM  `staff` WHERE `role_id`=:rid";
-        } else {
-            $query = "SELECT * FROM `staff` WHERE `role_id`=:rid AND `id`=:id";
+
+        if ($id != 0) {
+            $query = "SELECT * FROM `staff` WHERE `role_id` = :rid AND `id` = :id";
             $params['id'] = $id;
+        } else if ($sid != 0) {
+
+            $query = "
+            SELECT DISTINCT 
+                `teacher_subjects`.`subject_id`,
+                `staff`.`id`,
+                `staff`.`name`,
+                `staff`.`email`
+            FROM 
+                `staff`
+            JOIN 
+                `teacher_subjects` ON `teacher_subjects`.`teacher_id` = `staff`.`id`
+            WHERE 
+                `teacher_subjects`.`subject_id` = :sid 
+                AND `staff`.`role_id` = :rid
+        ";
+            $params['sid'] = $sid;
+        } else {
+            $query = "SELECT `id`, `name`,`email` FROM `staff` WHERE `role_id` = :rid";
         }
-        return ($this->db->query(
-            $query,
-            $params
-        )->find_all());
+
+        return ($this->db->query($query, $params)->find_all());
     }
 }

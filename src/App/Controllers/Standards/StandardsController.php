@@ -21,8 +21,7 @@ class StandardsController
         private TeacherService $teacher_service,
         private SubjectService $subject_service,
         private UserService $user_service
-    ) {
-    }
+    ) {}
 
     public function remove_teachers_stds(array $params = [])
     {
@@ -244,7 +243,9 @@ class StandardsController
     public function edit(array $params = [])
     {
 
-        $this->standards_service->is_std_added($_POST['std_name'], (int) $params['std_id']);
+        // $this->standards_service->is_std_added($_POST['std_name'], (int) $params['std_id']);
+        $this->validator_service->validate_standards($_POST);
+        $this->user_service->is_record_added('standards', 'name', $_POST['std_name'], 'id!=' . (int) $params['std_id'], 'std_name');
         $this->standards_service->update($_POST, (int) $params['std_id']);
         redirectTo($_SERVER['HTTP_REFERER']);
     }

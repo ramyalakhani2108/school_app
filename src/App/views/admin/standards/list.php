@@ -115,6 +115,8 @@
                                                         </thead>
                                                         <tbody align="center">
                                                             <?php $i = 1;
+                                                            $filtered_standard = $filtered_standard;
+                                                            /** @var string filtered_standard */
                                                             // dd($filtered_standard);
                                                             foreach ($filtered_standard   as $standard) : ?>
                                                                 <?php if (empty($standard)) {
