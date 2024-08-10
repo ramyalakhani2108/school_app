@@ -228,7 +228,7 @@ class SubjectsController
     public function total_subjects(int $class = 0)
     {
 
-        $this->view->addGlobal('total_subjects', $this->subject_service->total_subjects($class));
+        $this->view->addGlobal('total_subjects', $this->subject_service->total_subjects());
     }
 
     public function remove_teachers_sub(array $params = [])
