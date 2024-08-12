@@ -16,8 +16,7 @@ class ProfileController
         private ProfileService $profile_service,
         public ValidatorService $validator_service,
         public UserService $user_service
-    ) {
-    }
+    ) {}
 
     public function profile_view(array $params = [])
     {
@@ -36,7 +35,7 @@ class ProfileController
         // dd($_POST);
 
         $this->validator_service->validate_profile($_POST);
-        $this->user_service->is_email_taken_profile($_POST['email'], $_SESSION['user_id']);
+        $this->user_service->is_record_added('users', 'email', $_POST['email'], 'user_id!=' . $_SESSION['user_id'], 'email');
         $this->profile_service->update($_POST);
         redirectTo($_SERVER['HTTP_REFERER']);
     }

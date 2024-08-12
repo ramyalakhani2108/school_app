@@ -301,7 +301,7 @@ $order_by $order
 ";
         return ($this->db->query($query)->find_all());
     }
-    public function get_standards_data(string|int $name = 0, string $order_by = "id", $order = "ASC")
+    public function get_standards_data(string|int $search = 0, string $order_by = "id", $order = "ASC")
     {
 
         if ($order_by == "id") {
@@ -317,7 +317,7 @@ $order_by $order
         }
 
 
-        if ($name != 0) {
+        if ($search != 0) {
             $query = "SELECT
     `std`.id AS `standards_id`,
     `std`.`name` AS `standards_name`,
@@ -357,9 +357,9 @@ LEFT JOIN `std_sub` ON `std`.`id` = `std_sub`.`standard_id`
 LEFT JOIN `subjects` ON `std_sub`.`subject_id` = `subjects`.`id`
 LEFT JOIN `teachers_std` ON `teachers_std`.`standard_id`=`std_sub`.`standard_id`
 LEFT JOIN `staff` ON `staff`.`id` = `teachers_std`.`teacher_id`
-WHERE `std`.`name` LIKE '%$name%'
-OR `staff`.`name` LIKE '%$name%'
-OR `subjects`.`name` LIKE '%$name%'
+WHERE `std`.`name` LIKE '%$search%'
+OR `staff`.`name` LIKE '%$search%'
+OR `subjects`.`name` LIKE '%$search%'
 
 GROUP BY
     `std`.`id`,

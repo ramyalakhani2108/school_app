@@ -10,9 +10,7 @@ use Framework\Exceptions\ValidationException;
 
 class ProfileService
 {
-    public function __construct(private Database $db)
-    {
-    }
+    public function __construct(private Database $db) {}
 
     public function get_user_profile(int $id)
     {
@@ -29,7 +27,8 @@ class ProfileService
         $query = "SELECT COUNT(*) FROM staff WHERE phone = :phone AND user_id != :user_id";
 
         $result = $this->db->query($query, [
-            'phone' => $phone, 'user_id' => $userId
+            'phone' => $phone,
+            'user_id' => $userId
         ])->fetchColumn();
         if ($result > 0) {
             throw new ValidationException(['phone' => 'The number is already added']);
@@ -55,7 +54,7 @@ class ProfileService
             $data['password'] = $user_old_data['password'];
         }
 
-        // Prepare data for update
+
         $params = [
             'nm' => $data['name'],
             'eml' => $data['email'],
@@ -110,6 +109,11 @@ class ProfileService
             unlink(Paths::STORAGE_UPLOADS . "/" . $user_old_data['storage_filename']);
         }
         //from rowcount
+    }
+    public function select_record($table, $columns, $condition = null, $params = [])
+    {
+        $query = "SELECT $columns FROM $table" . (($condition != null) ? " AND $condition" : " ");
+        return $this->db->query($query, $params)->find_all();
     }
 
     public function validate_file(?array $file)

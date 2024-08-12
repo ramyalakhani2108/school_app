@@ -25,9 +25,10 @@ class UserService
         $columns = $this->db->query($query, ['value' => $value])->fetchColumn();
 
         if ($columns > 0) {
-
+            // dd("hi");
             throw new ValidationException(["$field" => ["$table is already added"]]);
         }
+        return true;
     }
     public function delete_record(string $table, string $condition)
     {
@@ -42,37 +43,8 @@ class UserService
             throw new ValidationException(['email' => 'can\'t delete ']);
         }
     }
-    public function is_email_taken_profile(string $email, int $id)
-    {
-        $query = "SELECT COUNT(*) FROM `staff` WHERE `email`=:email AND `user_id`!=:id";
-        $emailCount = $this->db->query($query, [
-            'email' => $email,
-            'id' => $id
-        ])->count();
-
-        $query = "SELECT `email` FROM `staff` WHERE `email`=:email";
-        $emailFind = $this->db->query($query, [
-            'email' => $email
-        ])->find();
 
 
-        if ($emailCount > 0) {
-            if ($email !== $emailFind['email']) {
-                throw new ValidationException(['email' => 'Email Taken']);
-            }
-        }
-    }
-    public function is_email_taken(string $email)
-    {
-        $query = "SELECT COUNT(*) FROM users WHERE email=:email";
-        $emailCount = $this->db->query($query, [
-            'email' => $email
-        ])->count();
-
-        if ($emailCount > 0) {
-            throw new ValidationException(['registered_user' => 'Email Taken']);
-        }
-    }
     public function login(array $data)
     {
 

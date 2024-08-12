@@ -73,7 +73,7 @@ if ($profile['storage_filename'] != null || $profile['storage_filename'] != '') 
                                                                     </div>
                                                                     <?php if (array_key_exists('email', $errors)) : ?>
                                                                         <div class="bg-gray-100 mt-2 p-2 text-red-500" style="color:red">
-                                                                            <?php echo e($errors['email']); ?>
+                                                                            <?php echo e($errors['email'][0]); ?>
                                                                         </div>
                                                                     <?php endif; ?>
 

@@ -101,16 +101,13 @@ class SubjectsController
 
     public function admin_subjects_view()
     {
-        // $this->total_subjects();
-        // dd($_POST);
+
         $standard_names = [];
         $standards = $this->standards_service->get_standards();
-        // dd($standards);
-
-
         foreach ($standards as $standard) {
             $standard_names[] = $standard['name'];
         }
+        unset($standards);
 
         $filtered_subject = [];
         $teachers = $this->teacher_service->get_teachers();
@@ -118,15 +115,11 @@ class SubjectsController
         foreach ($teachers as $teacher) {
             $teacher_names[] = $teacher['name'];
         }
-        $order_by = "id";
-        $order = "ASC";
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-            if (array_key_exists('order_by', $_POST)) {
-                $order_by = $_POST['order_by'];
-                $order = $_POST['order'];
-            }
-            if (array_key_exists('teacher_names', $_POST)) {
+            if (array_key_exists(
+                'teacher_names',
+                $_POST
+            )) {
                 $params = $_POST['teacher_names'];
                 $names = [];
 
@@ -136,14 +129,9 @@ class SubjectsController
                 if ($_POST['s']) {;
                     $filtered_subject[] = $this->subject_service->filtered_subject($names, 'staff', $_POST['s']);
                 } else {
-
-
                     $filtered_subject[] = $this->subject_service->filtered_subject($names, 'staff');
                 }
             }
-
-
-
             if (array_key_exists(
                 'standards_name',
                 $_POST
@@ -156,9 +144,6 @@ class SubjectsController
                 }
 
                 if ($_POST['s'] ?? '') {
-
-                    // dd($_POST);
-
                     $filtered_subject[] = $this->subject_service->filtered_subject($names, 'standards', $_POST['s']);
                 } else {
                     $filtered_subject[] = $this->subject_service->filtered_subject($names, 'standards');
@@ -182,16 +167,7 @@ class SubjectsController
             $filtered_subject[] = $this->subject_service->get_data();
         }
         $search = 0;
-        // if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['s'])) {
-        //     $search = urldecode(htmlspecialchars(trim($_GET['s'])));
-        //     $filtered_standard[] = array_merge($filtered_standard, $this->subject_service->get_search_results($search));
-        // } else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['sort']) && isset($_GET['order'])) {
-        //     $filtered_standard[] = $this->standards_service->get_standards_data(order_by: $_GET['sort'], order: $_GET['order']);
-        //     // dd($filtered_standard);
-        //} else
-        // if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        //     $filtered_standard[] = $this->standards_service->get_standards_data();
-        // }
+
 
 
 
@@ -215,14 +191,6 @@ class SubjectsController
                 'standards' => $standard_names
             ]
         );
-        // echo $this->view->render(
-        //     "admin/subjects/list.php",
-        //     [
-        //         'subjects' => $data,
-        //         'teachers' => $teacher_names,
-        //         'standards' => $standard_names
-        //     ]
-        // );
     }
 
     public function total_subjects(int $class = 0)

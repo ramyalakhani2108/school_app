@@ -14,6 +14,7 @@ use Framework\TemplateEngine;
 
 class StandardsController
 {
+
     public function __construct(
         private TemplateEngine $view,
         private ValidatorService $validator_service,
@@ -36,7 +37,7 @@ class StandardsController
     }
     public function standards_view()
     {
-
+        
         $subject_names = [];
         $subjects = $this->subject_service->get_std_sub();
 

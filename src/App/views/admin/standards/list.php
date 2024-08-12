@@ -1,4 +1,5 @@
-<?php include $this->resolve("partials/admin/_header.php"); ?>
+<?php phpinfo();
+include $this->resolve("partials/admin/_header.php"); ?>
 
 <body>
     <div class="container-scroller">
