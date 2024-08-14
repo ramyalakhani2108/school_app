@@ -144,8 +144,9 @@
                                                 ?>
                                             </div>
                                         </div>
-
                                     </div>
+<?php include $this->resolve("/admin/subjects/partials/_pagination.php"); ?>
+                                    
                                     <button type="button" class="btn btn-success btn-fw mt-3 col-5 ml-5 p-4" style="padding:15px;font-size:20px;margin-right:20px;" onclick="add_subject()">Add Subject</button>
                                     <script>
                                         function add_subject() {
@@ -155,6 +156,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

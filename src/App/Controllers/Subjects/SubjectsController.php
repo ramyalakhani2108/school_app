@@ -29,66 +29,66 @@ class SubjectsController
 
     public function get_search_results(array $search) {}
 
-    public  function filtered_subject(array $params = [])
-    {
+    // public  function filtered_subject(array $params = [])
+    // {
+
+        
 
 
+    //     $filtered_subject = [];
+    //     $teachers = $this->teacher_service->get_teachers();
+    //     $teacher_names = [];
+    //     foreach ($teachers as $teacher) {
+    //         $teacher_names[] = $teacher['name'];
+    //     }
+    //     if (array_key_exists('teacher_names', $_POST)) {
+    //         $params = $_POST['teacher_names'];
+
+    //         // dd($standards);
+    //         $names = [];
+    //         foreach ($params as $param) {
+    //             $names[] = urldecode($param);
+    //         }
+    //         $filtered_subject[] = $this->subject_service->filtered_subject($names, 'staff');
+    //     }
+    //     $standards = $this->standards_service->get_standard();
 
 
-        $filtered_subject = [];
-        $teachers = $this->teacher_service->get_teachers();
-        $teacher_names = [];
-        foreach ($teachers as $teacher) {
-            $teacher_names[] = $teacher['name'];
-        }
-        if (array_key_exists('teacher_names', $_POST)) {
-            $params = $_POST['teacher_names'];
+    //     $standard_names = [];
+    //     foreach ($standards as $standard) {
+    //         $standard_names[] = $standard['name'];
+    //     }
+    //     if (array_key_exists('standards_name', $_POST)) {
+    //         $params = $_POST['standards_name'];
 
-            // dd($standards);
-            $names = [];
-            foreach ($params as $param) {
-                $names[] = urldecode($param);
-            }
-            $filtered_subject[] = $this->subject_service->filtered_subject($names, 'staff');
-        }
-        $standards = $this->standards_service->get_standard();
+    //         $names = [];
+    //         foreach ($params as $param) {
+    //             $names[] = urldecode($param);
+    //         }
 
 
-        $standard_names = [];
-        foreach ($standards as $standard) {
-            $standard_names[] = $standard['name'];
-        }
-        if (array_key_exists('standards_name', $_POST)) {
-            $params = $_POST['standards_name'];
+    //         $filtered_subject[] = $this->subject_service->filtered_subject($names, 'standards');
+    //     }
+    //     if (isset($_GET['s'])) {
+    //         $search = urldecode(htmlspecialchars(trim($_GET['s'])));
+    //         $filtered_subject[] = array_merge($filtered_subject, $this->subject_service->get_search_results($search));
+    //     }
 
-            $names = [];
-            foreach ($params as $param) {
-                $names[] = urldecode($param);
-            }
+    //     $filtered_subjects = [];
+    //     foreach ($filtered_subject as $subjects) {
 
+    //         $filtered_subjects = array_merge($filtered_subjects, $subjects);
+    //     }
 
-            $filtered_subject[] = $this->subject_service->filtered_subject($names, 'standards');
-        }
-        if (isset($_GET['s'])) {
-            $search = urldecode(htmlspecialchars(trim($_GET['s'])));
-            $filtered_subject[] = array_merge($filtered_subject, $this->subject_service->get_search_results($search));
-        }
-
-        $filtered_subjects = [];
-        foreach ($filtered_subject as $subjects) {
-
-            $filtered_subjects = array_merge($filtered_subjects, $subjects);
-        }
-
-        echo $this->view->render(
-            "admin/subjects/filtered_subject.php",
-            [
-                'filtered_subjects' => $filtered_subjects,
-                'teachers' => $teacher_names,
-                'standards' => $standard_names
-            ]
-        );
-    }
+    //     echo $this->view->render(
+    //         "admin/subjects/filtered_subject.php",
+    //         [
+    //             'filtered_subjects' => $filtered_subjects,
+    //             'teachers' => $teacher_names,
+    //             'standards' => $standard_names
+    //         ]
+    //     );
+    // }
     public function create()
     {
 
@@ -101,6 +101,10 @@ class SubjectsController
 
     public function admin_subjects_view()
     {
+        $page = isset( $_GET['p'])  ? $_GET['p'] : 1;
+        $limit = 8;
+        $offset = (int) ($page-1)*$limit;
+
 
         $standard_names = [];
         $standards = $this->standards_service->get_standards();
@@ -127,9 +131,10 @@ class SubjectsController
                     $names[] = urldecode($param);
                 }
                 if ($_POST['s']) {;
-                    $filtered_subject[] = $this->subject_service->filtered_subject($names, 'staff', $_POST['s']);
+                    [$filtered_subject[], $count] = $this->subject_service->filtered_subject($names, 'staff', $_POST['s'],$limit,$offset);
+
                 } else {
-                    $filtered_subject[] = $this->subject_service->filtered_subject($names, 'staff');
+                    [$filtered_subject[], $count] = $this->subject_service->filtered_subject($names, 'staff');
                 }
             }
             if (array_key_exists(
@@ -144,9 +149,10 @@ class SubjectsController
                 }
 
                 if ($_POST['s'] ?? '') {
-                    $filtered_subject[] = $this->subject_service->filtered_subject($names, 'standards', $_POST['s']);
+                   [$filtered_subject[], $count] = $this->subject_service->filtered_subject($names, 'standards', $_POST['s'],$limit,$offset);
                 } else {
-                    $filtered_subject[] = $this->subject_service->filtered_subject($names, 'standards');
+                    [$filtered_subject[], $count] = $this->subject_service->filtered_subject($names, 'standards',$limit
+                        ,$offset);
                 }
             }
 
@@ -156,7 +162,7 @@ class SubjectsController
 
                     $search = urldecode(htmlspecialchars(trim($_POST['s'])));
 
-                    $filtered_subject[] = array_merge($filtered_subject, $this->subject_service->get_search_results($search));
+                    [$filtered_subject[], $count] = array_merge($filtered_subject, $this->subject_service->get_search_results($search,$limit,$offset));
                 }
             }
         }
@@ -164,12 +170,20 @@ class SubjectsController
             empty(($_POST['s'])) && empty($_POST['_search_input_']) && empty($_POST['standards_name']) && empty($_POST['teacher_names'])
         ) {
 
-            $filtered_subject[] = $this->subject_service->get_data();
+            [$filtered_subject[], $count] = $this->subject_service->get_data($limit,$offset);
         }
         $search = 0;
+        // dd($count);
+        $last_page = ceil($count/$limit);
 
+        $pages = $last_page ? range(1, $last_page) : [];
 
+        $page_links = array_map(fn($page_number) => http_build_query([
+                        'p'=> $page_number
+                    ])
 
+            , $pages);
+        // dd($page_links);
 
 
 
@@ -188,7 +202,20 @@ class SubjectsController
             [
                 'filtered_subjects' => $filtered_subjects,
                 'teachers' => $teacher_names,
-                'standards' => $standard_names
+                'standards' => $standard_names,
+                'current_page' => $page,
+                'previous_page'=> http_build_query(
+[
+    'p' => $page - 1
+]
+                ),
+                'next_page' => http_build_query(
+                    [
+                        'p' => $page+1
+                    ]),
+                'page_links' => $page_links,
+                'last_page' => $last_page
+
             ]
         );
     }
@@ -251,9 +278,10 @@ class SubjectsController
 
 
 
-    public function get_data()
+    public function get_data(int $limit=8,int $offset=0)
     {
-        return $this->subject_service->get_data();
+
+        return $this->subject_service->get_data($limit,$offset);
     }
 
     public function edit_view($params = [])

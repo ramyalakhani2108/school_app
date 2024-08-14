@@ -31,8 +31,11 @@ class SubjectService
     }
 
 
-    public function filtered_subject(array $names, string $table_name, string $searched = "")
+    public function filtered_subject(array $names, string $table_name, string $searched = "",int $limit = 8, int $offset = 0)
     {
+
+      
+
 
         $names = implode("','", $names);
         $searched = "%{$searched}%";
@@ -69,10 +72,18 @@ WHERE
     $table_name.`name` IN ('$names') 
 	$search_query
 GROUP BY 
-    `teacher_subjects`.`id`;
-";
-        // dd($query);
-        return ($this->db->query($query, $params)->find_all());
+    `teacher_subjects`.`id`
+
+
+;
+    ";
+
+    $result = $this->db->query($query,$params)->find_all();
+       $count = count($result);
+       $query .= " LIMIT $limit OFFSET $offset;";
+              $result = $this->db->query($query,$params)->find_all();
+return([$result, $count]);
+    
     }
 
     public function add_teacher_subject(int $teacher_id = 0, array $data = [])
@@ -318,7 +329,7 @@ GROUP BY
         return $this->db->query($query)->find()['COUNT(*)'];
     }
 
-    public function get_search_results(string|int $search)
+    public function get_search_results(string|int $search, int $limit = 8, int $offset = 0)
     {
 
         $query = "SELECT 
@@ -342,7 +353,16 @@ OR `subjects`.`code` LIKE '%$search%'
 OR `standards`.`name` LIKE '%$search%' 
 
 ";
-        return ($this->db->query($query)->find_all());
+          $result = $this->db->query($query)->find_all();
+       $count = count($result);
+       $query .= " LIMIT $limit OFFSET $offset;";
+
+              $result = $this->db->query($query)->find_all();
+              if(($result[0]['staff_name'] == '')){
+                $result = [];
+              }
+              // dd($query);
+return([$result, $count]);
     }
     public function get_subject(int $id = 0)
     {
@@ -432,43 +452,40 @@ OR `standards`.`name` LIKE '%$search%'
         $query = "SELECT DISTINCT `id`,`name`,`code` FROM `subjects` ";
         return $this->db->query($query)->find_all();
     }
-    public function get_data()
+    public function get_data(int $limit=8,int $offset=0)
     {
-        $query = "SELECT
-    `subjects`.`name` AS `subject_names`,
-    `subjects`.`id` AS `subject_ids`,
-    `subjects`.`code` AS `subject_codes`,
-    (
+        $query = "
     SELECT
-        COUNT(`std_sub`.`standard_id`)
+        `subjects`.`name` AS `subject_names`,
+        `subjects`.`id` AS `subject_ids`,
+        `subjects`.`code` AS `subject_codes`,
+        (
+            SELECT COUNT(`std_sub`.`standard_id`)
+            FROM `std_sub`
+            WHERE `std_sub`.`subject_id` = `subjects`.`id`
+        ) AS `standards`,
+        (
+            SELECT COUNT(`teacher_subjects`.`teacher_id`)
+            FROM `teacher_subjects`
+            WHERE `teacher_subjects`.`subject_id` = `subjects`.`id`
+        ) AS `staff_name`
     FROM
-        `std_sub`
-    WHERE
-        `std_sub`.`subject_id` = `subjects`.`id`
-) AS `standards`,
-(
-    SELECT
-        COUNT(`teacher_subjects`.`teacher_id`)
-    FROM
-        `teacher_subjects`
-    WHERE
-        `teacher_subjects`.`subject_id` = `subjects`.`id`
-) AS `staff_name`
-FROM
-    `subjects`
-LEFT JOIN `teacher_subjects` ON `teacher_subjects`.`subject_id` = `subjects`.`id`
-LEFT JOIN `staff` ON `teacher_subjects`.`teacher_id` = `staff`.`id`
-LEFT JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id`
-LEFT JOIN `standards` ON `standards`.`id` = teachers_std.id
-GROUP BY
-    `subjects`.`id`,
-    `subjects`.`name`;
-        
-        ";
+        `subjects`
+    LEFT JOIN `teacher_subjects` ON `teacher_subjects`.`subject_id` = `subjects`.`id`
+    LEFT JOIN `staff` ON `teacher_subjects`.`teacher_id` = `staff`.`id`
+    LEFT JOIN `teachers_std` ON `teachers_std`.`teacher_id` = `staff`.`id`
+    LEFT JOIN `standards` ON `standards`.`id` = `teachers_std`.`id`
+    GROUP BY
+        `subjects`.`id`,
+        `subjects`.`name`
+    
+";
         // dd($query);
-        return (
-            $this->db->query($query)->find_all()
-        );
+       $result = $this->db->query($query)->find_all();
+       $count = count($result);
+       $query .= " LIMIT $limit OFFSET $offset;";
+              $result = $this->db->query($query)->find_all();
+return([$result, $count]);
     }
 
     public function is_subject_added(string $subject_code, string $subject_name, int $sub_id = 0)
