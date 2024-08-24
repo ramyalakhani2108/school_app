@@ -15,6 +15,14 @@
     }
 
     ?>
+    <?php
+    $status = [];
+    if (array_key_exists('selected_status', $_POST)) {
+        $status = array_merge($selected_status, $_POST['selected_status']);
+    }
+
+    ?>
+
  <div class="custom-dropdown">
      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false">
          <i class="mdi mdi-filter-outline"></i> Filter
@@ -78,6 +86,7 @@
                  <?php endforeach; ?>
              </div>
          </div>
+ 
          <input type="hidden" name="_search_input_" value="<?php echo e($_POST['s'] ?? ''); ?>">
          <?php if (array_key_exists('teacher_names', $_POST)) : foreach ($_POST['teacher_names'] as $teacher) : ?>
                  <input type="hidden" id="_filter_teachers_[]" name="_filter_teachers_[]" value="<?php echo e($teacher ?? ''); ?>">
@@ -88,6 +97,7 @@
                  <input type="hidden" id="_filter_stds_[]" name="_filter_stds_[]" value="<?php echo e($std ?? ''); ?>">
              <?php endforeach; ?>
          <?php endif; ?>
+        
 
          <button type="submit" class="btn btn-primary mt-2">Apply Filter</button>
 

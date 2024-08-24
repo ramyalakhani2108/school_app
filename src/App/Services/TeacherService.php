@@ -228,10 +228,11 @@ ON `teachers_std`.`standard_id`=`std`.`id`
 WHERE `teachers_std`.`teacher_id`=:tid AND `status`=1;";
         return $this->db->query($query, ['tid' => $tid])->find_all();
     }
-    public function filtered_teacher(array $names, string $table_name, string $searched = '', string $order_by = "id", string $order = "ASC")
+    public function filtered_teacher(array $names=[], string $table_name, string $searched = '', string $order_by = "id", string $order = "ASC",$limit=10,$offset=0)
     {
-
         $names = implode("','", $names);
+        // dd($names);
+        // dd($names);
         // dd($searched);
         $params = [];
         if ($searched != '') {
@@ -248,6 +249,9 @@ WHERE `teachers_std`.`teacher_id`=:tid AND `status`=1;";
             $search_query = "";
         }
 
+        
+        $role_where = "     AND 
+    `staff`.`role_id` NOT IN ('1')";
         $query
             = "SELECT
     `staff`.`id` AS `staff_ids`,
@@ -277,22 +281,39 @@ WHERE `teachers_std`.`teacher_id`=:tid AND `status`=1;";
 ) AS `total_subjects`
 FROM
     `staff`
-JOIN 
+LEFT JOIN 
 	`teacher_subjects` ON `teacher_subjects`.`teacher_id` = `staff`.`id`
-JOIN `subjects` ON `teacher_subjects`.`subject_id`=`subjects`.`id`
-JOIN `std_sub` ON `std_sub`.`subject_id` =`subjects`.`id`
-JOIN `standards` ON `standards`.`id`=`std_sub`.`standard_id`
-WHERE
-    `$table_name`.`name` IN ('$names')
-
+LEFT JOIN `subjects` ON `teacher_subjects`.`subject_id`=`subjects`.`id`
+LEFT JOIN `std_sub` ON `std_sub`.`subject_id` =`subjects`.`id`
+LEFT JOIN `standards` ON `standards`.`id`=`std_sub`.`standard_id`
+WHERE".
+    
+    (($names == '1' || $names == '0' || $names = '1\',\'2')?
+             " `$table_name`.`status` IN ('$names') "
+        
+        :
+    "         `$table_name`.`name` IN ('$names') ")
+    
+."
     $search_query
+
+   $role_where 
 GROUP BY 
-    `teacher_subjects`.`id`;
+    ".
+    (($names == '1' || $names == '0' || $names = '1\',\'2')?
+        "`staff`.`id`;"
+        :
+        "`teacher_subjects`.`id`;"
+    )."
 ";
-        // dd($query);
-        return ($this->db->query($query, $params)->find_all());
+// dd($query);
+        $result = $this->db->query($query,$params)->find_all();
+       $count = count($result);
+       $query .= " LIMIT $limit OFFSET $offset;";
+              $result = $this->db->query($query,$params)->find_all();
+return([$result, $count]);
     }
-    public function get_search_results(string|int $search, string $order_by = "id", string $order = "ASC")
+    public function get_search_results(string|int $search, string $order_by = "id", string $order = "ASC",$limit=8,$offset=0)
     {
         if ($order_by == "id") {
             $order_by = " ORDER BY `staff`.`id`  ";
@@ -365,8 +386,12 @@ GROUP BY
     `staff`.`id`
     $order_by $order
     ";
-        // dd($query);
-        return ($this->db->query($query, ['searched' => $search])->find_all());
+    $params= ['searched' => $searched];
+               $result = $this->db->query($query,$params)->find_all();
+       $count = count($result);
+       $query .= " LIMIT $limit OFFSET $offset;";
+              $result = $this->db->query($query,$params)->find_all();
+return([$result, $count]);
     }
     public function total_teachers()
     {
@@ -439,7 +464,7 @@ WHERE
         }
     }
 
-    public function get_teacher_data(string|int $name = 0, string $order_by = "id", $order = "ASC")
+    public function get_teacher_data(string|int $name = 0, string $order_by = "id", $order = "ASC",$limit = 10,$offset=0)
     {
 
         if ($order_by == "id") {
@@ -505,8 +530,12 @@ GROUP BY
     `staff`.`id`
 $order_by $order
         ";
-
-        return $this->db->query($query)->find_all();
+        $params =[];
+        $result = $this->db->query($query,$params)->find_all();
+       $count = count($result);
+       $query .= " LIMIT $limit OFFSET $offset;";
+              $result = $this->db->query($query,$params)->find_all();
+return([$result, $count]);
     }
     public function get_teachers(int $id = 0, int $sid = 0)
     {

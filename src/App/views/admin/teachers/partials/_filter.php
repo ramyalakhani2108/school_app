@@ -15,6 +15,13 @@
     }
 
     ?>
+        <?php
+    $selected_status = [];
+    if (array_key_exists('status', $_POST)) {
+        $selected_status = array_merge($selected_status, $_POST['status']);
+    }
+
+    ?>
  <div class="custom-dropdown">
      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false">
          <i class="mdi mdi-filter-outline"></i> Filter
@@ -78,6 +85,36 @@
                  <?php endforeach; ?>
              </div>
          </div>
+                 <div class="dropdown-item">
+             <span class="dropdown-label" style="color:black">Status</span>
+             <div class="dropdown-submenu">
+
+                 <?php foreach ($statuses as $status) :
+
+                        if (in_array($status, $selected_status)) :
+                    ?>
+                         <label>
+
+                             <input type="checkbox" name="status[]" value="<?php echo htmlspecialchars($status); ?>" checked> <?php echo htmlspecialchars($status); ?>
+                         </label>
+
+                     <?php
+                        else :
+                        ?>
+                         <label>
+
+                             <input type="checkbox" name="status[]" value="<?php echo htmlspecialchars($status); ?>"> <?php echo htmlspecialchars($status); ?>
+                         </label>
+
+                     <?php endif; ?>
+
+
+
+
+                 <?php endforeach; ?>
+             </div>
+         </div>
+         <input type="hidden" name="page_num" value="<?php echo e($_POST['page_num'] ?? 1);  ?>">
          <input type="hidden" name="_search_input_" value="<?php echo e($_POST['s'] ?? ''); ?>">
          <input type="hidden" id="order_by" name="order_by" value="name">
          <input type="hidden" id="order" name="order" value="asc">
@@ -90,7 +127,10 @@
                  <input type="hidden" id="_filter_stds_[]" name="_filter_stds_[]" value="<?php echo e($std ?? ''); ?>">
              <?php endforeach; ?>
          <?php endif; ?>
-
+ <?php if (array_key_exists('selected_status', $_POST)) : foreach ($_POST['selected_status'] as $sts) : ?>
+                 <input type="hidden" id="_filter_status_[]" name="_filter_status_[]" value="<?php echo e($sts ?? ''); ?>">
+             <?php endforeach; ?>
+         <?php endif; ?>
          <button type="button" onclick="form_submit()" class="btn btn-primary mt-2">Apply Filter</button>
 
 
@@ -128,13 +168,22 @@
      });
      const form_search = document.getElementById("form_search");
 
-     function form_submit() {
+     function form_submit(pageNum=1) {
          // Select all hidden elements
          const hiddenElements = document.querySelectorAll('input[type="hidden"]');
 
+
          // Log all hidden element values to the console
          hiddenElements.forEach(element => {
+             if(element.name == "page_num"){
+                element.value = pageNum;
+                
+            }else{
+
              console.log(element.name + ": " + element.value);
+            }
+
+            
          });
 
          form_search.submit();

@@ -86,7 +86,7 @@
 <?php
 $pages = range(1, $last_page);
 $count = count($pages);
-$current_page = isset($_GET['p']) ? (int) $_GET['p'] : 1;
+$current_page = isset($_POST['page_num']) ? (int) $_POST['page_num'] : 1;
 if($current_page >  $last_page){
   $current_page = $last_page;
 }else if($current_page <= 0){
@@ -100,14 +100,23 @@ $next_page = $current_page < $count ? 'p=' . ($current_page + 1) : null;
 <nav class="pagination-container">
     <!-- First Page Link -->
     <?php if ($current_page > 4): ?>
-        <a href="?p=1" class="inline-flex items-center text-gray-500 hover:text-gray-700">
+        <!-- <a href="?p=1" class="inline-flex items-center text-gray-500 hover:text-gray-700">
+            &lt;&lt;
+        </a> -->
+        <a href="#" onclick="form_submit(1)" class="inline-flex items-center text-gray-500 hover:text-gray-700">
             &lt;&lt;
         </a>
     <?php endif; ?>
 
     <!-- Previous Page Link -->
     <?php if ($current_page > 1): ?>
-        <a href="?<?php echo $previous_page; ?>" class="inline-flex items-center text-gray-500 hover:text-gray-700">
+        <!-- <a href="?<?php echo $previous_page; ?>" class="inline-flex items-center text-gray-500 hover:text-gray-700">
+            <svg class="mr-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M18 10a.75.75 0 01-.75.75H4.66l2.1 1.95a.75.75 0 11-1.02 1.1l-3.5-3.25a.75.75 0 010-1.1l3.5-3.25a.75.75 0 111.02 1.1l-2.1 1.95h12.59A.75.75 0 0118 10z" clip-rule="evenodd" />
+            </svg>
+            Previous
+        </a> -->
+        <a href="#" onclick="form_submit(<?php echo e($previous_page); ?>)" class="inline-flex items-center text-gray-500 hover:text-gray-700">
             <svg class="mr-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M18 10a.75.75 0 01-.75.75H4.66l2.1 1.95a.75.75 0 11-1.02 1.1l-3.5-3.25a.75.75 0 010-1.1l3.5-3.25a.75.75 0 111.02 1.1l-2.1 1.95h12.59A.75.75 0 0118 10z" clip-rule="evenodd" />
             </svg>
@@ -117,8 +126,9 @@ $next_page = $current_page < $count ? 'p=' . ($current_page + 1) : null;
 
     <!-- Page Links -->
     <div class="hidden md:flex md:-mt-px">
+        <!-- ?p=<?php echo $page_num; ?> -->
         <?php foreach (range(max($current_page - 3, 1), min($current_page + 3, $count)) as $page_num): ?>
-            <a href="?p=<?php echo $page_num; ?>" class="<?php echo $page_num == $current_page ? 'active' : ''; ?>">
+            <a href="#" onclick="form_submit(<?php echo e($page_num); ?>)" class="<?php echo $page_num == $current_page ? 'active' : ''; ?>">
                 <?php echo $page_num; ?>
             </a>
         <?php endforeach; ?>
@@ -126,7 +136,13 @@ $next_page = $current_page < $count ? 'p=' . ($current_page + 1) : null;
     <input type="hidden" name="last_page" value="<?php echo e($last_page??1); ?>">
     <!-- Next Page Link -->
     <?php if ($current_page < $count): ?>
-        <a href="?<?php echo $next_page; ?>" class="inline-flex items-center text-gray-500 hover:text-gray-700">
+       <!--  <a href="?<?php echo $next_page; ?>" class="inline-flex items-center text-gray-500 hover:text-gray-700">
+            Next
+            <svg class="ml-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M2 10a.75.75 0 01.75-.75h12.59l-2.1-1.95a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.1-1.95H2.75A.75.75 0 012 10z" clip-rule="evenodd" />
+            </svg>
+        </a> -->
+         <a href="#" onclick="form_submit(<?php echo e($next_page); ?>)" class="inline-flex items-center text-gray-500 hover:text-gray-700">
             Next
             <svg class="ml-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M2 10a.75.75 0 01.75-.75h12.59l-2.1-1.95a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.1-1.95H2.75A.75.75 0 012 10z" clip-rule="evenodd" />
@@ -136,9 +152,12 @@ $next_page = $current_page < $count ? 'p=' . ($current_page + 1) : null;
 
     <!-- Last Page Link -->
     <?php if ($current_page < $count): ?>
-        <a href="?p=<?php echo $count; ?>" class="inline-flex items-center text-gray-500 hover:text-gray-700">
+        <a href="#" onclick="form_submit(<?php echo e($count); ?>)" class="inline-flex items-center text-gray-500 hover:text-gray-700">
             &gt;&gt;
         </a>
+        <!-- <a href="?p=<?php echo $count; ?>" class="inline-flex items-center text-gray-500 hover:text-gray-700">
+            &gt;&gt;
+        </a> -->
     <?php endif; ?>
 </nav>
 

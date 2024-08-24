@@ -85,8 +85,8 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start">
                                         <div>
-                                            <h4 class="card-title mb-1">Subjects</h4>
-                                            <p class="text-muted mb-1">Subjects for all class</p>
+                                            <h4 class="card-title mb-1">Teachers</h4>
+                                            <p class="text-muted mb-1">Teachers for all class</p>
                                         </div>
 
                                         <?php include $this->resolve("admin/teachers/partials/_searchbar.php"); ?>
@@ -176,6 +176,7 @@
                                                     <?php endforeach; ?>
                                                 </tbody>
                                             </table>
+                            <?php include $this->resolve("/admin/teachers/partials/_pagination.php"); ?>
 
                                             <button type="button" ondblclick="delete_selected()" class="btn btn-inverse-danger btn-fw" style="width: 10px;padding-top:15px;padding-bottom:15px">Delete Selected</button>
                                     </form>

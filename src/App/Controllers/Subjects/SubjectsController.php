@@ -101,7 +101,12 @@ class SubjectsController
 
     public function admin_subjects_view()
     {
-        $page = isset( $_GET['p'])  ? $_GET['p'] : 1;
+        $page = isset( $_GET['p'])   ? (int) $_GET['p'] : 1;
+        if($page ==0){
+            $page = 1;
+
+        }
+
         $limit = 8;
         $offset = (int) ($page-1)*$limit;
 
